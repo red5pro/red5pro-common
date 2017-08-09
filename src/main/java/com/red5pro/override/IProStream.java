@@ -6,10 +6,11 @@ package com.red5pro.override;
 import java.io.IOException;
 
 import org.red5.server.api.event.IEvent;
-import org.red5.server.api.stream.IStream;
-import org.red5.server.api.stream.IClientStream;
 import org.red5.server.api.stream.IBroadcastStream;
+import org.red5.server.api.stream.IClientStream;
 import org.red5.server.api.stream.IClientBroadcastStream;
+import org.red5.server.api.stream.IStream;
+import org.red5.server.api.stream.StreamState;
 import org.red5.server.net.rtmp.event.Notify;
 
 /**
@@ -28,6 +29,12 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
 
     /** {@inheritDoc} */
     Notify getMetaData();
+
+    /** {@inheritDoc} */
+    StreamState getState();
+
+    /** {@inheritDoc} */
+    long getBytesReceived();
 
     /** {@inheritDoc} */
     void saveAs(String name, boolean append) throws IOException;
