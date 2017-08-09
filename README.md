@@ -16,3 +16,10 @@ Including in your maven pom is as easy as adding this xml to your dependencies
     <scope>provided</scope>
 </dependency>
 ```
+
+#### Deploy to Artifactory
+**For Internal Use Only**
+
+`mvn clean deploy`
+
+This assumes you have your maven `settings.xml` properly configured of course.
