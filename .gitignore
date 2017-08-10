@@ -1,0 +1,24 @@
+.DS_Store
+
+target/
+tmp/
+bin/
+*.class
+*.DS_Store
+*.metadata
+log/
+# Package Files
+*.war
+*.ear
+
+/appcompat
+gen
+.project
+.classpath
+.settings
+.externalToolBuilders
+.recommenders
+
+# file created by maven shade plugin
+dependency-reduced-pom.xml
+
