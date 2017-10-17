@@ -69,10 +69,10 @@ enum PROCESS_RETURN {
 */
 
 // Return unique little endian fourCC  ('D' | ('E'<<8 )| ('M'<<16) | ('O'<<24 )) ;
-typedef uint32_t (*GetGuid);
+typedef uint32_t (*GetGuid)();
 
 // Return new instance of CVideoProcessModule. 
-typedef CVideoProcessModule* (*CreateVideoProcessor);
+typedef CVideoProcessModule* (*CreateVideoProcessor)();
 
 //Destroy instance of CVideoProcessModule. 
 typedef void (*DestroyVideoProcessor)(CVideoProcessModule*);
