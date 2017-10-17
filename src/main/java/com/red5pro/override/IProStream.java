@@ -52,10 +52,10 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
      * Stops any currently active recording. 
      */
     void stopRecording();
+
     /**
      * Sets the guid of the native module and queue of 'Ingredients'.
-     * @param potion
-     * <p />Use within an implementation of MediaProcessorAware streamProcessorStart
+     * <br>Use within an implementation of MediaProcessorAware streamProcessorStart
      * <pre>
      * streamProcessorStart(IProStream stream){
      *     Potion p = new Potion("face");
@@ -70,20 +70,21 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
      * stream.getPotion().add(new Ingredient("maskShape","round"));
      * </pre>
      * 
+     * @param potion Potion
      */
     void setPotion(Potion potion);
+
     /**
      * Gets the Parameter Queue which the native processor is polling 'Ingrediants' from.
-     * 
-     * <p />
+     * <br>
      * Since Potion extends Queue, in an application, you can add 'Ingredients'. 
      * The ProStream empties the Ingredient queue before processing each frame. 
      * <pre>
      * stream.getPotion().add(new Ingredient("maskShape","round"));
      * </pre>
+     * 
      * @return Potion
      */
-    Potion getPotion();	
-    
+    Potion getPotion();
 
 }
