@@ -14,9 +14,9 @@ import com.red5pro.override.IProStream;
  */
 public interface MediaProcessorAware {
     /**
-     * Called when the native library is initiate.
+     * Called when the native library is initiated. 
      */
-    void cauldronLibStarted();
+    void cauldronLibStarted(IProcess  loader);
 
     /**
      * Called when a native processor is about to be created.
