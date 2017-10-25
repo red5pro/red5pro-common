@@ -13,6 +13,7 @@ import org.red5.server.api.stream.IStream;
 import org.red5.server.api.stream.StreamState;
 import org.red5.server.net.rtmp.event.Notify;
 
+import com.red5pro.override.cauldron.ProcessConfiguration;
 import com.red5pro.override.cauldron.brews.Potion;
 
 /**
@@ -86,5 +87,21 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
      * @return Potion
      */
     Potion getPotion();
+    
+    /**
+     * Sets the core processor class. Required to activate API.
+     * <p>This can also be set in red5-commons. file
+     * <pre>
+     * com.red5pro.media.transform.codec.AVCProcessor
+     * </pre>
+     * @param clazz The class with core native bindings.
+     * 
+     */
+    void setProcessorClass(String clazz);
+    /**
+     * Sets the output parameters for the processor.
+     * @param config output parameters 
+     */
+    void setProcessConfiguration(ProcessConfiguration config);
 
 }
