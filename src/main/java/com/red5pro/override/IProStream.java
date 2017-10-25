@@ -13,6 +13,9 @@ import org.red5.server.api.stream.IStream;
 import org.red5.server.api.stream.StreamState;
 import org.red5.server.net.rtmp.event.Notify;
 
+import com.red5pro.override.cauldron.ProcessConfiguration;
+import com.red5pro.override.cauldron.brews.Potion;
+
 /**
  * Red5 Pro server-side stream.
  * 
@@ -50,5 +53,55 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
      * Stops any currently active recording. 
      */
     void stopRecording();
+
+    /**
+     * Sets the guid of the native module and queue of 'Ingredients'.
+     * <br>Use within an implementation of MediaProcessorAware streamProcessorStart
+     * <pre>
+     * streamProcessorStart(IProStream stream){
+     *     Potion p = new Potion("face");
+     *     p.add(new Ingredient("background",0xFFFFFFFF));
+     *     p.add(new Ingredient("maskShape","rect"));
+     *     stream.setPotion(p);
+     * }
+     * </pre>
+     * Since Potion extends Queue, later in the application, you can add/update 'Ingredients'. 
+     * The ProStream empties the Ingredient queue before processing each frame. 
+     * <pre>
+     * stream.getPotion().add(new Ingredient("maskShape","round"));
+     * </pre>
+     * 
+     * @param potion Potion
+     */
+    void setPotion(Potion potion);
+
+    /**
+     * Gets the Parameter Queue which the native processor is polling 'Ingrediants' from.
+     * <br>
+     * Since Potion extends Queue, in an application, you can add 'Ingredients'. 
+     * The ProStream empties the Ingredient queue before processing each frame. 
+     * <pre>
+     * stream.getPotion().add(new Ingredient("maskShape","round"));
+     * </pre>
+     * 
+     * @return Potion
+     */
+    Potion getPotion();
+    
+    /**
+     * Sets the core processor class. Required to activate API.
+     * <p>This can also be set in red5-commons. file
+     * <pre>
+     * com.red5pro.media.transform.codec.AVCProcessor
+     * </pre>
+     * @param clazz The class with core native bindings.
+     * 
+     */
+    void setProcessorClass(String clazz);
+    /**
+     * Sets the output parameters for the processor.
+     * @param config output parameters 
+     */
+    void setProcessConfiguration(ProcessConfiguration config);
 
 }
