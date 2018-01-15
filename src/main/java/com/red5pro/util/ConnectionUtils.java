@@ -70,7 +70,7 @@ public class ConnectionUtils {
     /**
      * Returns boolean true if connection is a RTMPMinaConnection object, false otherwise
      * 
-     * @param connection
+     * @param connection IConnection
      * @return true if RTMP and false otherwise
      */
     public static boolean isRTMP(IConnection connection) {
@@ -80,7 +80,7 @@ public class ConnectionUtils {
     /**
      * Returns boolean true if connection is a RTSPMinaConnection object, false otherwise
      * 
-     * @param connection
+     * @param connection IConnection
      * @return true if RTSP and false otherwise
      */
     public static boolean isRTSP(IConnection connection) {
@@ -90,7 +90,7 @@ public class ConnectionUtils {
     /**
      * Returns boolean true if connection is a RTCConnection object, false otherwise
      * 
-     * @param connection
+     * @param connection IConnection
      * @return true if RTC and false otherwise
      */
     public static boolean isRTC(IConnection connection) {
