@@ -28,5 +28,12 @@ public interface ProvisionIndex {
 	 * @return Provision if it exists
 	 */
 	public Provision getProvisionForNode( String host, int port,String context, String name);
+	/**
+	 * Look up a provision based on a stream name and path. The name may be appended with multi bit rate parameters.
+	 * @param context stream path
+	 * @param name stream name
+	 * @return Provision if it exists
+	 */
+	public Provision resolveProvision(String context, String name);
 
 }

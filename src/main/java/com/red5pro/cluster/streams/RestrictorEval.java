@@ -11,10 +11,7 @@ import org.red5.server.api.IConnection;
  *
  */
 public interface RestrictorEval {
-	/**
-	 * Allow if no permissions are provided. 
-	 */
-	static boolean AllowDefault = true;
+
 	/**
 	 * Add restrictions to this list.
 	 */
@@ -27,7 +24,7 @@ public interface RestrictorEval {
 	 */
 	static boolean isRestricted(Restrictions provision,IConnection conn){
 		Iterator<RestrictorEval> iter = Restrictions.iterator();
-		boolean allow = AllowDefault;
+		boolean allow = false;
 		String allowIfEquals = null;//no permissions needed. 
 		while(iter.hasNext()){
 			RestrictorEval restriction = iter.next();
