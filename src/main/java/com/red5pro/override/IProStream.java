@@ -13,6 +13,7 @@ import org.red5.server.api.stream.IStream;
 import org.red5.server.api.stream.StreamState;
 import org.red5.server.net.rtmp.event.Notify;
 
+import com.red5pro.override.api.ProStreamTerminationEventListener;
 import com.red5pro.override.cauldron.ProcessConfiguration;
 import com.red5pro.override.cauldron.brews.Potion;
 
@@ -103,5 +104,10 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
      * @param config output parameters 
      */
     void setProcessConfiguration(ProcessConfiguration config);
+    /**
+     * Add a Listener to be called at stream stop.
+     * @param handler the callee at stream-stop event.
+     */
+    void addTerminationEventListener(ProStreamTerminationEventListener handler);
 
 }
