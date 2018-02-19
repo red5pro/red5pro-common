@@ -15,6 +15,9 @@ public class Provision {
 	 * @return String concatenated with "/" between context and name
 	 */
 	public static String GetGuid(String context, String name){
+		if(context.startsWith("/")){
+			context=context.substring(1);
+		}
 		if(!context.endsWith("/")){
 			context=context.concat("/");
 		}
