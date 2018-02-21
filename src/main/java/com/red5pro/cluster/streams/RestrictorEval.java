@@ -1,8 +1,6 @@
 package com.red5pro.cluster.streams;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.red5.server.api.IConnection;
 /**
@@ -15,31 +13,36 @@ public interface RestrictorEval {
 	/**
 	 * Add restrictions to this list.
 	 */
-	static List<RestrictorEval> Restrictions = new CopyOnWriteArrayList<RestrictorEval>();
+	static CopyOnWriteArraySet<RestrictorEval> Restrictions = new CopyOnWriteArraySet<RestrictorEval>();
 	/**
 	 * 
 	 * @param provision stream provision
 	 * @param conn the subscriber
-	 * @return boolean if it is restricted
+	 * @return boolean true if access is allowed
 	 */
-	static boolean isRestricted(Restrictions provision,IConnection conn){
-		Iterator<RestrictorEval> iter = Restrictions.iterator();
-		boolean allow = false;
+	static boolean isAllowed(Restrictions provision,IConnection conn){
+		
+		boolean allow = provision.restricted;
+		if(allow){
+			return true;
+		}
 		String allowIfEquals = null;//no permissions needed. 
-		while(iter.hasNext()){
-			RestrictorEval restriction = iter.next();
+		for(RestrictorEval restriction:Restrictions){			
 			allowIfEquals = restriction.getRestriction(conn);
-			if(allowIfEquals!=null){
-				allow=false;//override default;
+			if(allowIfEquals==null){
+				
 			}
 			String []perms = provision.getConditions();
-			if(perms!=null && allowIfEquals!=null){
-				for(String condition:perms){
-					if(condition.equals(allowIfEquals)){
-						return true;
-					}
+			if(allowIfEquals==null || perms== null){
+				continue;
+			}
+			
+			for(String condition:perms){
+				if(condition.equals(allowIfEquals)){
+					return true;
 				}
 			}
+			
 		}		
 		return allow;
 	}

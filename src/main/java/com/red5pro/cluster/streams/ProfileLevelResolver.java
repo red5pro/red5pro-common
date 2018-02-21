@@ -1,7 +1,6 @@
 package com.red5pro.cluster.streams;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * @author Andy Shaules
  *
@@ -10,7 +9,7 @@ public interface ProfileLevelResolver {
 	/**
 	 * used to determine the priority level of a multi bitrate stream. Parses the stream name to extract the bitrate priority. 
 	 */
-	public static List<ProfileLevelResolver> LevelResolvers = new CopyOnWriteArrayList<>();
+	public static CopyOnWriteArraySet<ProfileLevelResolver> LevelResolvers = new CopyOnWriteArraySet<ProfileLevelResolver>();
 	/**
 	 * looks at the parsers and returns the first non zero returned.
 	 * @param context path of stream
