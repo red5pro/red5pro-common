@@ -14,7 +14,7 @@ public class Provision {
 	 * @param name stream name
 	 * @return String concatenated with "/" between context and name
 	 */
-	public static String GetGuid(String context, String name){
+	public static String MakeGuid(String context, String name){
 		if(context.startsWith("/")){
 			context=context.substring(1);
 		}
