@@ -6,8 +6,13 @@ package com.red5pro.cluster.streams;
  *
  */
 public class Ingest {
-	
-	public static int SBR = 0;	
+	/**
+	 * Only one version of the stream available.
+	 */
+	public static int SBR = 0;
+	/**
+	 * Highest quality of multi bitrate stream variations. Lower quality streams are higher indexes. 
+	 */
 	public static int MBR_MAIN = 1;
 	
 	private String host;

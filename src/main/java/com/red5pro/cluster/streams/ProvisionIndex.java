@@ -1,7 +1,6 @@
 package com.red5pro.cluster.streams;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Provision services and config handlers implement this interface.
@@ -11,7 +10,7 @@ public interface ProvisionIndex {
 	/**
 	 * Add data sources to this list. 
 	 */
-	public static List<ProvisionIndex> Providers = new CopyOnWriteArrayList<>();
+	public static CopyOnWriteArraySet<ProvisionIndex> Providers = new CopyOnWriteArraySet<ProvisionIndex>();
 	/**
 	 * Returns publisher perspective. 
 	 * @param context path of stream
