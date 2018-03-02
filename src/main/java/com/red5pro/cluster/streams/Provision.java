@@ -1,6 +1,7 @@
 package com.red5pro.cluster.streams;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -8,11 +9,20 @@ import java.util.List;
  *
  */
 public class Provision {
+	public static String Param_Video_Bitrate = "videoBR";
+	public static String Param_Audio_Bitrate = "audioBR";
+	public static String Param_Video_Height = "videoHeight";
+	public static String Param_Video_Width = "videoWidth";
+	public static String Param_Video_Profile = "videoProfile";
+	public static String Param_Audio_Sample_Rate = "audioSR";
+	public static String Param_Audio_Channel_Count = "audioCh";
+	
 	/**
-	 * Returns concatenated context path.
+	 * Returns concatenated context path without leading slashes. Normalizes guid.
 	 * @param context app scope
 	 * @param name stream name
-	 * @return String concatenated with "/" between context and name
+	 * @return String with leading slash removed from context, 
+	 * concatenated with "/" and name.
 	 */
 	public static String MakeGuid(String context, String name){
 		if(context.startsWith("/")){
@@ -21,12 +31,21 @@ public class Provision {
 		if(!context.endsWith("/")){
 			context=context.concat("/");
 		}
+		if(name.startsWith("/")){
+			name=name.substring(1);
+		}
 		return context.concat(name);
 	}
 	/**
 	 * context / path
 	 */
-	private String guid;
+	private String guid;	 
+	
+	private String contextPath;
+	
+	private String streamName;
+	
+	private int qualityLevel;
 	
 	private List<Ingest> primaries;	
 	
@@ -34,6 +53,8 @@ public class Provision {
 	
 	private Restrictions restrictions;
 
+	private Map<String,Object> parameters;
+	
 	public String getGuid() {
 		return guid;
 	}
@@ -64,6 +85,38 @@ public class Provision {
 
 	public void setRestrictions(Restrictions restrictions) {
 		this.restrictions = restrictions;
+	}
+
+	public String getContextPath() {
+		return contextPath;
+	}
+
+	public void setContextPath(String contextPath) {
+		this.contextPath = contextPath;
+	}
+
+	public String getStreamName() {
+		return streamName;
+	}
+
+	public void setStreamName(String streamName) {
+		this.streamName = streamName;
+	}
+
+	public int getQualityLevel() {
+		return qualityLevel;
+	}
+
+	public void setQualityLevel(int qualityLevel) {
+		this.qualityLevel = qualityLevel;
+	}
+
+	public Map<String,Object> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(Map<String,Object> parameters) {
+		this.parameters = parameters;
 	}
 
 }
