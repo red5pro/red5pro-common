@@ -16,6 +16,9 @@ public class Provision {
 	public static String Param_Video_Profile = "videoProfile";
 	public static String Param_Audio_Sample_Rate = "audioSR";
 	public static String Param_Audio_Channel_Count = "audioCh";
+	public static String Param_User_Name = "userName";
+	public static String Param_Password = "password";
+	public static String Param_QOS = "qos";
 	
 	/**
 	 * Returns concatenated context path without leading slashes. Normalizes guid.
@@ -40,7 +43,7 @@ public class Provision {
 	 * context / path
 	 */
 	private String guid;	 
-	
+
 	private String contextPath;
 	
 	private String streamName;
