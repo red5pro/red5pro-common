@@ -2,6 +2,7 @@ package com.red5pro.cluster.streams;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 
@@ -121,5 +122,20 @@ public class Provision {
 	public void setParameters(Map<String,Object> parameters) {
 		this.parameters = parameters;
 	}
-
+	@Override
+	public int hashCode(){
+		// can only be one stream instance on this path.
+	    return Objects.hashCode(new Object[]{this.contextPath,this.streamName});
+	}
+	@Override
+	public boolean equals(Object other){
+		if(other instanceof Provision){
+			Provision compare=(Provision) other;
+			// can only be one stream instance on this path.
+			if(compare.contextPath.equals(contextPath) && compare.streamName.equals(streamName)){
+				return true;
+			}
+		}
+		return false;
+	}
 }
