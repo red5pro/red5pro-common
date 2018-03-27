@@ -35,6 +35,10 @@ public interface ProfileLevelResolver {
 	 * @return priority level. return 0 for single/unknown bitrate, or priority level. 
 	 */
 	int getLevel(String context, String name);
-	
+	/**
+	 * Designates pattern added to stream names to separate the index number from the original name. 
+	 * @param pattern String pattern used prior to quality index.
+	 */
+	void setSpliteration(String pattern);
 
 }
