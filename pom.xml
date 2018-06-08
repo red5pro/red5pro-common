@@ -5,7 +5,7 @@
     <artifactId>red5pro-common</artifactId>
     <packaging>jar</packaging>
     <name>red5pro-common</name>
-    <version>4.5.8082-SNAPSHOT</version>
+    <version>4.6.5349-SNAPSHOT</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -50,10 +50,11 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
-        <red5.version>1.0.10-M3</red5.version>
-        <mina.version>2.0.16</mina.version>
+        <red5.version>1.0.10-M7</red5.version>
+        <mina.version>2.0.17</mina.version>
         <spring.version>4.3.2.RELEASE</spring.version>
         <httpcomponents.version>4.5.3</httpcomponents.version>
+        <gson.version>2.3.1</gson.version>
         <junit.version>4.12</junit.version>
     </properties>
     <distributionManagement>
@@ -163,6 +164,11 @@
             <artifactId>httpclient</artifactId>
             <version>${httpcomponents.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -10,32 +10,30 @@ package com.red5pro.cluster.streams;
  *
  */
 public class ExampleProfileResolver implements ProfileLevelResolver {
-	
-	private String spliterator = "_";;
 
-	public ExampleProfileResolver(){
-		ProfileLevelResolver.LevelResolvers.add(this);
-	}
-	
-	@Override
-	public int getLevel(String contect, String name) {
-		//Parse name to determine which bitrate level priority this stream is.
-		//lowest  name_3  
-		String[] parts = name.split(spliterator) ;
-		// last part should be integer.
-		int level = 0;
-		try{
-			level = Integer.parseInt( parts[parts.length-1] );
-		
-		}catch(NumberFormatException nfe){			
-		}
-		return level;
-	}
+    private String spliterator = "_";;
 
-	@Override
-	public void setSpliteration(String pattern) {
-		this.spliterator  = pattern;
-		
-	}
+    public ExampleProfileResolver() {
+        ProfileLevelResolver.levelResolvers.add(this);
+    }
+
+    @Override
+    public int getLevel(String contect, String name) {
+        //Parse name to determine which bitrate level priority this stream is.
+        //lowest  name_3  
+        String[] parts = name.split(spliterator);
+        // last part should be integer.
+        int level = 0;
+        try {
+            level = Integer.parseInt(parts[parts.length - 1]);
+        } catch (NumberFormatException nfe) {
+        }
+        return level;
+    }
+
+    @Override
+    public void setSpliteration(String pattern) {
+        this.spliterator = pattern;
+    }
 
 }

@@ -7,11 +7,13 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author Andy Shaules
  *
  */
-public interface LinkStateListener{
-	
-    public static CopyOnWriteArraySet<LinkStateListener> linkListeners = new CopyOnWriteArraySet<>();
-	
-	void originAck(String origin);		
-	void originClose(String host);
-	void edgeClose(String host);
+public interface LinkStateListener {
+
+    public static final CopyOnWriteArraySet<LinkStateListener> linkListeners = new CopyOnWriteArraySet<>();
+
+    void originAck(String origin);
+
+    void originClose(String host);
+
+    void edgeClose(String host);
 }
