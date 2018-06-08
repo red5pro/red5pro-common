@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -107,9 +107,29 @@ public class Provision {
         this.restrictions = restrictions;
         this.parameters = parameters;
     }
-    
+
     public String getGuid() {
         return guid;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public String getStreamName() {
+        return streamName;
+    }
+
+    public int getQualityLevel() {
+        return qualityLevel;
+    }
+
+    public Restrictions getRestrictions() {
+        return restrictions;
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
     }
 
     public List<Ingest> getPrimaries() {
@@ -126,26 +146,6 @@ public class Provision {
 
     public void setSecondaries(List<Ingest> secondaries) {
         this.secondaries = secondaries;
-    }
-
-    public Restrictions getRestrictions() {
-        return restrictions;
-    }
-
-    public String getContextPath() {
-        return contextPath;
-    }
-
-    public String getStreamName() {
-        return streamName;
-    }
-
-    public int getQualityLevel() {
-        return qualityLevel;
-    }
-
-    public Map<String, Object> getParameters() {
-        return parameters;
     }
 
     @Override
@@ -202,20 +202,24 @@ public class Provision {
             secondaries.add(iasJ);
         });
         ret.add("secondaries", secondaries);
-        return ret;        
+        return ret;
     }
-    
+
     @Override
     public String toString() {
         return "Provision [guid=" + guid + ", contextPath=" + contextPath + ", streamName=" + streamName + ", qualityLevel=" + qualityLevel + ", restrictions=" + restrictions + ", parameters=" + parameters + ", primaries=" + primaries + ", secondaries=" + secondaries + "]";
     }
 
-    public static Provision build(String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
-        return new Provision(contextPath, streamName, qualityLevel, restrictions, parameters);
+    public static Provision build(String guid, String contextPath, String streamName, int qualityLevel) {
+        return new Provision(guid, contextPath, streamName, qualityLevel, null, new HashMap<>());
     }
 
     public static Provision build(String guid, String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
         return new Provision(guid, contextPath, streamName, qualityLevel, restrictions, parameters);
+    }
+
+    public static Provision build(String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
+        return new Provision(makeGuid(contextPath, streamName), contextPath, streamName, qualityLevel, restrictions, parameters);
     }
 
     public static Provision build(JsonObject provObj) {
@@ -256,15 +260,10 @@ public class Provision {
                 secondaries.add(pi);
             }
         }
-        Provision prov;
-        if (guid.isEmpty()) {
-            prov = new Provision(contextPath, streamName, qualityLevel, rObj, parameters);
-        } else {
-            prov = new Provision(guid, contextPath, streamName, qualityLevel, rObj, parameters);
-        }
-        prov.setPrimaries(primaries);
-        prov.setSecondaries(secondaries);
-        return prov;
+        Provision provision = new Provision(guid, contextPath, streamName, qualityLevel, rObj, parameters);
+        provision.setPrimaries(primaries);
+        provision.setSecondaries(secondaries);
+        return provision;
     }
 
 }
