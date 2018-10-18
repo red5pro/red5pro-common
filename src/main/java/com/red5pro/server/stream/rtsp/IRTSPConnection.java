@@ -14,4 +14,11 @@ public interface IRTSPConnection {
 
     String getSessionId();
 
+    /**
+     * Apply a QoS value to the connection.
+     * 
+     * @param qos
+     */
+    void applyQoS(int qos);
+
 }

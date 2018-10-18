@@ -49,4 +49,11 @@ public interface IWebRTCConnection {
      */
     boolean isConnected();
 
+    /**
+     * Apply a QoS value to the connection.
+     * 
+     * @param qos
+     */
+    void applyQoS(int qos);
+
 }
