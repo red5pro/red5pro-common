@@ -180,12 +180,14 @@ public class Provision {
         }
         ret.add("parameters", parameters);
         JsonArray restrictions = new JsonArray();
-        for (String r : getRestrictions().getConditions()) {
-            JsonPrimitive element = new JsonPrimitive(r);
-            restrictions.add(element);
+        if (getRestrictions() != null) {
+            for (String r : getRestrictions().getConditions()) {
+                JsonPrimitive element = new JsonPrimitive(r);
+                restrictions.add(element);
+            }
+            ret.add("restrictions", restrictions);
+            ret.addProperty("isRestricted", getRestrictions().isRestricted());
         }
-        ret.add("restrictions", restrictions);
-        ret.addProperty("isRestricted", getRestrictions().isRestricted());
         JsonArray primaries = new JsonArray();
         getPrimaries().forEach(primary -> {
             JsonObject iasJ = new JsonObject();
