@@ -17,7 +17,7 @@ public interface IRTSPConnection {
     /**
      * Apply a QoS value to the connection.
      * 
-     * @param qos
+     * @param qos quality of service.
      */
     void applyQoS(int qos);
 

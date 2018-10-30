@@ -2,7 +2,7 @@ package com.red5pro.override.cauldron;
 
 public interface MIRVPreprocessor {
     /**
-     * Create an instance. <br /> Must call close to free the memory.
+     * Create an instance. <br > Must call close to free the memory.
      * @param outputs number of outputs.
      * @return unique pointer value or zero if error.
      */
@@ -10,14 +10,14 @@ public interface MIRVPreprocessor {
     /**
      * 
      * @param id pointer
-     * @return 1
+     * @return 1 no error
      */
     public long start(long id);
 
     /**
      * 
      * @param id pointer
-     * @return
+     * @return no error
      */
     public long close(long id);
 
@@ -34,11 +34,11 @@ public interface MIRVPreprocessor {
 
     /**
      * 
-     * @param guid module guid
+     * @param index index of process.
      * @param key module property 
      * @param value module property value
      * @param id pointer.
-     * @return
+     * @return no error
      */
     public int apply(int index, String key, String value, long id);
 }
