@@ -6,11 +6,10 @@ public interface IPreprocessorFactory {
     
     static final String BeanName = "ipreprocessorFactory";
     /**
-     * When called, call IProStream.usePreprocessor(clazz,params);<br>
+     * When called, use IProStream.usePreprocessor(clazz,params);<br>
      * Call with nulls for defaults. 
-     * Uses same parameters as mbr but with width/height of zero for canceling resize.<br>
-     * Provision.Param_Video_Bitrate =1000000 <br>
-     * @param stream stream to configure
+     * Uses same Provision parameters as mbr but with optionally width/height of zero for canceling resize.<br>
+     * @param stream stream to configure and scrub/re-key
      */
     void configure(IProStream stream);
 }
