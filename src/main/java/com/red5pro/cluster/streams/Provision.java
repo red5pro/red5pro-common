@@ -36,8 +36,35 @@ public class Provision {
     public static String Param_User_Name = "userName";
 
     public static String Param_Password = "password";
-
+    
     public static String Param_QOS = "qos";
+    
+    /**
+     * H264 param for MBR/Preprocessor.<br>
+     * H264 quantize value 
+     */
+    public static String Param_Video_QP_Min = "videoQPMin";
+    /**     
+     * H264 quantize value 
+     */
+    public static String Param_Video_QP_Max = "videoQPMax";
+    /**    
+     * max bitrate allowed
+     */
+    public static String Param_Video_BR_Max = "videoBRMax";
+    /**
+     * Re-encoded entropy cabac/calcv output Constrained baseline=0
+     */
+    public static String Param_Video_Enc_Profile = "videoEncProfile";
+    /**
+     * 0 bitrate, 1 quality
+     */
+    public static String Param_Video_Enc_Mode = "videoEncMode";
+    /**
+     * Key frame interval, by frame count. 
+     */
+    public static String Param_Video_Key = "videoKey";
+    
 
     /**
      * Returns concatenated context path without leading slashes. Normalizes guid.
