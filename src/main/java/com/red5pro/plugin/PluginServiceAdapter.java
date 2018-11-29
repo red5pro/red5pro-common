@@ -15,16 +15,16 @@ import org.springframework.core.io.Resource;
  */
 public class PluginServiceAdapter implements IPluginService {
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean handleRequest(Object... args) {
-        return false;
-    }
+	/** {@inheritDoc} */
+	@Override
+	public boolean handleRequest(Object... args) {
+		return false;
+	}
 
-    /** {@inheritDoc} */
-    @Override
-    public List<Resource> handleResourceRequest(Object... args) {
-        return Collections.emptyList();
-    }
+	/** {@inheritDoc} */
+	@Override
+	public List<Resource> handleResourceRequest(Object... args) {
+		return Collections.emptyList();
+	}
 
 }
