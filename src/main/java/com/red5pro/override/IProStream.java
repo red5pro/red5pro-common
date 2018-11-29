@@ -4,6 +4,7 @@
 package com.red5pro.override;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.stream.IBroadcastStream;
@@ -109,5 +110,11 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
      * @param handler the callee at stream-stop event.
      */
     void addTerminationEventListener(ProStreamTerminationEventListener handler);
-
+    /**
+     * 
+     * @param clazz processor class. Use null for default.
+     * @param params processor parameters. Use null for default.
+     */
+    void usePreprocessor(String clazz,Map<String,Object> params);
+    
 }
