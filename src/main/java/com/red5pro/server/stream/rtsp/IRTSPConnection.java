@@ -10,15 +10,16 @@ import org.apache.mina.core.session.IoSession;
  */
 public interface IRTSPConnection {
 
-    IoSession getIOSession();
+	IoSession getIOSession();
 
-    String getSessionId();
+	String getSessionId();
 
-    /**
-     * Apply a QoS value to the connection.
-     * 
-     * @param qos
-     */
-    void applyQoS(int qos);
+	/**
+	 * Apply a QoS value to the connection.
+	 * 
+	 * @param qos
+	 *            quality of service.
+	 */
+	void applyQoS(int qos);
 
 }

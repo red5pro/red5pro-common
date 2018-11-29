@@ -5,7 +5,7 @@
     <artifactId>red5pro-common</artifactId>
     <packaging>jar</packaging>
     <name>red5pro-common</name>
-    <version>5.3.8</version>
+    <version>5.3.9</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -51,7 +51,7 @@
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
         <red5.version>1.0.10-M7</red5.version>
-        <red5-websocket.version>1.16.13</red5-websocket.version>
+        <tomcatplugin.version>2.0.4</tomcatplugin.version>
         <mina.version>2.0.19</mina.version>
         <spring.version>4.3.12.RELEASE</spring.version>
         <httpcomponents.version>4.5.3</httpcomponents.version>
@@ -150,15 +150,9 @@
         </dependency>
         <dependency>
             <groupId>org.red5</groupId>
-            <artifactId>websocket</artifactId>
-            <version>${red5-websocket.version}</version>
+            <artifactId>tomcatplugin</artifactId>
+            <version>${tomcatplugin.version}</version>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <artifactId>mina-core</artifactId>
@@ -199,6 +193,30 @@
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
+            <!-- Project http://code.revelc.net/formatter-maven-plugin/ -->
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>2.7.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <configFile>../Red5Pro-formatter.xml</configFile>
+                    <!-- Enforce line-feed (linux,mac) line endings att -->
+                    <lineEnding>LF</lineEnding>
+                    <!-- Exclude xml and props files -->
+                    <excludes>
+                      <exclude>**/*.xml</exclude>
+                      <exclude>**/*.html</exclude>
+                      <exclude>**/*.properties</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.6.1</version>

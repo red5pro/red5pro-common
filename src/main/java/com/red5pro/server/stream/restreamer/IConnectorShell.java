@@ -4,6 +4,6 @@ import org.red5.server.api.stream.IStreamCapableConnection;
 
 public interface IConnectorShell extends IStreamCapableConnection {
 
-    Object[] getConnectCallParams();
+	Object[] getConnectCallParams();
 
 }
