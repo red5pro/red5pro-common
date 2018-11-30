@@ -70,8 +70,13 @@ public class VideoConstants {
 	public static final String BITRATE = "bitrate";
 
 	/**
-	 * The name of the format parameter which specifies the packetization mode f
-	 * H.264 RTP payload.
+	 * Frames-per-second key.
+	 */
+	public static final String FRAMES_PER_SECOND = "fps";
+
+	/**
+	 * The name of the format parameter which specifies the packetization mode for
+	 * an H.264 RTP payload.
 	 */
 	public static final String H264_PACKETIZATION_MODE_FMTP = "packetization-mode";
 
