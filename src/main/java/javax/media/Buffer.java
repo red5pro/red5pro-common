@@ -256,6 +256,8 @@ public class Buffer {
 	 */
 	private RTPCodecEnum codec = RTPCodecEnum.NONE;
 
+	private long rtcpBaseAge;
+
 	/**
 	 * Reset all instance properties / fields for re-use, except FORMAT.
 	 */
@@ -368,7 +370,6 @@ public class Buffer {
 		sequenceNumber = buffer.sequenceNumber;
 		flags = buffer.flags;
 		criticalFrame = buffer.criticalFrame;
-		// config = buffer.config;
 	}
 
 	/**
@@ -895,9 +896,9 @@ public class Buffer {
 
 	@Override
 	public String toString() {
-		return String.format("Buffer %s [timeStamp=%d, sequenceNumber=%d, keyframe=%b, last=%b]",
+		return String.format("Buffer %s [timeStamp=%d, sequenceNumber=%d, keyframe=%b, last=%b, length=%d]",
 				(codec.equals(RTPCodecEnum.NONE) ? "" : codec.name()), timeStamp, sequenceNumber, isKeyframe(),
-				isLastPacket());
+				isLastPacket(), length);
 	}
 
 	/**
@@ -930,6 +931,15 @@ public class Buffer {
 			this.id = id;
 			this.value = value;
 		}
+	}
+
+	public void setStreamCreation(long rtcpBaseAge) {
+		this.rtcpBaseAge = rtcpBaseAge;
+
+	}
+
+	public long getStreamCreation() {
+		return rtcpBaseAge;
 	}
 
 }
