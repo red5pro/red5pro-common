@@ -12,7 +12,7 @@ Including in your maven pom is as easy as adding this xml to your dependencies
 <dependency>
     <groupId>com.red5pro</groupId>
     <artifactId>red5pro-common</artifactId>
-    <version>5.3.11</version>
+    <version>5.3.12</version>
     <scope>provided</scope>
 </dependency>
 ```

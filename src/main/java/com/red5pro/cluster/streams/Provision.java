@@ -207,7 +207,13 @@ public class Provision {
 		JsonObject parameters = new JsonObject();
 		while (iter.hasNext()) {
 			Entry<String, Object> entry = iter.next();
-			parameters.addProperty(entry.getKey(), String.valueOf(entry.getValue()));
+			if (entry.getValue() instanceof Number) {
+				parameters.addProperty(entry.getKey(), (Number) entry.getValue());
+			} else if (entry.getValue() instanceof String) {
+				parameters.addProperty(entry.getKey(), (String) entry.getValue());
+			} else {
+				parameters.addProperty(entry.getKey(), String.valueOf(entry.getValue()));
+			}
 		}
 		ret.add("parameters", parameters);
 		JsonArray restrictions = new JsonArray();
