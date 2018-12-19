@@ -60,6 +60,10 @@ public class AudioConstants {
 
 	public static final String AAC_RTMP = AAC + "/rtmp";
 
+	public static final String AAC_MODE_FMTP = "mode";
+
+	public static final String AAC_PROFILE_LEVEL_ID_FMTP = "profile-level-id";
+
 	/**
 	 * The list of well-known audio sample rates.
 	 */

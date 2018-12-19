@@ -17,14 +17,16 @@ public class ConnectionUtils {
 		RTMP("org.red5.server.net.rtmp.RTMPMinaConnection"),
 		// RTMPT connection
 		RTMPT("org.red5.server.net.rtmpt.RTMPTConnection"),
-		// Red5 Pro RTSP connection
+		// RTSP connection
 		RTSP("com.red5pro.server.stream.rtsp.RTSPMinaConnection"),
-		// Red5 Pro SecondScreen connection
+		// SecondScreen connection
 		SECOND_SCREEN_MULTI("com.red5pro.server.secondscreen.net.MultiscreenMinaConnection"),
-		// Red5 Pro SecondScreen via WebSocket connection
+		// SecondScreen via WebSocket connection
 		SECOND_SCREEN_WS("com.red5pro.server.html5.websockets.net.WebsocketsMinaConnection"),
-		// Red5 Pro WebRTC connection
-		RTC("com.red5pro.webrtc.RTCConnection");
+		// WebRTC connection
+		RTC("com.red5pro.webrtc.RTCConnection"),
+		// MPEG-TS connection
+		MPEGTS("com.red5pro.mpegts.MPEGTSConnection");
 
 		final String className;
 
@@ -104,6 +106,18 @@ public class ConnectionUtils {
 	 */
 	public static boolean isRTC(IConnection connection) {
 		return ConnectionType.RTC.equals(getConnectionTypeEnum(connection));
+	}
+
+	/**
+	 * Returns boolean true if connection is a MPEGTSConnection object, false
+	 * otherwise
+	 * 
+	 * @param connection
+	 *            IConnection
+	 * @return true if MPEGTS and false otherwise
+	 */
+	public static boolean isMPEGTS(IConnection connection) {
+		return ConnectionType.MPEGTS.equals(getConnectionTypeEnum(connection));
 	}
 
 	/*
