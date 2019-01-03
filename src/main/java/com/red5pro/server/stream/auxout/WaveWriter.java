@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class WaveWriter implements AuxOut {
-
+    
 	private static final int Format = ('P') | ('C' << 8) | ('M' << 16) | (' ' << 24);
 
 	private static final int HEADER_LENGTH = 44;
@@ -45,6 +45,15 @@ public class WaveWriter implements AuxOut {
 	}
 
 	public void packetReceived(WaveSamples samples) {
+	    if(this.channels==0){
+	        this.channels=samples.channels;
+	    }
+	    if(this.rate==0){
+	        this.rate=samples.rate;
+	    }
+	    if(this.bitsPerSample==0){
+	        this.bitsPerSample=samples.bitsPerSample;
+	    }
 		soundin.add(samples);
 	}
 
@@ -79,18 +88,10 @@ public class WaveWriter implements AuxOut {
 		}
 	}
 
-	private void doFlush() {
-
+	private void doFlush() {	    
 		WaveSamples samples;
 		while ((samples = soundout.poll()) != null) {
 			byte[] data = samples.samples;
-			// convert to little endian
-			byte tmp;
-			for (int i = 0; i < data.length; i += 2) {
-				tmp = data[i + 1];
-				data[i + 1] = data[i];
-				data[i] = tmp;
-			}
 			try {
 				bytesWritten += data.length;
 				out.write(data, 0, data.length);
@@ -101,9 +102,7 @@ public class WaveWriter implements AuxOut {
 
 	public void stop() {
 		this.doRun = false;
-
 		try {
-
 			future.get(500, TimeUnit.MILLISECONDS);
 
 		} catch (Exception e) {
@@ -151,8 +150,7 @@ public class WaveWriter implements AuxOut {
 	}
 
 	@Override
-	public int getBitsPerSample() {
-		// TODO Auto-generated method stub
+	public int getBitsPerSample() {		
 		return bitsPerSample;
 	}
 }
