@@ -17,6 +17,7 @@ import org.red5.server.net.rtmp.event.Notify;
 import com.red5pro.override.api.ProStreamTerminationEventListener;
 import com.red5pro.override.cauldron.ProcessConfiguration;
 import com.red5pro.override.cauldron.brews.Potion;
+import com.red5pro.server.stream.auxout.AuxOut;
 
 /**
  * Red5 Pro server-side stream.
@@ -56,6 +57,7 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
 	 */
 	void stopRecording();
 
+	void addAuxOut(AuxOut audio);
 	/**
 	 * Sets the guid of the native module and queue of 'Ingredients'. <br>
 	 * Use within an implementation of MediaProcessorAware streamProcessorStart
