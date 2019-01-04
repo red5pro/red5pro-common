@@ -9,7 +9,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 public class WaveWriter implements AuxOut {
-    
+	/**
+	 * Format of decoded auxiliary out. Currently only pcm supported though aux
+	 * interface.
+	 */
 	private static final int Format = ('P') | ('C' << 8) | ('M' << 16) | (' ' << 24);
 
 	private static final int HEADER_LENGTH = 44;
@@ -18,20 +21,69 @@ public class WaveWriter implements AuxOut {
 
 	private static final long WAVE_FMT = 6287401410857104416l; // 'WAVEfmt '
 
-	private static final int DATA = 1684108385; // 'data'
+	public static final short WAVE_FORMAT_PCM = 0x0001;
 
+	public static final short WAVE_FORMAT_ALAW = 0x0006;
+
+	public static final short WAVE_FORMAT_MULAW = 0x0007;
+
+	private static final int DATA = 1684108385; // 'data'
+	/**
+	 * Number of channels requested in PCM
+	 */
 	private int channels;
+	/**
+	 * Sample rate requested in PCM.
+	 */
 	private int rate;
+	/**
+	 * Samples will always be received as 16 bits
+	 */
 	private int bitsPerSample;
+	/**
+	 * Count of cached samples.
+	 */
 	private int segmentWritten;
+	/**
+	 * wave file destination.
+	 */
 	private RandomAccessFile out;
+	/**
+	 * File size
+	 */
 	private int bytesWritten;
+	/**
+	 * Engine
+	 */
 	private ExecutorService runner = Executors.newFixedThreadPool(1);
+	/**
+	 * To join at stop.
+	 */
 	private Future<?> future;
+	/**
+	 * Duration cached between disk writes.
+	 */
+	private int duration = 1;
+
 	private boolean doRun = true;
+
 	private LinkedBlockingQueue<WaveSamples> soundin = new LinkedBlockingQueue<WaveSamples>();
+
 	private LinkedBlockingQueue<WaveSamples> soundout = new LinkedBlockingQueue<WaveSamples>();
 
+	/**
+	 * Construct a wave writer and specify the desired sample rate, channel count,
+	 * and bit depth. Use zeros to bypass resampling.
+	 * 
+	 * @param name
+	 *            full file path.
+	 * @param chan
+	 *            number of channels.
+	 * @param rate
+	 *            sample rate.
+	 * @param bitsPerSample
+	 *            bit depth.
+	 */
 	public WaveWriter(String name, int chan, int rate, int bitsPerSample) {
 		this.channels = chan;
 		this.rate = rate;
@@ -43,17 +95,27 @@ public class WaveWriter implements AuxOut {
 		} catch (IOException e) {
 		}
 	}
-
+	/**
+	 * Receive decoded PCMs
+	 */
 	public void packetReceived(WaveSamples samples) {
-	    if(this.channels==0){
-	        this.channels=samples.channels;
-	    }
-	    if(this.rate==0){
-	        this.rate=samples.rate;
-	    }
-	    if(this.bitsPerSample==0){
-	        this.bitsPerSample=samples.bitsPerSample;
-	    }
+		if (this.channels == 0) {
+			this.channels = samples.channels;
+		}
+		if (this.rate == 0) {
+			this.rate = samples.rate;
+		}
+		// samples will always be 16 bits depth.
+		if (this.bitsPerSample == 0) {
+			this.bitsPerSample = samples.bitsPerSample;
+		} else {
+			// so if you want 8bit ulaw/alaw, do it here.
+			// If alaw/ulaw, change the WAVE_FORMAT_PCM at 'close'
+			if (this.bitsPerSample == 8) {
+				// TODO
+			}
+		}
+
 		soundin.add(samples);
 	}
 
@@ -82,13 +144,13 @@ public class WaveWriter implements AuxOut {
 		int sampleCount = (data.samples.length / (bitsPerSample / 8)) / data.channels;
 		segmentWritten += sampleCount;
 		soundout.add(data);
-		if (segmentWritten >= rate) {// 1 second worth
+		if (segmentWritten >= rate * duration) {
 			doFlush();
 			segmentWritten = 0;
 		}
 	}
 
-	private void doFlush() {	    
+	private void doFlush() {
 		WaveSamples samples;
 		while ((samples = soundout.poll()) != null) {
 			byte[] data = samples.samples;
@@ -111,14 +173,14 @@ public class WaveWriter implements AuxOut {
 		}
 	}
 
-	public void close() throws IOException {
+	private void close() throws IOException {
 		out.seek(0);
 		final int bytesPerSec = (bitsPerSample + 7) / 8;
 		out.writeInt(RIFF); // wave label
 		out.writeInt(Integer.reverseBytes(bytesWritten + 36)); // length in bytes without header
 		out.writeLong(WAVE_FMT);
 		out.writeInt(Integer.reverseBytes(16)); // length of pcm format declaration area
-		out.writeShort(Short.reverseBytes((short) 1)); // is PCM
+		out.writeShort(Short.reverseBytes((short) WAVE_FORMAT_PCM)); // is PCM
 		out.writeShort(Short.reverseBytes((short) channels)); // number of channels
 		out.writeInt(Integer.reverseBytes(rate)); // sample rate
 		out.writeInt(Integer.reverseBytes(rate * channels * bytesPerSec)); // bytes per second
@@ -149,8 +211,16 @@ public class WaveWriter implements AuxOut {
 		return Format;
 	}
 
-	@Override
-	public int getBitsPerSample() {		
+	public int getBitsPerSample() {
 		return bitsPerSample;
+	}
+	/**
+	 * Set the file write frequency in seconds. Default is 1 second.
+	 * 
+	 * @param duration
+	 *            between file writes.
+	 */
+	public void setFlushDuration(int duration) {
+		this.duration = duration;
 	}
 }
