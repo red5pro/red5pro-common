@@ -51,7 +51,7 @@ public class WaveWriter implements AuxOut {
 	/**
 	 * File size
 	 */
-	private int bytesWritten;
+	private long bytesWritten;
 	/**
 	 * Engine
 	 */
@@ -177,7 +177,7 @@ public class WaveWriter implements AuxOut {
 		out.seek(0);
 		final int bytesPerSec = (bitsPerSample + 7) / 8;
 		out.writeInt(RIFF); // wave label
-		out.writeInt(Integer.reverseBytes(bytesWritten + 36)); // length in bytes without header
+		out.writeInt(Integer.reverseBytes((int)((bytesWritten + 36)&0xFFFFFFFFL))); // length in bytes without header
 		out.writeLong(WAVE_FMT);
 		out.writeInt(Integer.reverseBytes(16)); // length of pcm format declaration area
 		out.writeShort(Short.reverseBytes((short) WAVE_FORMAT_PCM)); // is PCM
@@ -187,7 +187,7 @@ public class WaveWriter implements AuxOut {
 		out.writeShort(Short.reverseBytes((short) (channels * bytesPerSec))); // bytes per sample time
 		out.writeShort(Short.reverseBytes((short) bitsPerSample)); // bits per sample
 		out.writeInt(DATA); // data section label
-		out.writeInt(Integer.reverseBytes(bytesWritten)); // length of raw pcm data in bytes
+		out.writeInt(Integer.reverseBytes((int)(bytesWritten&0xFFFFFFFFL))); // length of raw pcm data in bytes
 		out.close();
 	}
 
@@ -213,6 +213,9 @@ public class WaveWriter implements AuxOut {
 
 	public int getBitsPerSample() {
 		return bitsPerSample;
+	}
+	public long getSize(){
+	    return bytesWritten+44;
 	}
 	/**
 	 * Set the file write frequency in seconds. Default is 1 second.
