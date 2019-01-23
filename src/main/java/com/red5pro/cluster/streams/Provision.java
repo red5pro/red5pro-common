@@ -1,315 +1,226 @@
 package com.red5pro.cluster.streams;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.red5pro.util.ProvisionAdapter;
 
 /**
+ * Provision model object.
  * 
  * @author Andy Shaules
+ * @author Paul Gregoire
  */
 public class Provision {
 
-	public static String Param_Video_Bitrate = "videoBR";
+    public final static String Param_Video_Bitrate = "videoBR";
 
-	public static String Param_Audio_Bitrate = "audioBR";
+    public final static String Param_Audio_Bitrate = "audioBR";
 
-	public static String Param_Video_Height = "videoHeight";
+    public final static String Param_Video_Height = "videoHeight";
 
-	public static String Param_Video_Width = "videoWidth";
+    public final static String Param_Video_Width = "videoWidth";
 
-	public static String Param_Video_Profile = "videoProfile";
+    public final static String Param_Video_Profile = "videoProfile";
 
-	public static String Param_Audio_Sample_Rate = "audioSR";
+    public final static String Param_Audio_Sample_Rate = "audioSR";
 
-	public static String Param_Audio_Channel_Count = "audioCh";
+    public final static String Param_Audio_Channel_Count = "audioCh";
 
-	public static String Param_User_Name = "userName";
+    public final static String Param_User_Name = "userName";
 
-	public static String Param_Password = "password";
+    public final static String Param_Password = "password";
 
-	public static String Param_QOS = "qos";
+    public final static String Param_QOS = "qos";
 
-	/**
-	 * H264 param for MBR/Preprocessor.<br>
-	 * H264 quantize value
-	 */
-	public static String Param_Video_QP_Min = "videoQPMin";
-	/**
-	 * H264 quantize value
-	 */
-	public static String Param_Video_QP_Max = "videoQPMax";
-	/**
-	 * max bitrate allowed
-	 */
-	public static String Param_Video_BR_Max = "videoBRMax";
-	/**
-	 * Re-encoded entropy cabac/calcv output Constrained baseline=0
-	 */
-	public static String Param_Video_Enc_Profile = "videoEncProfile";
-	/**
-	 * 0 bitrate, 1 quality
-	 */
-	public static String Param_Video_Enc_Mode = "videoEncMode";
-	/**
-	 * Key frame interval, by frame count.
-	 */
-	public static String Param_Video_Key = "videoKey";
+    /**
+     * H264 param for MBR/Preprocessor.<br>
+     * H264 quantize value
+     */
+    public final static String Param_Video_QP_Min = "videoQPMin";
 
-	/**
-	 * Returns concatenated context path without leading slashes. Normalizes guid.
-	 * 
-	 * @param context
-	 *            app scope
-	 * @param name
-	 *            stream name
-	 * @return String with leading slash removed from context, concatenated with "/"
-	 *         and name.
-	 */
-	public static String makeGuid(String context, String name) {
-		if (context.startsWith("/")) {
-			context = context.substring(1);
-		}
-		if (!context.endsWith("/")) {
-			context = context.concat("/");
-		}
-		if (name.startsWith("/")) {
-			name = name.substring(1);
-		}
-		return context.concat(name);
-	}
+    /**
+     * H264 quantize value
+     */
+    public final static String Param_Video_QP_Max = "videoQPMax";
 
-	private static Object interpret(JsonElement elem) {
-		if (elem.isJsonPrimitive()) {
-			JsonPrimitive jp = elem.getAsJsonPrimitive();
-			if (jp.isNumber()) {
-				return jp.getAsInt();
-			} else if (jp.isString()) {
-				return jp.getAsString();
-			}
-		}
-		return null;
-	}
+    /**
+     * max bitrate allowed
+     */
+    public final static String Param_Video_BR_Max = "videoBRMax";
 
-	/**
-	 * context / path
-	 */
-	private final String guid;
+    /**
+     * Re-encoded entropy cabac/calcv output Constrained baseline=0
+     */
+    public final static String Param_Video_Enc_Profile = "videoEncProfile";
 
-	private final String contextPath;
+    /**
+     * 0 bitrate, 1 quality
+     */
+    public final static String Param_Video_Enc_Mode = "videoEncMode";
 
-	private final String streamName;
+    /**
+     * Key frame interval, by frame count.
+     */
+    public final static String Param_Video_Key = "videoKey";
 
-	private final int qualityLevel;
+    /**
+     * Gson for serialize and deserialize ops.
+     */
+    private static Gson gson;
 
-	private final Restrictions restrictions;
+    static {
+        // construct the builder that we'll re-use; it is thread-safe
+        gson = new GsonBuilder().registerTypeAdapter(Provision.class, new ProvisionAdapter()).create();
+    }
 
-	private final Map<String, Object> parameters;
+    /**
+     * context / path
+     */
+    private final String guid;
 
-	private List<Ingest> primaries;
+    private final String contextPath;
 
-	private List<Ingest> secondaries;
+    private final String streamName;
 
-	private Provision(String contextPath, String streamName, int qualityLevel, Restrictions restrictions,
-			Map<String, Object> parameters) {
-		this.guid = makeGuid(contextPath, streamName);
-		this.contextPath = contextPath;
-		this.streamName = streamName;
-		this.qualityLevel = qualityLevel;
-		this.restrictions = restrictions;
-		this.parameters = parameters;
-	}
+    private final int qualityLevel;
 
-	private Provision(String guid, String contextPath, String streamName, int qualityLevel, Restrictions restrictions,
-			Map<String, Object> parameters) {
-		this.guid = guid;
-		this.contextPath = contextPath;
-		this.streamName = streamName;
-		this.qualityLevel = qualityLevel;
-		this.restrictions = restrictions;
-		this.parameters = parameters;
-	}
+    private final Restrictions restrictions;
 
-	public String getGuid() {
-		return guid;
-	}
+    private final Map<String, Object> parameters;
 
-	public String getContextPath() {
-		return contextPath;
-	}
+    private List<Ingest> primaries;
 
-	public String getStreamName() {
-		return streamName;
-	}
+    private List<Ingest> secondaries;
 
-	public int getQualityLevel() {
-		return qualityLevel;
-	}
+    private Provision(String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
+        this.guid = makeGuid(contextPath, streamName);
+        this.contextPath = contextPath;
+        this.streamName = streamName;
+        this.qualityLevel = qualityLevel;
+        this.restrictions = restrictions;
+        this.parameters = parameters;
+    }
 
-	public Restrictions getRestrictions() {
-		return restrictions;
-	}
+    private Provision(String guid, String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
+        this.guid = guid;
+        this.contextPath = contextPath;
+        this.streamName = streamName;
+        this.qualityLevel = qualityLevel;
+        this.restrictions = restrictions;
+        this.parameters = parameters;
+    }
 
-	public Map<String, Object> getParameters() {
-		return parameters;
-	}
+    public String getGuid() {
+        return guid;
+    }
 
-	public List<Ingest> getPrimaries() {
-		return primaries;
-	}
+    public String getContextPath() {
+        return contextPath;
+    }
 
-	public void setPrimaries(List<Ingest> primaries) {
-		this.primaries = primaries;
-	}
+    public String getStreamName() {
+        return streamName;
+    }
 
-	public List<Ingest> getSecondaries() {
-		return secondaries;
-	}
+    public int getQualityLevel() {
+        return qualityLevel;
+    }
 
-	public void setSecondaries(List<Ingest> secondaries) {
-		this.secondaries = secondaries;
-	}
+    public Restrictions getRestrictions() {
+        return restrictions;
+    }
 
-	@Override
-	public int hashCode() {
-		// can only be one stream instance on this path.
-		return Objects.hashCode(new Object[]{this.contextPath, this.streamName});
-	}
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
 
-	@Override
-	public boolean equals(Object other) {
-		if (other instanceof Provision) {
-			Provision compare = (Provision) other;
-			// can only be one stream instance on this path.
-			if (compare.contextPath.equals(contextPath) && compare.streamName.equals(streamName)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public List<Ingest> getPrimaries() {
+        return primaries;
+    }
 
-	public JsonObject toJson() {
-		JsonObject ret = new JsonObject();
-		ret.addProperty("guid", getGuid());
-		ret.addProperty("context", getContextPath());
-		ret.addProperty("name", getStreamName());
-		ret.addProperty("level", getQualityLevel());
-		Iterator<Entry<String, Object>> iter = getParameters().entrySet().iterator();
-		JsonObject parameters = new JsonObject();
-		while (iter.hasNext()) {
-			Entry<String, Object> entry = iter.next();
-			if (entry.getValue() instanceof Number) {
-				parameters.addProperty(entry.getKey(), (Number) entry.getValue());
-			} else if (entry.getValue() instanceof String) {
-				parameters.addProperty(entry.getKey(), (String) entry.getValue());
-			} else {
-				parameters.addProperty(entry.getKey(), String.valueOf(entry.getValue()));
-			}
-		}
-		ret.add("parameters", parameters);
-		JsonArray restrictions = new JsonArray();
-		if (getRestrictions() != null) {
-			for (String r : getRestrictions().getConditions()) {
-				JsonPrimitive element = new JsonPrimitive(r);
-				restrictions.add(element);
-			}
-			ret.add("restrictions", restrictions);
-			ret.addProperty("isRestricted", getRestrictions().isRestricted());
-		}
-		JsonArray primaries = new JsonArray();
-		getPrimaries().forEach(primary -> {
-			JsonObject iasJ = new JsonObject();
-			iasJ.addProperty("host", primary.getHost());
-			iasJ.addProperty("port", primary.getPort());
-			primaries.add(iasJ);
-		});
-		ret.add("primaries", primaries);
-		JsonArray secondaries = new JsonArray();
-		getSecondaries().forEach(secondary -> {
-			JsonObject iasJ = new JsonObject();
-			iasJ.addProperty("host", secondary.getHost());
-			iasJ.addProperty("port", secondary.getPort());
-			secondaries.add(iasJ);
-		});
-		ret.add("secondaries", secondaries);
-		return ret;
-	}
+    public void setPrimaries(List<Ingest> primaries) {
+        this.primaries = primaries;
+    }
 
-	@Override
-	public String toString() {
-		return "Provision [guid=" + guid + ", contextPath=" + contextPath + ", streamName=" + streamName
-				+ ", qualityLevel=" + qualityLevel + ", restrictions=" + restrictions + ", parameters=" + parameters
-				+ ", primaries=" + primaries + ", secondaries=" + secondaries + "]";
-	}
+    public List<Ingest> getSecondaries() {
+        return secondaries;
+    }
 
-	public static Provision build(String guid, String contextPath, String streamName, int qualityLevel) {
-		return new Provision(guid, contextPath, streamName, qualityLevel, null, new HashMap<>());
-	}
+    public void setSecondaries(List<Ingest> secondaries) {
+        this.secondaries = secondaries;
+    }
 
-	public static Provision build(String guid, String contextPath, String streamName, int qualityLevel,
-			Restrictions restrictions, Map<String, Object> parameters) {
-		return new Provision(guid, contextPath, streamName, qualityLevel, restrictions, parameters);
-	}
+    @Override
+    public int hashCode() {
+        // can only be one stream instance on this path.
+        return Objects.hashCode(new Object[] { this.contextPath, this.streamName });
+    }
 
-	public static Provision build(String contextPath, String streamName, int qualityLevel, Restrictions restrictions,
-			Map<String, Object> parameters) {
-		return new Provision(makeGuid(contextPath, streamName), contextPath, streamName, qualityLevel, restrictions,
-				parameters);
-	}
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Provision) {
+            Provision compare = (Provision) other;
+            // can only be one stream instance on this path.
+            if (compare.contextPath.equals(contextPath) && compare.streamName.equals(streamName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public static Provision build(JsonObject provObj) {
-		String guid = provObj.get("guid").getAsString();
-		String contextPath = provObj.get("context").getAsString();
-		String streamName = provObj.get("name").getAsString();
-		int qualityLevel = provObj.get("level").getAsInt();
-		Restrictions rObj = null;
-		if (provObj.has("restrictions")) {
-			JsonArray rest = provObj.get("restrictions").getAsJsonArray();
-			String[] reps = new String[rest.size()];
-			int i = 0;
-			for (JsonElement match : rest) {
-				reps[i++] = match.getAsString();
-			}
-			rObj = Restrictions.build(provObj.get("isRestricted").getAsBoolean(), reps);
-		}
-		Map<String, Object> parameters = new HashMap<>();
-		if (provObj.has("parameters")) {
-			JsonObject params = provObj.get("parameters").getAsJsonObject();
-			for (Entry<String, JsonElement> param : params.entrySet()) {
-				parameters.put(param.getKey(), interpret(param.getValue()));
-			}
-		}
-		List<Ingest> primaries = new ArrayList<>();
-		if (provObj.has("primaries")) {
-			JsonArray params = provObj.get("primaries").getAsJsonArray();
-			for (JsonElement param : params) {
-				Ingest pi = Ingest.build(param.getAsJsonObject().get("host").getAsString(),
-						param.getAsJsonObject().get("port").getAsInt());
-				primaries.add(pi);
-			}
-		}
-		List<Ingest> secondaries = new ArrayList<>();
-		if (provObj.has("secondaries")) {
-			JsonArray params = provObj.get("secondaries").getAsJsonArray();
-			for (JsonElement param : params) {
-				Ingest pi = Ingest.build(param.getAsJsonObject().get("host").getAsString(),
-						param.getAsJsonObject().get("port").getAsInt());
-				secondaries.add(pi);
-			}
-		}
-		Provision provision = new Provision(guid, contextPath, streamName, qualityLevel, rObj, parameters);
-		provision.setPrimaries(primaries);
-		provision.setSecondaries(secondaries);
-		return provision;
-	}
+    @Override
+    public String toString() {
+        return "Provision [guid=" + guid + ", contextPath=" + contextPath + ", streamName=" + streamName + ", qualityLevel=" + qualityLevel + ", restrictions=" + restrictions + ", parameters=" + parameters + ", primaries=" + primaries + ", secondaries=" + secondaries + "]";
+    }
+
+    /**
+     * Returns concatenated context path without leading slashes. Normalizes guid.
+     * 
+     * @param context
+     *            app scope
+     * @param name
+     *            stream name
+     * @return String with leading slash removed from context, concatenated with "/"
+     *         and name.
+     */
+    public static String makeGuid(String context, String name) {
+        if (context.startsWith("/")) {
+            context = context.substring(1);
+        }
+        if (!context.endsWith("/")) {
+            context = context.concat("/");
+        }
+        if (name.startsWith("/")) {
+            name = name.substring(1);
+        }
+        return context.concat(name);
+    }
+
+    /**
+     * Returns a Gson instance based on the Provision enabled GsonBuilder.
+     * 
+     * @return Gson instance
+     */
+    public static Gson getGson() {
+        // Gson is thread-safe
+        return gson;
+    }
+    
+    public static Provision build(String guid, String contextPath, String streamName, int qualityLevel) {
+        return new Provision(guid, contextPath, streamName, qualityLevel, null, new HashMap<>());
+    }
+
+    public static Provision build(String guid, String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
+        return new Provision(guid, contextPath, streamName, qualityLevel, restrictions, parameters);
+    }
+
+    public static Provision build(String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
+        return new Provision(makeGuid(contextPath, streamName), contextPath, streamName, qualityLevel, restrictions, parameters);
+    }
 
 }
