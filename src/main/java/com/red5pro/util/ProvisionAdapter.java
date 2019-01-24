@@ -21,7 +21,8 @@ import com.red5pro.cluster.streams.Provision;
 import com.red5pro.cluster.streams.Restrictions;
 
 /**
- * Provides serialize and deserialization for Provision model objects using Gson.
+ * Provides serialize and deserialization for Provision model objects using
+ * Gson.
  * 
  * @author Paul Gregoire
  */
