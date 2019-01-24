@@ -210,7 +210,7 @@ public class Provision {
         // Gson is thread-safe
         return gson;
     }
-    
+
     public static Provision build(String guid, String contextPath, String streamName, int qualityLevel) {
         return new Provision(guid, contextPath, streamName, qualityLevel, null, new HashMap<>());
     }
