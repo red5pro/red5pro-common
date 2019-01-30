@@ -82,6 +82,8 @@ public class VideoConstants {
 
 	public static final String H264_SPROP_PARAMETER_SETS_FMTP = "sprop-parameter-sets";
 
+	public static final String H264_PROFILE_LEVEL_ID_FMTP = "profile-level-id";
+
 	/**
 	 * Determines whether two sets of format parameters match in the context of a
 	 * specific encoding.
