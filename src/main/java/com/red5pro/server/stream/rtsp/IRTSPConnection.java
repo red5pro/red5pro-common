@@ -12,13 +12,13 @@ import com.red5pro.server.stream.IoSessionAware;
  */
 public interface IRTSPConnection extends IoSessionAware {
 
-    /**
-     * Use IoSessionAware.getIoSession().
-     * 
-     * @return session
-     */
-    @Deprecated
-    IoSession getIOSession();
+	/**
+	 * Use IoSessionAware.getIoSession().
+	 * 
+	 * @return session
+	 */
+	@Deprecated
+	IoSession getIOSession();
 
 	String getSessionId();
 
