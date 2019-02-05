@@ -1,11 +1,13 @@
 package com.red5pro.server.stream.mpegts;
 
+import com.red5pro.server.stream.IoSessionAware;
+
 /**
  * Base interface for an MPEG-TS connection.
  * 
  * @author Paul Gregoire (paul@infrared5.com)
  */
-public interface IMPEGTSConnection {
+public interface IMPEGTSConnection extends IoSessionAware {
 
 	/**
 	 * From RTMPConnection / IConnection

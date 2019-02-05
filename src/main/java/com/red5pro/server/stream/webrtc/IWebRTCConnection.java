@@ -2,12 +2,14 @@ package com.red5pro.server.stream.webrtc;
 
 import org.red5.net.websocket.WebSocketConnection;
 
+import com.red5pro.server.stream.IoSessionAware;
+
 /**
  * Base interface for WebRTC connection.
  * 
  * @author Paul Gregoire (paul@infrared5.com)
  */
-public interface IWebRTCConnection {
+public interface IWebRTCConnection extends IoSessionAware {
 
 	/**
 	 * Returns the signal channel for the connection.
