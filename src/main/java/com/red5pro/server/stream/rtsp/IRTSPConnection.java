@@ -12,6 +12,8 @@ import com.red5pro.server.stream.IoSessionAware;
  */
 public interface IRTSPConnection extends IoSessionAware {
 
+	public final static int fourCC = 'r' | ('t' << 8) | ('s' << 16) | ('p' << 24);
+
 	/**
 	 * Use IoSessionAware.getIoSession().
 	 * 

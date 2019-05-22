@@ -11,6 +11,8 @@ import com.red5pro.server.stream.IoSessionAware;
  */
 public interface IWebRTCConnection extends IoSessionAware {
 
+	public final static int fourCC = 'r' | ('t' << 8) | ('c' << 16) | (' ' << 24);
+
 	/**
 	 * Returns the signal channel for the connection.
 	 * 
