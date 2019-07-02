@@ -48,7 +48,7 @@ public class YUVFormat extends VideoFormat {
 	/** The YUV format type */
 	protected int yuvType = NOT_SPECIFIED;
 
-	/** Length of a row of Y values. Would be >= width of the frame. */
+	/** Length of a row of Y values. Would be &gt;= width of the frame. */
 	protected int strideY = NOT_SPECIFIED;
 
 	/** Length of a row of U or V values. */

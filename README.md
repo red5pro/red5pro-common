@@ -16,7 +16,7 @@ Including in your maven pom is as easy as adding this xml to your dependencies
 ```
 
 #### Anonymous Access
-For *public* access to the artifacts, you'll need to modify your Maven `settings.xml` or use the example below:
+For *public* access to the artifacts, you'll need to modify your Maven `.m2/settings.xml` or use the example below:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -64,6 +64,7 @@ For *public* access to the artifacts, you'll need to modify your Maven `settings
   </activeProfiles>
 </settings>
 ```
+The `.m2` directory is located within your home directory, unless otherwise configured.
 
 
 #### Deploy to Artifactory

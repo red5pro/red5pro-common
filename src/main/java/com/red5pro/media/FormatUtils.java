@@ -82,6 +82,12 @@ public class FormatUtils {
 
 	/**
 	 * Is a a subclass of b? Strict.
+	 * 
+	 * @param a
+	 *            class a
+	 * @param b
+	 *            class b
+	 * @return true if subclass and false otherwise
 	 */
 	public static boolean isSubclass(Class<?> a, Class<?> b) {
 		if (a == b)

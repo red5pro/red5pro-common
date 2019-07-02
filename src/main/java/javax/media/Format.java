@@ -212,6 +212,8 @@ public class Format implements Cloneable, Serializable {
 	 * Checks if the encodings of both format objects are the same. Its faster than
 	 * calling String.equalsIgnoreCase to compare the two encodings.
 	 *
+	 * @param other
+	 *            format to check
 	 * @return true if the encodings are the same, false otherwise.
 	 */
 	public boolean isSameEncoding(Format other) {
@@ -243,7 +245,9 @@ public class Format implements Cloneable, Serializable {
 	/**
 	 * Checks if the encoding of this format is same as the parameter. Its faster
 	 * than calling String.equalsIgnoreCase to compare the two encodings.
-	 *
+	 * 
+	 * @param encoding
+	 *            encoding to check
 	 * @return true if the encodings are the same, false otherwise.
 	 */
 	public boolean isSameEncoding(String encoding) {
