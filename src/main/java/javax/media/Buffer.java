@@ -16,10 +16,6 @@ import com.red5pro.media.rtp.RTPCodecEnum;
  * A <tt>Buffer</tt> object maintains information such as the time stamp,
  * length, and <tt>Format</tt> of the data it carries, as well as any header
  * information that might be required to process the media data.
- *
- * @see PlugIn
- * @see javax.media.protocol.PushBufferStream
- * @see javax.media.protocol.PullBufferStream
  */
 public class Buffer {
 
@@ -377,6 +373,7 @@ public class Buffer {
 	 * codec decribing the data.
 	 * 
 	 * @param checkCodec
+	 *            codec to check
 	 * @return true if compatible and false otherwise
 	 */
 	public boolean isCompatible(RTPCodecEnum checkCodec) {
@@ -424,6 +421,8 @@ public class Buffer {
 	 * @see #FLAG_FLUSH
 	 * @see #FLAG_SYSTEM_MARKER
 	 * @see #FLAG_RTP_MARKER
+	 * 
+	 * @return flags
 	 */
 	public int getFlags() {
 		return flags;
@@ -431,6 +430,8 @@ public class Buffer {
 
 	/**
 	 * Get the <tt>Format</tt> of the data in this <tt>Buffer</tt>.
+	 * 
+	 * @return format
 	 */
 	public Format getFormat() {
 		return format;
@@ -464,6 +465,7 @@ public class Buffer {
 	 * If the media chunk for this <tt>Buffer</tt> is held in an array, gets the
 	 * offset into the data array where the valid data begins.
 	 *
+	 * @return offset
 	 */
 	public int getOffset() {
 		return offset;
@@ -684,6 +686,9 @@ public class Buffer {
 	 * @see #FLAG_FLUSH
 	 * @see #FLAG_SYSTEM_MARKER
 	 * @see #FLAG_RTP_MARKER
+	 * 
+	 * @param flags
+	 *            the flags
 	 */
 	public void setFlags(int flags) {
 		this.flags = flags;
