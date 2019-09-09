@@ -57,6 +57,7 @@ public enum RTPCodecEnum {
 	 * Returns a formatted rtpmap string for the given codec.
 	 * 
 	 * @param codec
+	 *            the codec
 	 * @return rtpmap string
 	 */
 	public static String getRTPMapString(RTPCodecEnum codec) {

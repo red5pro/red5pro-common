@@ -42,6 +42,7 @@ public interface IMPEGTSConnection extends IoSessionAware {
 	 * Apply a QoS value to the connection.
 	 * 
 	 * @param qos
+	 *            quality of service
 	 */
 	void applyQoS(int qos);
 

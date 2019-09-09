@@ -139,6 +139,8 @@ public class RGBFormat extends VideoFormat {
 	 *            The mask for the blue color component.
 	 * @param pixelStride
 	 *            The number of array elements between adjacent pixels.
+	 * @param lineStride
+	 *            line length
 	 * @param flipped
 	 *            Indicates whether or not the lines in the video frame are flipped
 	 *            vertically (upside down). <tt>Format.TRUE</tt> indicates the image

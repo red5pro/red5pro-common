@@ -33,7 +33,7 @@ public interface MediaProcessor {
 	 *            MediaProcessorAware listener
 	 */
 	static void removeProcessListener(MediaProcessorAware listener) {
-		listeners.remove(listeners);
+		listeners.remove(listener);
 	}
 
 }
