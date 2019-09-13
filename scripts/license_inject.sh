@@ -2,7 +2,7 @@
 
 # = NOTE =
 # Use at root of repository: ./scripts/inject-license.sh
-SRC=$(realpath src/main/java/com/red5pro)
+SRC=src/main/java/com/red5pro
 STRING="Copyright © 2015 Infrared5"
 LICENSE=$(realpath scripts/LICENSE_INJECT)
 WAS_UPDATED=0
@@ -10,7 +10,9 @@ WAS_UPDATED=0
 # check to see if already has license...
 echo "Traversing ${SRC}..."
 while IFS= read -r -d '' file; do
-        if grep -q "$STRING" "$file"; then
+        if [ "$file" == "src/main/java/com/red5pro//media/FormatUtils.java" ]; then
+                echo "Skipping..."
+        elif grep -q "$STRING" "$file"; then
                 echo "$file"
                 echo "Already has license..."
         else
