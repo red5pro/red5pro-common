@@ -713,6 +713,11 @@ public class Buffer {
 		}
 	}
 
+    public void setFormat(Format format, RTPCodecEnum codec) {
+        this.format = format;
+        this.codec = codec;
+	}	
+	
 	/**
 	 * Returns whether or not this buffer has a format set and contains audio.
 	 * 
