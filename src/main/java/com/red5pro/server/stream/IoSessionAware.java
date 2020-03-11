@@ -23,23 +23,25 @@
 // WHETHER IN  AN  ACTION  OF  CONTRACT,  TORT  OR  OTHERWISE,  ARISING  FROM,  OUT  OF  OR  IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-package com.red5pro.cluster;
+package com.red5pro.server.stream;
 
-import java.util.concurrent.CopyOnWriteArraySet;
+import org.apache.mina.core.session.IoSession;
 
 /**
- * Used to be notified of cluster link states.
+ * Indicates that the implementation supports the <tt>getIoSession()</tt>
+ * accessor.
  * 
- * @author Andy Shaules
- *
+ * @author Paul Gregoire
  */
-public interface LinkStateListener {
+public interface IoSessionAware {
 
-	public static final CopyOnWriteArraySet<LinkStateListener> linkListeners = new CopyOnWriteArraySet<>();
+	public final static int fourCC = 'b' | ('a' << 8) | ('s' << 16) | ('e' << 24);
 
-	void originAck(String origin);
+	/**
+	 * Returns an IoSession or null if it does not exist.
+	 * 
+	 * @return session or null
+	 */
+	IoSession getIoSession();
 
-	void originClose(String host);
-
-	void edgeClose(String host);
 }

@@ -23,23 +23,15 @@
 // WHETHER IN  AN  ACTION  OF  CONTRACT,  TORT  OR  OTHERWISE,  ARISING  FROM,  OUT  OF  OR  IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-package com.red5pro.cluster;
-
-import java.util.concurrent.CopyOnWriteArraySet;
+package com.red5pro.restreamer;
 
 /**
- * Used to be notified of cluster link states.
+ * Enum constants for use in the restreamer API.
  * 
- * @author Andy Shaules
- *
+ * @author Paul Gregoire
  */
-public interface LinkStateListener {
+public enum APIParameter {
 
-	public static final CopyOnWriteArraySet<LinkStateListener> linkListeners = new CopyOnWriteArraySet<>();
+	type, action, create, kill, list, contextpath, scopename, name, outputname, ip, host, port, cast, id, guid, meta, recording;
 
-	void originAck(String origin);
-
-	void originClose(String host);
-
-	void edgeClose(String host);
 }

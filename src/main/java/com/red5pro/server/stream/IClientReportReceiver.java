@@ -23,23 +23,23 @@
 // WHETHER IN  AN  ACTION  OF  CONTRACT,  TORT  OR  OTHERWISE,  ARISING  FROM,  OUT  OF  OR  IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-package com.red5pro.cluster;
+package com.red5pro.server.stream;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 
-/**
- * Used to be notified of cluster link states.
- * 
- * @author Andy Shaules
- *
- */
-public interface LinkStateListener {
+public interface IClientReportReceiver {
 
-	public static final CopyOnWriteArraySet<LinkStateListener> linkListeners = new CopyOnWriteArraySet<>();
+	static final CopyOnWriteArraySet<IClientReportReceiver> receivers = new CopyOnWriteArraySet<>();
 
-	void originAck(String origin);
+	/**
+	 * 
+	 * @param fourCC
+	 *            IoSessionAware foucCC
+	 * @param timestamp
+	 *            time stamp
+	 * @param info
+	 *            information
+	 */
+	public void logReport(int fourCC, long timestamp, String info);
 
-	void originClose(String host);
-
-	void edgeClose(String host);
 }

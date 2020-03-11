@@ -23,23 +23,16 @@
 // WHETHER IN  AN  ACTION  OF  CONTRACT,  TORT  OR  OTHERWISE,  ARISING  FROM,  OUT  OF  OR  IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-package com.red5pro.cluster;
+package com.red5pro.restreamer;
 
-import java.util.concurrent.CopyOnWriteArraySet;
+public interface ErrorListener {
 
-/**
- * Used to be notified of cluster link states.
- * 
- * @author Andy Shaules
- *
- */
-public interface LinkStateListener {
+	public void operationComplete(ErrorHandler errorHandler);
 
-	public static final CopyOnWriteArraySet<LinkStateListener> linkListeners = new CopyOnWriteArraySet<>();
+	public void noValidMedia(ErrorHandler errorHandler);
 
-	void originAck(String origin);
+	public void unknownHostError(ErrorHandler errorHandler);
 
-	void originClose(String host);
+	public void streamError(ErrorHandler errorHandler);
 
-	void edgeClose(String host);
 }
