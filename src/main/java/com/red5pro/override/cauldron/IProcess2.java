@@ -12,7 +12,7 @@ public interface IProcess2 extends IProcess {
 	 *            media type, 'PCM ' 'I420', 'RGB '.
 	 * @param time
 	 *            milliseconds
-	 * @param data
+	 * @param nals
 	 *            media
 	 * @param frameReturn
 	 *            user info

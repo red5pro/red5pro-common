@@ -33,10 +33,15 @@ public interface Red5ProCanvas {
 	 * engine.
 	 * 
 	 * @param scope
+	 *            to broadcast in
 	 * @param name
+	 *            name of broacdcast
 	 * @param record
+	 *            to record or not
 	 * @param appeand
+	 *            to appeand existing recording or not
 	 * @throws IOException
+	 *             if the stream cant be created
 	 */
 	void loopBack(IScope scope, String name, boolean record, boolean appeand) throws IOException;
 
@@ -45,10 +50,17 @@ public interface Red5ProCanvas {
 	 * start.
 	 * 
 	 * @param host
+	 *            host of rtmp server.
 	 * @param port
+	 *            port of rtmo server
 	 * @param path
+	 *            path of rtmp app
 	 * @param name
+	 *            name of publish stream
 	 * @param params
+	 *            connect params
+	 * @throws IOException
+	 *             if connection fails
 	 */
 	void forward(String host, int port, String path, String name, Map<String, Object> connectParams) throws IOException;
 	/**
