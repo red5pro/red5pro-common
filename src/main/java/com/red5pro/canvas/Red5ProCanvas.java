@@ -1,6 +1,7 @@
 package com.red5pro.canvas;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.red5.server.api.scope.IScope;
 
@@ -14,7 +15,13 @@ public interface Red5ProCanvas {
 	void setFrameProvider(FrameProvider provider);
 	/**
 	 * 
-	 * @param bitrate video bitrate.
+	 * @return frame provider
+	 */
+	FrameProvider getFrameProvider();
+	/**
+	 * 
+	 * @param bitrate
+	 *            video bitrate.
 	 */
 	void setBitrate(int bitrate);
 	/**
@@ -41,8 +48,9 @@ public interface Red5ProCanvas {
 	 * @param port
 	 * @param path
 	 * @param name
+	 * @param params
 	 */
-	void forward(String host, int port, String path, String name) throws IOException;
+	void forward(String host, int port, String path, String name, Map<String, Object> connectParams) throws IOException;
 	/**
 	 * Stop streaming process.
 	 */
