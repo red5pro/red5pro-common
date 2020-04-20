@@ -32,6 +32,6 @@ package com.red5pro.restreamer;
  */
 public enum APIParameter {
 
-	type, action, create, kill, list, contextpath, scopename, name, outputname, ip, host, port, cast, id, guid, meta, recording;
+	type, action, create, kill, list, contextpath, scopename, name, outputname, ip, host, port, cast, id, guid, meta, recording, authtype, userName, password;
 
 }
