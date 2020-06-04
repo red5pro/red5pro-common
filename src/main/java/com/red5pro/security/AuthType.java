@@ -11,5 +11,5 @@ package com.red5pro.security;
 public enum AuthType {
 
     Basic, Bearer, Digest, HOBA, Mutual, NTLM, AWS4;
-    
+
 }
