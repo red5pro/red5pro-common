@@ -25,8 +25,7 @@
 //
 package com.red5pro.server.stream.webrtc;
 
-import org.red5.net.websocket.WebSocketConnection;
-
+import com.red5pro.server.SignalingChannel;
 import com.red5pro.server.stream.IoSessionAware;
 
 /**
@@ -43,7 +42,7 @@ public interface IWebRTCConnection extends IoSessionAware {
 	 * 
 	 * @return signal channel or null if its not set
 	 */
-	WebSocketConnection getSignalChannel();
+	SignalingChannel getSignalChannel();
 
 	/**
 	 * Returns whether or not this connection instance has a signal channel.
