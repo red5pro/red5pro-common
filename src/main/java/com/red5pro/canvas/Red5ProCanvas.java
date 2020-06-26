@@ -57,8 +57,8 @@ public interface Red5ProCanvas {
 	 *            path of rtmp app
 	 * @param name
 	 *            name of publish stream
-	 * @param params
-	 *            connect params
+	 * @param connectParams
+	 *            client connect params
 	 * @throws IOException
 	 *             if connection fails
 	 */
