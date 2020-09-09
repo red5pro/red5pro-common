@@ -78,6 +78,26 @@ public class VideoConstants {
 	 */
 	public static final String VP8_RTP = VP8 + _RTP;
 
+	/**
+	 * The VP8/rtmp constant.
+	 */
+	public static final String VP8_RTMP = VP8 + "/rtmp";
+
+	/**
+	 * The VP9 constant
+	 */
+	public static final String VP9 = "VP9";
+
+	/**
+	 * The VP9/rtp constant.
+	 */
+	public static final String VP9_RTP = VP9 + _RTP;
+
+	/**
+	 * The VP9/rtmp constant.
+	 */
+	public static final String VP9_RTMP = VP9 + "/rtmp";
+
 	/** MPEG format. */
 	public static final String MPEG = "mpeg";
 

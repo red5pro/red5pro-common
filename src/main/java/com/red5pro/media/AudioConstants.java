@@ -69,6 +69,8 @@ public class AudioConstants {
 	 */
 	public static final String OPUS_RTP = OPUS + _RTP;
 
+	public static final String OPUS_RTMP = OPUS + "/rtmp";
+
 	/**
 	 * The SPEEX constant.
 	 */
