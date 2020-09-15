@@ -1,4 +1,3 @@
-//
 // Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
@@ -23,42 +22,54 @@
 // WHETHER IN  AN  ACTION  OF  CONTRACT,  TORT  OR  OTHERWISE,  ARISING  FROM,  OUT  OF  OR  IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-/*
- * https://account.red5pro.com/assets/LICENSE.txt
- */
-package com.red5pro.override.cauldron;
+package com.red5pro.server.stream.srt;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.red5pro.server.stream.IoSessionAware;
 
 /**
- * This interface notifies external handlers of process life cycle events. <br>
- * Register a listener to access live video processing API. <br>
+ * Base interface for an SRT connection.
  * 
- * @author Andy Shaules
+ * TODO move to commons lib
+ * 
+ * @author Paul Gregoire (paul@infrared5.com)
  */
-public interface MediaProcessor {
+public interface ISRTConnection extends IoSessionAware {
 
-	static List<MediaProcessorAware> listeners = new ArrayList<>();
-
-	/**
-	 * Add a listener to access the processing API.
-	 * 
-	 * @param listener
-	 *            MediaProcessorAware listener
-	 */
-	static void addProcessListener(MediaProcessorAware listener) {
-		listeners.add(listener);
-	}
+	public final static int fourCC = 's' | ('r' << 8) | ('t' << 16) | (' ' << 24);
 
 	/**
-	 * Remove a listener.
-	 * 
-	 * @param listener
-	 *            MediaProcessorAware listener
+	 * From RTMPConnection / IConnection
 	 */
-	static void removeProcessListener(MediaProcessorAware listener) {
-		listeners.remove(listener);
-	}
+	public void close();
+
+	/**
+	 * Returns whether or not the connection is considered idle.
+	 * 
+	 * @return true if idle and false otherwise
+	 */
+	boolean isIdle();
+
+	/**
+	 * Return session identifier.
+	 * 
+	 * @return connection session id
+	 */
+	String getSessionId();
+
+	/**
+	 * Check whether connection is alive
+	 * 
+	 * @return true if not idle nor in a state of disconnected / disconnecting,
+	 *         false otherwise
+	 */
+	boolean isConnected();
+
+	/**
+	 * Apply a QoS value to the connection.
+	 * 
+	 * @param qos
+	 *            quality of service
+	 */
+	void applyQoS(int qos);
 
 }

@@ -13,21 +13,39 @@ public interface Red5ProCanvas {
 	 *            FrameProvider
 	 */
 	void setFrameProvider(FrameProvider provider);
+
 	/**
 	 * 
 	 * @return frame provider
 	 */
 	FrameProvider getFrameProvider();
+
 	/**
 	 * 
 	 * @param bitrate
 	 *            video bitrate.
 	 */
 	void setBitrate(int bitrate);
+
+	/**
+	 * Sets the encoding to use for video to h264.
+	 * 
+	 * @param useH264
+	 */
+	void setUseH264(boolean useH264);
+
+	/**
+	 * Sets the encoding to use for video to VP8.
+	 * 
+	 * @param useVP8
+	 */
+	void setUseVP8(boolean useVP8);
+
 	/**
 	 * Start encoding engine.
 	 */
 	void start();
+
 	/**
 	 * Start output engine, option 1 local publish. Call after starting encoding
 	 * engine.
@@ -63,6 +81,7 @@ public interface Red5ProCanvas {
 	 *             if connection fails
 	 */
 	void forward(String host, int port, String path, String name, Map<String, Object> connectParams) throws IOException;
+
 	/**
 	 * Stop streaming process.
 	 */
