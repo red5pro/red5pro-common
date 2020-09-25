@@ -40,6 +40,11 @@ public interface IRTSPConnection extends IoSessionAware {
 	public final static int fourCC = 'r' | ('t' << 8) | ('s' << 16) | ('p' << 24);
 
 	/**
+	 * From RTMPConnection / IConnection
+	 */
+	public void close();
+
+	/**
 	 * Use IoSessionAware.getIoSession().
 	 * 
 	 * @return session

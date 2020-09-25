@@ -51,7 +51,11 @@ public class ConnectionUtils {
 		// WebRTC connection
 		RTC("com.red5pro.webrtc.RTCConnection"),
 		// MPEG-TS connection
-		MPEGTS("com.red5pro.mpegts.MPEGTSConnection");
+		MPEGTS("com.red5pro.mpegts.MPEGTSConnection"),
+		// SRT
+		SRT("com.red5pro.srt.SRTConnection"),
+		// Shared Object connection
+		SHARED_OBJECT("com.red5pro.server.so.SharedObjectCapableConnection");
 
 		final String className;
 
@@ -145,12 +149,4 @@ public class ConnectionUtils {
 		return ConnectionType.MPEGTS.equals(getConnectionTypeEnum(connection));
 	}
 
-	/*
-	 * public static void main(String[] args) { // NPE expected, and working as it
-	 * should //System.out.println("Null? " + ConnectionUtils.isRTMP(null) +
-	 * " return type: " + ConnectionUtils.getConnectionType(null));
-	 * RTMPMinaConnection rtmp = new RTMPMinaConnection();
-	 * System.out.println("RTMP? " + ConnectionUtils.isRTMP(rtmp) + " return type: "
-	 * + ConnectionUtils.getConnectionType(rtmp)); }
-	 */
 }

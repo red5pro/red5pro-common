@@ -43,7 +43,7 @@ public enum RTPCodecEnum {
 			1), SPEEX(97, "speex", "Speex", 16000, 2),
 	// video
 	H264_PMODE1(126, "H264", "h.264", 90000), H264_PMODE0(97, "H264", "h.264", 90000), VP8(100, "VP8", "VP8",
-			90000), VP9(101, "VP9", "VP9", 90000), AV1(103, "AV1", "AV1", 90000),
+			90000), VP9(101, "VP9", "VP9", 90000), AV1(103, "AV1", "AV1", 90000), HEVC(104, "H265", "h.265", 90000),
 	// other
 	RED(116, "red", "Redundant", 90000), ULPFEC(117, "ulpfec", "Generic Forward Error Correction", 90000),
 	// special identifiers for something working with any codec or payload type
@@ -150,7 +150,7 @@ public enum RTPCodecEnum {
 	 */
 	public static int[] getVideoPayloadTypesAsArray() {
 		int[] types = new int[]{H264_PMODE1.payloadType, H264_PMODE0.payloadType, VP8.payloadType, VP9.payloadType,
-				AV1.payloadType};
+				AV1.payloadType, HEVC.payloadType};
 		return types;
 	}
 
@@ -171,7 +171,7 @@ public enum RTPCodecEnum {
 	 */
 	public static String[] getVideoEncodingNamesAsArray() {
 		String[] encodings = new String[]{H264_PMODE1.encodingName, H264_PMODE0.encodingName, VP8.encodingName,
-				VP9.encodingName, AV1.encodingName};
+				VP9.encodingName, AV1.encodingName, HEVC.encodingName};
 		return encodings;
 	}
 
