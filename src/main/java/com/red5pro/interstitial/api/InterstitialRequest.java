@@ -8,11 +8,11 @@ import java.util.List;
  * @author Nate Roe
  */
 public class InterstitialRequest {
-    public String user;
+	public String user;
 
-    public String digest;
+	public String digest;
 
-    public List<InterstitialInsert> inserts;
+	public List<InterstitialInsert> inserts;
 
-    public String resume;
+	public String resume;
 }

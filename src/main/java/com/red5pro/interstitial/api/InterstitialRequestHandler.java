@@ -5,10 +5,10 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 public interface InterstitialRequestHandler {
 
-    static final CopyOnWriteArraySet<InterstitialRequestHandler> handlers = new CopyOnWriteArraySet<>();
+	static final CopyOnWriteArraySet<InterstitialRequestHandler> handlers = new CopyOnWriteArraySet<>();
 
-    void newRequest(String user, String digest, List<InterstitialInsert> inserts) throws InterstitialException;
+	void newRequest(String user, String digest, List<InterstitialInsert> inserts) throws InterstitialException;
 
-    void resume(String user, String digest, String path) throws InterstitialException;
+	void resume(String user, String digest, String path) throws InterstitialException;
 
 }
