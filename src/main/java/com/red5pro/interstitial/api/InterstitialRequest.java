@@ -3,7 +3,7 @@ package com.red5pro.interstitial.api;
 import java.util.List;
 
 /**
- * JSON request to insert one or more instertitials, or to resume a stream.
+ * JSON request to insert one or more interstitials, or to resume a stream.
  *
  * @author Nate Roe
  */
@@ -29,4 +29,19 @@ public class InterstitialRequest {
 	 * to stream's original A/V ending the interstitial insertion).
 	 */
 	public String resume;
+
+	public String target;
+
+	public String uri;
+
+	public boolean loop;
+
+	public InterstitialDurationControlType type;
+
+	public long start;
+
+	public long duration;
+
+	public long id;
+
 }
