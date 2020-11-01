@@ -29,19 +29,4 @@ public class InterstitialRequest {
 	 * to stream's original A/V ending the interstitial insertion).
 	 */
 	public String resume;
-
-	public String target;
-
-	public String uri;
-
-	public boolean loop;
-
-	public InterstitialDurationControlType type;
-
-	public long start;
-
-	public long duration;
-
-	public long id;
-
 }
