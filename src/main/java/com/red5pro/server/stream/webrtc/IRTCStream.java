@@ -116,18 +116,6 @@ public interface IRTCStream {
 	IScope getScope();
 
 	/**
-	 * Set tickle state to complete.
-	 */
-	void setTrickleComplete();
-
-	/**
-	 * Returns whether or not trickle is complete.
-	 * 
-	 * @return true if complete and false otherwise
-	 */
-	boolean isTrickleComplete();
-
-	/**
 	 * Returns whether or not we're controlling ICE.
 	 * 
 	 * @return true if controlling and false otherwise
