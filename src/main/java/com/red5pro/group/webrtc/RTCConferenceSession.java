@@ -88,44 +88,45 @@ public class RTCConferenceSession implements IRTCStreamSession {
 	}
 
 	@Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (int) (created ^ (created >>> 32));
-        result = prime * result + ((proStream == null) ? 0 : proStream.getPublishedName().hashCode());
-        result = prime * result + ((rtcStream == null) ? 0 : rtcStream.hashCode());
-        return result;
-    }
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (created ^ (created >>> 32));
+		result = prime * result + ((proStream == null) ? 0 : proStream.getPublishedName().hashCode());
+		result = prime * result + ((rtcStream == null) ? 0 : rtcStream.hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        RTCConferenceSession other = (RTCConferenceSession) obj;
-        if (created != other.created) {
-            return false;
-        }
-        IRTCStream otherRtcStream = other.getRtcStream();
-        if (!rtcStream.getName().equals(otherRtcStream.getName())) {
-            return false;
-        }
-        if (proStream == null) {
-            if (other.proStream != null) {
-                return false;
-            }
-        } else if (!proStream.equals(other.proStream)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RTCConferenceSession other = (RTCConferenceSession) obj;
+		if (created != other.created) {
+			return false;
+		}
+		IRTCStream otherRtcStream = other.getRtcStream();
+		if (!rtcStream.getName().equals(otherRtcStream.getName())) {
+			return false;
+		}
+		if (proStream == null) {
+			if (other.proStream != null) {
+				return false;
+			}
+		} else if (!proStream.equals(other.proStream)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "RTCConferenceSession [created=" + created + ", rtcStream=" + rtcStream + ", proStream=" + proStream + "]";
-    }
+	@Override
+	public String toString() {
+		return "RTCConferenceSession [created=" + created + ", rtcStream=" + rtcStream + ", proStream=" + proStream
+				+ "]";
+	}
 
 }

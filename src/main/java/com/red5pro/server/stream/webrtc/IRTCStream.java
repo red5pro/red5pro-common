@@ -132,4 +132,12 @@ public interface IRTCStream {
 	 */
 	boolean isStarting();
 
+	/**
+	 * Returns the media id for at the given index in the local SDP.
+	 *
+	 * @param index
+	 * @return media id
+	 */
+	String getMediaId(int index);
+
 }

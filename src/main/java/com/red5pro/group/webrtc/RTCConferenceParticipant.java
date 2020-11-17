@@ -174,6 +174,21 @@ public class RTCConferenceParticipant extends ConferenceParticipant implements I
 	}
 
 	/**
+	 * Returns the media id for at the given index in the local SDP.
+	 *
+	 * @param index
+	 * @return media id
+	 */
+	public String getMediaId(int index) {
+		try {
+			return offerSdp.getMediaDescriptions()[index].getMediaId();
+		} catch (Exception e) {
+			log.warn("Invalid media id index: {}", index);
+		}
+		return null;
+	}
+
+	/**
 	 * Publishers fill MediaTracks with h264 and opus packets and pass them to the
 	 * compositor. Audio MediaSamples will be contained in a CompositeMediaSample
 	 * with Opus alongside its decoded PCM. For video the same type of feature is
