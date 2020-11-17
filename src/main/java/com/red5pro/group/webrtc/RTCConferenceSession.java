@@ -1,6 +1,7 @@
 package com.red5pro.group.webrtc;
 
-import java.util.concurrent.Future;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.override.IProStream;
@@ -14,6 +15,34 @@ import com.red5pro.server.stream.webrtc.IRTCStreamSession;
  *
  */
 public class RTCConferenceSession implements IRTCStreamSession {
+
+	private static Logger log = LoggerFactory.getLogger(RTCConferenceSession.class);
+
+	// creation timestamp
+	private final long created = System.currentTimeMillis();
+
+	/**
+	 * Whether or not the session has started.
+	 */
+	protected volatile boolean started;
+
+	/**
+	 * The backing stream.
+	 */
+	private IProStream proStream;
+
+	/**
+	 * The webrtc based stream.
+	 */
+	private IRTCStream rtcStream;
+
+	public RTCConferenceSession(IRTCStream rtcStream, IProStream proStream) {
+		log.debug("RTCConferenceSession - rtc stream: {} pro stream: {}", rtcStream, proStream);
+		// set the rtc stream
+		this.rtcStream = rtcStream;
+		// source pro stream
+		this.proStream = proStream;
+	}
 
 	@Override
 	public void start(SDPUserAgent userAgentEnum) {
@@ -29,8 +58,7 @@ public class RTCConferenceSession implements IRTCStreamSession {
 
 	@Override
 	public boolean isStarted() {
-		// TODO Auto-generated method stub
-		return false;
+		return started;
 	}
 
 	@Override
@@ -41,38 +69,22 @@ public class RTCConferenceSession implements IRTCStreamSession {
 
 	@Override
 	public long getCreated() {
-		// TODO Auto-generated method stub
-		return 0;
+		return created;
 	}
 
 	@Override
 	public IRTCStream getRtcStream() {
-		// TODO Auto-generated method stub
-		return null;
+		return rtcStream;
 	}
 
 	@Override
-	public IProStream getFlashStream() {
-		// TODO Auto-generated method stub
-		return null;
+	public IProStream getProStream() {
+		return proStream;
 	}
 
 	@Override
-	public Future<?> getCreationFuture() {
+	public void updateProStream(IProStream stream) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setCreationFuture(Future<Boolean> createFuture) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void updateFlashStream(IProStream stream) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

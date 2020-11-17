@@ -1,7 +1,5 @@
 package com.red5pro.server.stream.webrtc;
 
-import java.util.concurrent.Future;
-
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.override.IProStream;
 
@@ -25,12 +23,8 @@ public interface IRTCStreamSession {
 
 	IRTCStream getRtcStream();
 
-	IProStream getFlashStream();
+	IProStream getProStream();
 
-	Future<?> getCreationFuture();
-
-	void setCreationFuture(Future<Boolean> createFuture);
-
-	void updateFlashStream(IProStream stream);
+	void updateProStream(IProStream stream);
 
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
 import org.red5.server.api.scope.IScope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.red5pro.group.ConferenceParticipant;
 import com.red5pro.media.IMediaSample;
@@ -21,7 +23,22 @@ import com.red5pro.server.stream.webrtc.IRTCStream;
  */
 public class RTCConferenceParticipant extends ConferenceParticipant implements IRTCStream {
 
-	private volatile boolean starting;
+	protected Logger log = LoggerFactory.getLogger(RTCConferenceParticipant.class);
+
+	protected boolean isTrace = log.isTraceEnabled();
+
+	protected boolean isDebug = log.isDebugEnabled();
+
+	protected volatile boolean starting;
+
+	protected SessionDescription offerSdp;
+
+	protected SessionDescription answerSdp;
+
+	protected IScope scope;
+
+	// the published stream from this participant
+	protected IProStream proStream;
 
 	@Override
 	public void init(SDPUserAgent userAgent) throws Exception {
@@ -55,19 +72,36 @@ public class RTCConferenceParticipant extends ConferenceParticipant implements I
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		// returns the participants identifier
+		return id;
 	}
 
+	public void setOffer(SessionDescription sdp) {
+		this.offerSdp = sdp;
+		log.debug("Offer: {}", sdp);
+	}
+
+	/**
+	 * Returns the offer sdp in SessionDescription form.
+	 *
+	 * @return offer sdp
+	 */
 	@Override
 	public SessionDescription getSdp() {
-		// TODO Auto-generated method stub
-		return null;
+		return offerSdp;
+	}
+
+	/**
+	 * Returns the answer sdp in SessionDescription form.
+	 *
+	 * @return answer sdp
+	 */
+	public SessionDescription getAnswerSdp() {
+		return answerSdp;
 	}
 
 	@Override
 	public String getLocalSdp() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -91,20 +125,17 @@ public class RTCConferenceParticipant extends ConferenceParticipant implements I
 
 	@Override
 	public IProStream getProStream() {
-		// TODO Auto-generated method stub
-		return null;
+		return proStream;
 	}
 
 	@Override
 	public IScope getScope() {
-		// TODO Auto-generated method stub
-		return null;
+		return scope;
 	}
 
 	@Override
 	public void setTrickleComplete() {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
