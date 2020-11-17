@@ -15,6 +15,26 @@ import com.red5pro.override.IProStream;
  */
 public interface IRTCStream {
 
+	public static enum H264Profile {
+
+		None, ConstrainedBaseline, Baseline, Main, High;
+
+		public static H264Profile valueOf(int val) {
+			switch (val) {
+				case 1 :
+					return ConstrainedBaseline;
+				case 2 :
+					return Baseline;
+				case 3 :
+					return Main;
+				case 4 :
+					return High;
+			}
+			return None;
+		}
+
+	};
+
 	/**
 	 * Returns the name for this stream instance.
 	 * 

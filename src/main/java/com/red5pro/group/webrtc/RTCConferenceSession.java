@@ -36,6 +36,12 @@ public class RTCConferenceSession implements IRTCStreamSession {
 	 */
 	private IRTCStream rtcStream;
 
+	public RTCConferenceSession(IRTCStream rtcStream) {
+		log.debug("RTCConferenceSession - rtc stream: {}", rtcStream);
+		// set the rtc stream
+		this.rtcStream = rtcStream;
+	}
+
 	public RTCConferenceSession(IRTCStream rtcStream, IProStream proStream) {
 		log.debug("RTCConferenceSession - rtc stream: {} pro stream: {}", rtcStream, proStream);
 		// set the rtc stream
@@ -84,7 +90,8 @@ public class RTCConferenceSession implements IRTCStreamSession {
 
 	@Override
 	public void updateProStream(IProStream stream) {
-		// XXX do nothing here
+		// source pro stream
+		this.proStream = stream;
 	}
 
 	@Override
