@@ -23,7 +23,7 @@ public interface IRTCStreamSession {
 
 	long getCreated();
 
-	Object getRtcStream();
+	IRTCStream getRtcStream();
 
 	IProStream getFlashStream();
 

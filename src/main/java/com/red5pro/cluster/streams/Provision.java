@@ -182,6 +182,15 @@ public class Provision {
 		this.secondaries = secondaries;
 	}
 
+	/**
+	 * Returns JSON string representing this object instance.
+	 * 
+	 * @return JSON string
+	 */
+	public String toJson() {
+		return gson.toJson(this);
+	}
+
 	@Override
 	public int hashCode() {
 		// can only be one stream instance on this path.
@@ -240,6 +249,10 @@ public class Provision {
 		return gson;
 	}
 
+	public static Provision buildFromJson(String json) {
+		return gson.fromJson(json, Provision.class);
+	}
+
 	public static Provision build(String guid, String contextPath, String streamName, int qualityLevel) {
 		return new Provision(guid, contextPath, streamName, qualityLevel, null, new HashMap<>());
 	}
@@ -253,15 +266,6 @@ public class Provision {
 			Map<String, Object> parameters) {
 		return new Provision(makeGuid(contextPath, streamName), contextPath, streamName, qualityLevel, restrictions,
 				parameters);
-	}
-
-	/**
-	 * Returns JSON string representing this object instance.
-	 * 
-	 * @return JSON string
-	 */
-	public String toJson() {
-		return gson.toJson(this);
 	}
 
 }
