@@ -203,7 +203,12 @@ public class ConferenceScope extends Scope implements IGroupCore {
 	}
 
 	@Override
-	public ExpressionCompositor getExpressionCompositor() {
+	public void setCompositor(ExpressionCompositor compositor) {
+		this.compositor = compositor;
+	}
+
+	@Override
+	public ExpressionCompositor getCompositor() {
 		return compositor;
 	}
 

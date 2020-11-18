@@ -1,6 +1,7 @@
 package com.red5pro.group.webrtc;
 
 import com.red5pro.group.GroupEvent;
+import com.red5pro.group.IGroupCore;
 import com.red5pro.group.expressions.GroupCompositorAdapter;
 
 /**
@@ -11,6 +12,10 @@ import com.red5pro.group.expressions.GroupCompositorAdapter;
  *
  */
 public class RTCGroupCompositor extends GroupCompositorAdapter {
+
+	public RTCGroupCompositor(IGroupCore group) {
+		this.owner = group;
+	}
 
 	@Override
 	public void push(GroupEvent event) {

@@ -48,11 +48,18 @@ public interface IGroupCore {
 	MediaTrack getTrackById(String id);
 
 	/**
+	 * Sets the compositor.
+	 * 
+	 * @param compositor
+	 */
+	void setCompositor(ExpressionCompositor compositor);
+
+	/**
 	 * Returns the compositor.
 	 * 
 	 * @return ExpressionCompositor
 	 */
-	ExpressionCompositor getExpressionCompositor();
+	ExpressionCompositor getCompositor();
 
 	/**
 	 * Returns a participant by their id.
