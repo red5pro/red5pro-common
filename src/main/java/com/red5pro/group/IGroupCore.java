@@ -62,6 +62,23 @@ public interface IGroupCore {
 	ExpressionCompositor getCompositor();
 
 	/**
+	 * Adds a participant.
+	 * 
+	 * @param participant
+	 * @return true if added and false otherwise
+	 */
+	boolean addParticipant(IParticipant participant);
+
+	/**
+	 * Removes a participant by its id.
+	 * 
+	 * @param id
+	 *            participant id
+	 * @return true if removed or false if not
+	 */
+	boolean removeParticipant(String id);
+
+	/**
 	 * Returns a participant by their id.
 	 * 
 	 * @param id

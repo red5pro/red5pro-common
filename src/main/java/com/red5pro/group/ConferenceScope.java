@@ -93,7 +93,7 @@ public class ConferenceScope extends Scope implements IGroupCore {
 			// timeout while connecting client
 			return false;
 		}
-		final IParticipant client = (IParticipant) conn.getClient();
+		final IClient client = conn.getClient();
 		// we would not get this far if there is no handler
 		if (hasHandler() && !getHandler().join(client, this)) {
 			return false;
@@ -104,7 +104,7 @@ public class ConferenceScope extends Scope implements IGroupCore {
 			return false;
 		}
 		// add the client and event listener
-		if (participants.add(client) && addEventListener(conn)) {
+		if (addEventListener(conn)) {
 			log.debug("Added client");
 			// increment conn stats
 			connectionStats.increment();
@@ -138,32 +138,30 @@ public class ConferenceScope extends Scope implements IGroupCore {
 			return;
 		}
 		// remove it if it exists
-		if (participants.remove(client)) {
-			IScopeHandler handler = getHandler();
-			if (handler != null) {
-				try {
-					handler.disconnect(conn, this);
-				} catch (Exception e) {
-					log.error("Error while executing \"disconnect\" for connection {} on handler {}. {}",
-							new Object[]{conn, handler, e});
-				}
-				try {
-					// there may be a timeout here ?
-					handler.leave(client, this);
-				} catch (Exception e) {
-					log.error("Error while executing \"leave\" for client {} on handler {}. {}",
-							new Object[]{conn, handler, e});
-				}
+		IScopeHandler handler = getHandler();
+		if (handler != null) {
+			try {
+				handler.disconnect(conn, this);
+			} catch (Exception e) {
+				log.error("Error while executing \"disconnect\" for connection {} on handler {}. {}",
+						new Object[]{conn, handler, e});
 			}
-			// remove listener
-			removeEventListener(conn);
-			// decrement if there was a set of connections
-			connectionStats.decrement();
-			if (this.equals(conn.getScope())) {
-				final IServer server = getServer();
-				if (server instanceof Server) {
-					((Server) server).notifyDisconnected(conn);
-				}
+			try {
+				// there may be a timeout here ?
+				handler.leave(client, this);
+			} catch (Exception e) {
+				log.error("Error while executing \"leave\" for client {} on handler {}. {}",
+						new Object[]{conn, handler, e});
+			}
+		}
+		// remove listener
+		removeEventListener(conn);
+		// decrement if there was a set of connections
+		connectionStats.decrement();
+		if (this.equals(conn.getScope())) {
+			final IServer server = getServer();
+			if (server instanceof Server) {
+				((Server) server).notifyDisconnected(conn);
 			}
 		}
 		if (hasParent()) {
@@ -210,6 +208,20 @@ public class ConferenceScope extends Scope implements IGroupCore {
 	@Override
 	public ExpressionCompositor getCompositor() {
 		return compositor;
+	}
+
+	@Override
+	public boolean addParticipant(IParticipant participant) {
+		return participants.add(participant);
+	}
+
+	@Override
+	public boolean removeParticipant(String id) {
+		IParticipant participant = getParticipant(id);
+		if (participant != null) {
+			return participants.remove(participant);
+		}
+		return false;
 	}
 
 	@Override
