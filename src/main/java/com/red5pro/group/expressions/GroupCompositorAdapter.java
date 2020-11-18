@@ -133,12 +133,12 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 
 	@Override
 	public MediaTrack[] getAudioTracks() {
-		return (MediaTrack[]) Arrays.stream(tracks).filter(MediaTrack.isAudioTrack()).toArray();
+		return (MediaTrack[]) Arrays.stream(tracks).filter(MediaTrack.isAudioTrack()).toArray(MediaTrack[]::new);
 	}
 
 	@Override
 	public MediaTrack[] getVideoTracks() {
-		return (MediaTrack[]) Arrays.stream(tracks).filter(MediaTrack.isVideoTrack()).toArray();
+		return (MediaTrack[]) Arrays.stream(tracks).filter(MediaTrack.isVideoTrack()).toArray(MediaTrack[]::new);
 	}
 
 	@Override
