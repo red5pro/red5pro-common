@@ -3,6 +3,7 @@ package com.red5pro.group;
 import org.red5.server.api.IClient;
 import org.red5.server.api.event.IEventListener;
 
+import com.red5pro.group.expressions.ExpressionCompositor;
 import com.red5pro.media.IMediaSample;
 
 /**
@@ -50,23 +51,17 @@ public interface IParticipant extends IClient, IEventListener {
 	String[] getExcludes();
 
 	/**
-	 * Audio MediaSample for handling by the participant.
+	 * MediaSample for handling by the participant.
 	 * 
-	 * @param timestamp
-	 *            pts for the sample
 	 * @param mediaSample
 	 *            audio sample consisting of a MediaSample or a CompositeMediaSample
 	 */
-	void onAudioMediaSample(long timestamp, IMediaSample mediaSample);
-
+	void onMediaSample(IMediaSample mediaSample);
 	/**
-	 * Video MediaSample for handling by the participant.
 	 * 
-	 * @param timestamp
-	 *            pts for the sample
-	 * @param mediaSample
-	 *            video sample consisting of a MediaSample or a CompositeMediaSample
+	 * @param compositor
+	 *            the group handler;
 	 */
-	void onVideoMediaSample(long timestamp, IMediaSample mediaSample);
+	void setCompositor(ExpressionCompositor compositor);
 
 }

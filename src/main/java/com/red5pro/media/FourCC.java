@@ -184,7 +184,7 @@ public enum FourCC {
 	 * @return integer fourCC
 	 */
 	public static int fourCC(char a, char b, char c, char d) {
-		return (a) | (b << 8) | (c << 16) | (d << 24);
+		return (a << 24) | (b << 16) | (c << 8) | (d);
 	}
 
 	/**

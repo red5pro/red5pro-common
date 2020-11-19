@@ -15,11 +15,11 @@ public class MediaSample implements IMediaSample {
 	// Pro sequence number
 	private long sequenceNumber;
 
-	private double duration = -1.0D;
+	private long timestamp;
 
-	private long startTime;
+	private long timebase;
 
-	private long endTime;
+	private long epoc;
 
 	private String sourceName;
 
@@ -37,6 +37,8 @@ public class MediaSample implements IMediaSample {
 	// fourCC code for the content
 	private FourCC fourCC;
 
+	private int trackNum;
+
 	/**
 	 * Creation with start time, buffer size, and media type.
 	 * 
@@ -44,8 +46,8 @@ public class MediaSample implements IMediaSample {
 	 * @param bufferSize
 	 * @param type
 	 */
-	private MediaSample(long startTime, int bufferSize, MediaType type) {
-		this.startTime = startTime;
+	private MediaSample(long timestamp, int bufferSize, MediaType type) {
+		this.timestamp = timestamp;
 		this.buffer = new byte[bufferSize];
 		this.type = type;
 		this.privateData = false;
@@ -58,8 +60,8 @@ public class MediaSample implements IMediaSample {
 	 * @param buffer
 	 * @param type
 	 */
-	private MediaSample(long startTime, byte[] buffer, MediaType type) {
-		this.startTime = startTime;
+	private MediaSample(long timestamp, byte[] buffer, MediaType type) {
+		this.timestamp = timestamp;
 		this.buffer = buffer;
 		this.type = type;
 		this.privateData = false;
@@ -73,8 +75,8 @@ public class MediaSample implements IMediaSample {
 	 * @param type
 	 * @param critical
 	 */
-	private MediaSample(long startTime, byte[] buffer, MediaType type, boolean critical) {
-		this.startTime = startTime;
+	private MediaSample(long timestamp, byte[] buffer, MediaType type, boolean critical) {
+		this.timestamp = timestamp;
 		this.buffer = buffer;
 		this.type = type;
 		this.privateData = critical;
@@ -90,8 +92,8 @@ public class MediaSample implements IMediaSample {
 	 * @param critical
 	 * @param sequenceNumber
 	 */
-	private MediaSample(long startTime, byte[] buffer, MediaType type, boolean critical, long sequenceNumber) {
-		this.startTime = startTime;
+	private MediaSample(long timestamp, byte[] buffer, MediaType type, boolean critical, long sequenceNumber) {
+		this.timestamp = timestamp;
 		this.buffer = buffer;
 		this.type = type;
 		this.privateData = critical;
@@ -110,9 +112,9 @@ public class MediaSample implements IMediaSample {
 	 * @param sequenceNumber
 	 * @param decoded
 	 */
-	private MediaSample(long startTime, byte[] buffer, MediaType type, String sourceName, boolean critical,
+	private MediaSample(long timestamp, byte[] buffer, MediaType type, String sourceName, boolean critical,
 			long sequenceNumber, boolean decoded) {
-		this.startTime = startTime;
+		this.timestamp = timestamp;
 		this.buffer = buffer;
 		this.type = type;
 		this.sourceName = sourceName;
@@ -155,28 +157,12 @@ public class MediaSample implements IMediaSample {
 		return bufferAsBytes().length;
 	}
 
-	public double getDuration() {
-		return duration;
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 
-	public void setDuration(double duration) {
-		this.duration = duration;
-	}
-
-	public void setStartTime(long startTime) {
-		this.startTime = startTime;
-	}
-
-	public long getStartTime() {
-		return startTime;
-	}
-
-	public long getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(long endTime) {
-		this.endTime = endTime;
+	public long getTimestamp() {
+		return timestamp;
 	}
 
 	public Object getBuffer() {
@@ -264,6 +250,22 @@ public class MediaSample implements IMediaSample {
 		this.fourCC = FourCC.getFourCC(a, b, c, d);;
 	}
 
+	public long getTimebase() {
+		return timebase;
+	}
+
+	public void setTimebase(long timebase) {
+		this.timebase = timebase;
+	}
+
+	public long getEpoc() {
+		return epoc;
+	}
+
+	public void setEpoc(long epoc) {
+		this.epoc = epoc;
+	}
+
 	@Override
 	public boolean isComposite() {
 		return false;
@@ -272,6 +274,7 @@ public class MediaSample implements IMediaSample {
 	/**
 	 * Returns an FMJ/JMF Buffer based on this MediaSample.
 	 * 
+	 * @deprecated
 	 * @param stripRtmp
 	 * @return
 	 */
@@ -281,12 +284,12 @@ public class MediaSample implements IMediaSample {
 		if (privateData) {
 			buf.setConfig();
 		}
-		buf.setTimeStamp(startTime);
-		buf.setMilliseconds(startTime);
+		buf.setTimeStamp(timestamp);
+		buf.setMilliseconds(timestamp);
 		if (isVideo()) {
-			buf.setRtpTimeStamp(startTime * 90);
+			buf.setRtpTimeStamp(timestamp * 90);
 		} else {
-			buf.setRtpTimeStamp(startTime * 48);
+			buf.setRtpTimeStamp(timestamp * 48);
 		}
 		if (stripRtmp) {
 			byte[] data = bufferAsBytes();
@@ -316,7 +319,7 @@ public class MediaSample implements IMediaSample {
 		int length = getBufferSize();
 		byte[] copy = new byte[length];
 		System.arraycopy(bufferAsBytes(), 0, copy, 0, length);
-		MediaSample ms = MediaSample.build(startTime, copy, type, sourceName, isCritical(), getSequenceNumber(),
+		MediaSample ms = MediaSample.build(timestamp, copy, type, sourceName, isCritical(), getSequenceNumber(),
 				decoded);
 		ms.setEncoding(encoding);
 		ms.setFlags(flags);
@@ -330,7 +333,7 @@ public class MediaSample implements IMediaSample {
 		result = prime * result + type.hashCode();
 		result = prime * result + ((encoding == null) ? 0 : encoding.hashCode());
 		result = prime * result + ((fourCC == null) ? 0 : fourCC.hashCode());
-		result = prime * result + (int) (startTime ^ (startTime >>> 32));
+		result = prime * result + (int) (timestamp ^ (timestamp >>> 32));
 		return result;
 	}
 
@@ -349,7 +352,7 @@ public class MediaSample implements IMediaSample {
 			return false;
 		if (fourCC != other.fourCC)
 			return false;
-		if (startTime != other.startTime)
+		if (timestamp != other.timestamp)
 			return false;
 		return true;
 	}
@@ -357,9 +360,8 @@ public class MediaSample implements IMediaSample {
 	@Override
 	public String toString() {
 		return "MediaSample [type=" + (isAudio() ? "audio" : "video") + ", sourceName=" + sourceName + ", encoding="
-				+ encoding + ", privateData=" + privateData + ", keyframe=" + isKeyframe() + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", sequenceNumber=" + sequenceNumber + ", decoded=" + decoded + ", buffer="
-				+ buffer + "]";
+				+ encoding + ", privateData=" + privateData + ", keyframe=" + isKeyframe() + ", startTime=" + timestamp
+				+ ",  sequenceNumber=" + sequenceNumber + ", decoded=" + decoded + ", buffer=" + buffer + "]";
 	}
 
 	public static MediaSample build(long startTime, byte[] buf, MediaType type) {
@@ -377,6 +379,18 @@ public class MediaSample implements IMediaSample {
 	public static MediaSample build(long startTime, byte[] buf, MediaType type, String sourceName, boolean critical,
 			long sequenceNumber, boolean decoded) {
 		return new MediaSample(startTime, buf, type, sourceName, critical, sequenceNumber, decoded);
+	}
+
+	@Override
+	public int getTrackNum() {
+		// TODO Auto-generated method stub
+		return trackNum;
+	}
+
+	@Override
+	public void setTrackNum(int id) {
+		trackNum = id;
+
 	}
 
 }

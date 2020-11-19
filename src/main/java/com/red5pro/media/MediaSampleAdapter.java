@@ -81,15 +81,6 @@ public class MediaSampleAdapter implements IMediaSample {
 	}
 
 	@Override
-	public void setStartTime(long startTime) {
-	}
-
-	@Override
-	public long getStartTime() {
-		return 0;
-	}
-
-	@Override
 	public Buffer toBuffer(boolean stripRtmp) {
 		return null;
 	}
@@ -101,6 +92,41 @@ public class MediaSampleAdapter implements IMediaSample {
 
 	@Override
 	public short[] bufferAsShorts() {
+		return null;
+	}
+
+	@Override
+	public void setTimestamp(long startTime) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public long getTimestamp() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getSourceName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getTrackNum() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setTrackNum(int id) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public FourCC getFourCC() {
 		return null;
 	}
 

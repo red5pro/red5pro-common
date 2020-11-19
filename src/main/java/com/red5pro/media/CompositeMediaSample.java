@@ -5,6 +5,8 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import com.red5pro.group.IParticipant;
+
 /**
  * Container for multiple MediaSample instances. This is meant to contain one or
  * more MediaSamples of the same instant, segment, frame, slice...
@@ -14,32 +16,22 @@ import java.util.Set;
  */
 public class CompositeMediaSample extends MediaSampleAdapter {
 
-	private Set<MediaSample> samples = new LinkedHashSet<>(2);
+	private IMediaSample[] samples;
 
-	private EnumSet<FourCC> fourCCs = EnumSet.noneOf(FourCC.class);
+	private int trackNum;
 
-	public void add(MediaSample sample) {
-		if (samples.add(sample)) {
-			fourCCs.add(sample.getFourCC());
-		}
+	public IMediaSample[] getSamples() {
+		return samples;
 	}
-
-	public boolean remove(MediaSample sample) {
-		if (samples.remove(sample)) {
-			fourCCs.remove(sample.getFourCC());
-			return true;
-		}
-		return false;
+	public void setSamples(IMediaSample[] samples) {
+		this.samples = samples;
 	}
 
 	public int size() {
-		return samples.size();
+		return samples.length;
 	}
 
-	public boolean containsFourCC(FourCC fourCC) {
-		return fourCCs.contains(fourCC);
-	}
-
+	private IParticipant source;
 	/**
 	 * Returns a MediaSample matching the FourCC given or null if not found; this
 	 * does not remove the sample.
@@ -47,10 +39,11 @@ public class CompositeMediaSample extends MediaSampleAdapter {
 	 * @param fourCC
 	 * @return MediaSample or null if not found
 	 */
-	public MediaSample get(FourCC fourCC) {
-		Optional<MediaSample> sample = samples.stream().filter(p -> p.getFourCC().equals(fourCC)).findFirst();
-		if (sample.isPresent()) {
-			return sample.get();
+	public IMediaSample get(FourCC fourCC) {
+		for (IMediaSample sample : samples) {
+			if (sample.getFourCC().equals(fourCC)) {
+				return sample;
+			}
 		}
 		return null;
 	}
@@ -61,21 +54,18 @@ public class CompositeMediaSample extends MediaSampleAdapter {
 	}
 
 	@Override
-	public Object getBuffer() {
-		// just as a convenience the buffer from the first sample is returned
-		if (!samples.isEmpty()) {
-			return samples.iterator().next().getBuffer();
-		}
-		return null;
+	public int getTrackNum() {
+		return trackNum;
 	}
 
 	@Override
-	public long getStartTime() {
-		// just as a convenience the start time from the first sample is returned
-		if (!samples.isEmpty()) {
-			return samples.iterator().next().getStartTime();
-		}
-		return 0;
+	public void setTrackNum(int id) {
+		trackNum = id;
 	}
-
+	public IParticipant getSource() {
+		return source;
+	}
+	public void setSource(IParticipant source) {
+		this.source = source;
+	}
 }

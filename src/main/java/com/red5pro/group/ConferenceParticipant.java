@@ -13,6 +13,7 @@ import org.red5.server.api.IConnection;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.scope.IScope;
 
+import com.red5pro.group.expressions.ExpressionCompositor;
 import com.red5pro.media.FourCC;
 import com.red5pro.media.IMediaSample;
 import com.red5pro.server.ConnectionAttributeKey;
@@ -44,6 +45,8 @@ public class ConferenceParticipant extends AttributeStore implements IParticipan
 	// determination of publisher or subscriber will be false until SDP's are
 	// processed
 	protected boolean publisher, subscriber;
+
+	protected ExpressionCompositor compositor;
 
 	/**
 	 * Connect this participant to the conference.
@@ -195,44 +198,7 @@ public class ConferenceParticipant extends AttributeStore implements IParticipan
 			// check excludes first
 			String eventSourceId = ge.getSourceId();
 			if (!excludes.contains(eventSourceId)) {
-				// XXX the IParticipant implementation is to take it from here and use the
-				// MediaSample content
-				// its interested in and ignore the rest of the event.
-				FourCC eventFourCC = ge.getFourCC();
-				// first cut doesnt expect any packetization wrapping the event media content
-				if (FourCC.isAudio(eventFourCC)) {
-					onAudioMediaSample(ge.getTimestamp(), (IMediaSample) ge.getObject());
-				} else if (FourCC.isVideo(eventFourCC)) {
-					onVideoMediaSample(ge.getTimestamp(), (IMediaSample) ge.getObject());
-				} else {
-					// if the group events four cc denotes a container / packaged type, handle it
-					// here
-					switch (eventFourCC) {
-						case AMF : // protocol
-						case MPTS : // protocol
-							// how did we get an protocol level event here?
-							break;
-						case RTMP : // transport
-						case RTP : // transport
-						case SRTP : // transport
-						case RTSP : // transport
-						case SRT : // transport
-							// how did we get an transport level event here?
-							break;
-						case METADATA :
-							// TODO route the metadata
-							break;
-						case JSON :
-							// TODO route the json
-							break;
-						case JSON_RPC :
-							// TODO handle the JSON RPC based on it being a notification or not
-							break;
-						default :
-							log.warn("Unexpected identifier type: {}", eventFourCC);
-							break;
-					}
-				}
+				onMediaSample((IMediaSample) ge.getObject());
 			} else {
 				log.debug("Event source is in excludes: {}, skipping it", eventSourceId);
 			}
@@ -242,13 +208,13 @@ public class ConferenceParticipant extends AttributeStore implements IParticipan
 	}
 
 	@Override
-	public void onAudioMediaSample(long timestamp, IMediaSample mediaSample) {
-		// XXX implementation is expected to handle samples
+	public void onMediaSample(IMediaSample mediaSample) {
 	}
 
 	@Override
-	public void onVideoMediaSample(long timestamp, IMediaSample mediaSample) {
-		// XXX implementation is expected to handle samples
+	public void setCompositor(ExpressionCompositor compositor) {
+		this.compositor = compositor;
+
 	}
 
 }

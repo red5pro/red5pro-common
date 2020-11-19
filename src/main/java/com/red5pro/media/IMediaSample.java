@@ -101,6 +101,8 @@ public interface IMediaSample {
 	 */
 	boolean isKeyframe();
 
+	String getSourceName();
+
 	/**
 	 * Sets the sequence number.
 	 * 
@@ -120,14 +122,14 @@ public interface IMediaSample {
 	 * 
 	 * @param startTime
 	 */
-	void setStartTime(long startTime);
+	void setTimestamp(long startTime);
 
 	/**
 	 * Returns the start time for the sample.
 	 * 
 	 * @return start time
 	 */
-	long getStartTime();
+	long getTimestamp();
 
 	/**
 	 * Returns an FMJ/JMF Buffer based on this MediaSample.
@@ -151,5 +153,18 @@ public interface IMediaSample {
 	 * @return short[]
 	 */
 	short[] bufferAsShorts();
+	/**
+	 * 
+	 * @return track id
+	 */
+	int getTrackNum();
+	/**
+	 * 
+	 * @param id
+	 *            track id
+	 * 
+	 */
+	void setTrackNum(int id);
 
+	FourCC getFourCC();
 }

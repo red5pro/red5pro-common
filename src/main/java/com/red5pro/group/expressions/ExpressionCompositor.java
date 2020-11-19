@@ -3,6 +3,7 @@ package com.red5pro.group.expressions;
 import com.red5pro.cluster.streams.Provision;
 import com.red5pro.group.GroupEvent;
 import com.red5pro.group.IGroupCore;
+import com.red5pro.group.IParticipant;
 import com.red5pro.media.MediaTrack;
 
 public interface ExpressionCompositor {
@@ -94,7 +95,38 @@ public interface ExpressionCompositor {
 	 * @param event
 	 */
 	void push(GroupEvent event);
-
+	/**
+	 * End user api. Pass private context into composition.
+	 * 
+	 * @param user
+	 *            defined event.
+	 */
 	void doExpressionEvent(Object event);
 
+	/**
+	 * 
+	 * @param participant
+	 * @return
+	 */
+	public boolean addParticipant(IParticipant participant);
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean removeParticipant(String id);
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public IParticipant getParticipant(String id);
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getParticipantCount();
 }
