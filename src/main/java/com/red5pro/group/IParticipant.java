@@ -51,12 +51,19 @@ public interface IParticipant extends IClient, IEventListener {
 	String[] getExcludes();
 
 	/**
-	 * MediaSample for handling by the participant.
+	 * Frame of media data, incoming from the participant's camera or mic.
 	 * 
 	 * @param mediaSample
 	 *            audio sample consisting of a MediaSample or a CompositeMediaSample
 	 */
 	void onMediaSample(IMediaSample mediaSample);
+
+	/**
+	 * Media frames to send to subscriber.
+	 * 
+	 * @param mediaSample
+	 */
+	void consumeMediaSample(IMediaSample mediaSample);
 	/**
 	 * 
 	 * @param compositor

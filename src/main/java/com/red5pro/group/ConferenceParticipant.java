@@ -217,4 +217,9 @@ public class ConferenceParticipant extends AttributeStore implements IParticipan
 
 	}
 
+	@Override
+	public void consumeMediaSample(IMediaSample mediaSample) {
+
+	}
+
 }
