@@ -14,7 +14,6 @@ import org.red5.server.api.event.IEvent;
 import org.red5.server.api.scope.IScope;
 
 import com.red5pro.group.expressions.ExpressionCompositor;
-import com.red5pro.media.FourCC;
 import com.red5pro.media.IMediaSample;
 import com.red5pro.server.ConnectionAttributeKey;
 import com.red5pro.util.IdGenerator;

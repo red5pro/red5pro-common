@@ -1,10 +1,5 @@
 package com.red5pro.media;
 
-import java.util.EnumSet;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
-
 import com.red5pro.group.IParticipant;
 
 /**
