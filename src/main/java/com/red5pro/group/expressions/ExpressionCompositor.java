@@ -15,6 +15,8 @@ public interface ExpressionCompositor {
 	 */
 	IGroupCore getOwner();
 
+	void setOwner(IGroupCore owner);
+
 	/**
 	 * Sets the local provision reference.
 	 * 

@@ -7,10 +7,10 @@ import javax.media.Buffer;
 public class MediaSample implements IMediaSample {
 
 	// type of media, audio, video etc
-	private final MediaType type;
+	protected MediaType type;
 
 	// Critical codec information flag
-	private final boolean privateData;
+	protected boolean privateData;
 
 	// Pro sequence number
 	private long sequenceNumber;
@@ -39,6 +39,9 @@ public class MediaSample implements IMediaSample {
 
 	private int trackNum;
 
+	protected MediaSample() {
+
+	}
 	/**
 	 * Creation with start time, buffer size, and media type.
 	 * 
