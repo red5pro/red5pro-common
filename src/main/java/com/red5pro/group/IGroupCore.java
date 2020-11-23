@@ -88,6 +88,15 @@ public interface IGroupCore {
 	IParticipant getParticipant(String id);
 
 	/**
+	 * Returns a participant by their publisher id.
+	 * 
+	 * @param publisherId
+	 *            of the participant
+	 * @return participant matching the given publisherId or null if not found
+	 */
+	IParticipant getParticipantByPublisherId(String publisherId);
+
+	/**
 	 * Returns the participant count.
 	 * 
 	 * @return total participants
@@ -115,4 +124,5 @@ public interface IGroupCore {
 	 * @return true if event was handled and false otherwise
 	 */
 	boolean handleEvent(IEvent event);
+
 }

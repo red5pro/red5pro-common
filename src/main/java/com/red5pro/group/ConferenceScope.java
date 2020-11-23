@@ -235,6 +235,16 @@ public class ConferenceScope extends Scope implements IGroupCore {
 	}
 
 	@Override
+	public IParticipant getParticipantByPublisherId(String publisherId) {
+		Optional<IParticipant> opt = participants.stream()
+				.filter(participant -> participant.getPublisherId().equals(publisherId)).findFirst();
+		if (opt.isPresent()) {
+			return opt.get();
+		}
+		return null;
+	}
+
+	@Override
 	public int getParticipantCount() {
 		return getActiveClients();
 	}
