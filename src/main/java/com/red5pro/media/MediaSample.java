@@ -50,7 +50,7 @@ public class MediaSample implements IMediaSample {
 	 * @param type
 	 */
 	@SuppressWarnings("unused")
-    private MediaSample(long timestamp, int bufferSize, MediaType type) {
+	private MediaSample(long timestamp, int bufferSize, MediaType type) {
 		this.timestamp = timestamp;
 		this.buffer = new byte[bufferSize];
 		this.type = type;
@@ -270,15 +270,15 @@ public class MediaSample implements IMediaSample {
 		this.epoc = epoc;
 	}
 
-    @Override
-    public int getTrackNum() {
-        return trackNum;
-    }
+	@Override
+	public int getTrackNum() {
+		return trackNum;
+	}
 
-    @Override
-    public void setTrackNum(int id) {
-        trackNum = id;
-    }
+	@Override
+	public void setTrackNum(int id) {
+		trackNum = id;
+	}
 
 	@Override
 	public boolean isComposite() {

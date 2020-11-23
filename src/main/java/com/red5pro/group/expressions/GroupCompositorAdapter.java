@@ -28,6 +28,7 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 	protected boolean isTrace;
 
 	protected Map<String, IParticipant> participants = new ConcurrentHashMap<>();
+
 	/**
 	 * Group / conference owning this compositor.
 	 */
@@ -187,15 +188,16 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 	@Override
 	public void setOwner(IGroupCore owner) {
 		this.owner = owner;
-
-	}
-	public void mainProgramStop() {
-		log.info("main stop");
-		hasMain = false;
 	}
 
 	public void mainProgramStart() {
 		log.info("main start");
 		hasMain = true;
 	}
+
+	public void mainProgramStop() {
+		log.info("main stop");
+		hasMain = false;
+	}
+
 }

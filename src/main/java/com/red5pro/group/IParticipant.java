@@ -25,6 +25,16 @@ public interface IParticipant extends IClient, IEventListener {
 	String getId();
 
 	/**
+	 * Sets the participants publisher id (may or may not be the stream name).
+	 */
+	void setPublisherId(String publisherId);
+
+	/**
+	 * Returns the participants publisher id.
+	 */
+	String getPublisherId();
+
+	/**
 	 * Whether or not this participant indicated its intent to publish.
 	 */
 	boolean isPublisher();
@@ -64,6 +74,7 @@ public interface IParticipant extends IClient, IEventListener {
 	 * @param mediaSample
 	 */
 	void consumeMediaSample(IMediaSample mediaSample);
+
 	/**
 	 * 
 	 * @param compositor

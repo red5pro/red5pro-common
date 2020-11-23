@@ -29,6 +29,9 @@ public class ConferenceParticipant extends AttributeStore implements IParticipan
 	// identifier for this participant
 	protected final String id = Long.toHexString(IdGenerator.generateId(24)); // 192 bits
 
+	// publisher id / stream name
+	protected String publisherId;
+
 	// timestamp for when this participant was created
 	protected final long created = System.currentTimeMillis();
 
@@ -219,6 +222,16 @@ public class ConferenceParticipant extends AttributeStore implements IParticipan
 	@Override
 	public void consumeMediaSample(IMediaSample mediaSample) {
 
+	}
+
+	@Override
+	public void setPublisherId(String publisherId) {
+		this.publisherId = publisherId;
+	}
+
+	@Override
+	public String getPublisherId() {
+		return publisherId;
 	}
 
 }
