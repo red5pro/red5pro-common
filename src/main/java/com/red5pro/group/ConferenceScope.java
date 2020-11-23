@@ -258,4 +258,5 @@ public class ConferenceScope extends Scope implements IGroupCore {
 	public MediaTrack getTrackById(String id) {
 		return compositor != null ? compositor.getTrackById(id) : null;
 	}
+
 }

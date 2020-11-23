@@ -49,7 +49,8 @@ public class MediaSample implements IMediaSample {
 	 * @param bufferSize
 	 * @param type
 	 */
-	private MediaSample(long timestamp, int bufferSize, MediaType type) {
+	@SuppressWarnings("unused")
+    private MediaSample(long timestamp, int bufferSize, MediaType type) {
 		this.timestamp = timestamp;
 		this.buffer = new byte[bufferSize];
 		this.type = type;
@@ -269,6 +270,16 @@ public class MediaSample implements IMediaSample {
 		this.epoc = epoc;
 	}
 
+    @Override
+    public int getTrackNum() {
+        return trackNum;
+    }
+
+    @Override
+    public void setTrackNum(int id) {
+        trackNum = id;
+    }
+
 	@Override
 	public boolean isComposite() {
 		return false;
@@ -279,7 +290,7 @@ public class MediaSample implements IMediaSample {
 	 * 
 	 * @deprecated
 	 * @param stripRtmp
-	 * @return
+	 * @return Buffer
 	 */
 	public Buffer toBuffer(boolean stripRtmp) {
 		Buffer buf = new Buffer();
@@ -382,18 +393,6 @@ public class MediaSample implements IMediaSample {
 	public static MediaSample build(long startTime, byte[] buf, MediaType type, String sourceName, boolean critical,
 			long sequenceNumber, boolean decoded) {
 		return new MediaSample(startTime, buf, type, sourceName, critical, sequenceNumber, decoded);
-	}
-
-	@Override
-	public int getTrackNum() {
-		// TODO Auto-generated method stub
-		return trackNum;
-	}
-
-	@Override
-	public void setTrackNum(int id) {
-		trackNum = id;
-
 	}
 
 }
