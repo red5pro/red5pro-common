@@ -73,9 +73,9 @@ public class ConferenceScope extends Scope implements IGroupCore {
 
 	@Override
 	public void stop() {
-	    log.debug("Scope stop"); 
-		if(compositor!=null){
-		    compositor.stop();
+		log.debug("Scope stop");
+		if (compositor != null) {
+			compositor.stop();
 		}
 		super.stop();
 	}
