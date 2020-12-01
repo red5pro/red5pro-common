@@ -131,4 +131,8 @@ public interface ExpressionCompositor {
 	 * @return
 	 */
 	public int getParticipantCount();
+	/**
+	 * 
+	 */
+	public void stop();
 }

@@ -200,4 +200,9 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 		hasMain = false;
 	}
 
+    @Override
+    public void stop() {       
+        
+    }
+
 }
