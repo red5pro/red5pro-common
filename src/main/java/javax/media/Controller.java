@@ -12,8 +12,6 @@ public interface Controller extends Clock, Duration {
 
 	public static final Time LATENCY_UNKNOWN = new Time(Long.MAX_VALUE);
 
-	// public void addControllerListener(ControllerListener listener);
-
 	public void close();
 
 	public void deallocate();
@@ -31,7 +29,5 @@ public interface Controller extends Clock, Duration {
 	public void prefetch();
 
 	public void realize();
-
-	// public void removeControllerListener(ControllerListener listener);
 
 }
