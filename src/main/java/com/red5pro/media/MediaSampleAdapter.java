@@ -81,6 +81,11 @@ public class MediaSampleAdapter implements IMediaSample {
 	}
 
 	@Override
+	public Buffer toBuffer() {
+		return null;
+	}
+
+	@Override
 	public Buffer toBuffer(boolean stripRtmp) {
 		return null;
 	}

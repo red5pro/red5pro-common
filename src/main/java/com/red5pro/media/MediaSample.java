@@ -4,6 +4,11 @@ import java.util.Arrays;
 
 import javax.media.Buffer;
 
+import org.red5.codec.AudioCodec;
+import org.red5.codec.VideoCodec;
+
+import com.red5pro.media.rtp.RTPCodecEnum;
+
 public class MediaSample implements IMediaSample {
 
 	// type of media, audio, video etc
@@ -40,8 +45,8 @@ public class MediaSample implements IMediaSample {
 	private int trackNum;
 
 	protected MediaSample() {
-
 	}
+
 	/**
 	 * Creation with start time, buffer size, and media type.
 	 * 
@@ -283,6 +288,82 @@ public class MediaSample implements IMediaSample {
 	@Override
 	public boolean isComposite() {
 		return false;
+	}
+
+	/**
+	 * Returns an FMJ/JMF Buffer based on this MediaSample.
+	 * 
+	 * @return Buffer
+	 */
+	@SuppressWarnings("incomplete-switch")
+	public Buffer toBuffer() {
+		Buffer buf = new Buffer();
+		buf.setFlags(flags);
+		if (privateData) {
+			buf.setConfig();
+		}
+		buf.setStreamCreation(epoc);
+		buf.setTimeStamp(timestamp);
+		buf.setMilliseconds(timestamp);
+		if (isVideo()) {
+			buf.setRtpTimeStamp(timestamp * 90);
+			buf.setClockRate(90000);
+		} else {
+			buf.setRtpTimeStamp(timestamp * 48);
+			buf.setClockRate(48000);
+		}
+		buf.setSequenceNumber(sequenceNumber);
+		if (fourCC != null) {
+			switch (fourCC) {
+				case OPUS :
+					buf.setCodec(RTPCodecEnum.OPUS);
+					break;
+				case H264 :
+					buf.setCodec(RTPCodecEnum.H264_PMODE1);
+					break;
+				case AAC :
+					buf.setCodec(RTPCodecEnum.AAC_48K);
+					break;
+				case VP8 :
+					buf.setCodec(RTPCodecEnum.VP8);
+					break;
+				case PCM :
+					buf.setCodec(RTPCodecEnum.PCMU);
+					break;
+			}
+		} else if (encoding != null) {
+			// attempt to set codec by encoding value
+			if (isAudio()) {
+				AudioCodec audioCodec = AudioCodec.valueOf(encoding);
+				switch (audioCodec) {
+					// case OPUS: // not linkable in the build due to red5pro classifier/special io
+					// build
+					// buf.setCodec(RTPCodecEnum.OPUS);
+					// break;
+					case AAC :
+						buf.setCodec(RTPCodecEnum.AAC_48K);
+						break;
+					case PCM :
+						buf.setCodec(RTPCodecEnum.PCMU);
+						break;
+				}
+			} else if (isVideo()) {
+				VideoCodec videoCodec = VideoCodec.valueOf(encoding);
+				switch (videoCodec) {
+					case AVC :
+						buf.setCodec(RTPCodecEnum.H264_PMODE1);
+						break;
+					// case VP8: // not linkable in the build due to red5pro classifier/special io
+					// build
+					// buf.setCodec(RTPCodecEnum.VP8);
+					// break;
+				}
+			}
+		}
+		buf.setData(buffer);
+		buf.setLength(getBufferSize());
+		buf.setOffset(0);
+		return buf;
 	}
 
 	/**

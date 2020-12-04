@@ -175,12 +175,14 @@ public class ConferenceScope extends Scope implements IGroupCore {
 	/** {@inheritDoc} */
 	@Override
 	public void dispatchEvent(IEvent event) {
+		log.debug("dispatchEvent: {}", event);
 		// dispatch to participants
 		participants.forEach(participant -> participant.notifyEvent(event));
 	}
 
 	@Override
 	public boolean handleEvent(IEvent event) {
+		log.debug("handleEvent: {}", event);
 		// TODO handle the event directed at our conference scope
 		if (event instanceof GroupEvent) {
 			// push the event into the compositor

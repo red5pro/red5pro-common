@@ -134,6 +134,13 @@ public interface IMediaSample {
 	/**
 	 * Returns an FMJ/JMF Buffer based on this MediaSample.
 	 * 
+	 * @return Buffer
+	 */
+	Buffer toBuffer();
+
+	/**
+	 * Returns an FMJ/JMF Buffer based on this MediaSample.
+	 * 
 	 * @param stripRtmp
 	 *            whether or not to strip AMF bytes
 	 * @return Buffer
