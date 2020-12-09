@@ -15,7 +15,9 @@ import com.red5pro.media.MediaTrack;
 
 /**
  * Represents a subscope to other scopes which represents a group of
- * participants in a conference scenario.
+ * participants in a conference scenario. To use this class as the
+ * Implementation, add parameter 'core' to the provision with value
+ * 'com.red5pro.group.ConferenceGroupImpl'
  * 
  * @author Paul Gregoire
  */
