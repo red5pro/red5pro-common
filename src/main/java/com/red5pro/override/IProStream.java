@@ -33,8 +33,8 @@ import java.util.Map;
 
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.stream.IBroadcastStream;
-import org.red5.server.api.stream.IClientStream;
 import org.red5.server.api.stream.IClientBroadcastStream;
+import org.red5.server.api.stream.IClientStream;
 import org.red5.server.api.stream.IStream;
 import org.red5.server.api.stream.StreamState;
 import org.red5.server.net.rtmp.event.Notify;
@@ -46,19 +46,21 @@ import com.red5pro.server.stream.auxout.AuxOut;
 
 /**
  * Red5 Pro server-side stream.
- * 
+ *
  * @author Paul Gregoire
  * @author Andy Shaules
  */
 public interface IProStream extends IStream, IClientStream, IBroadcastStream, IClientBroadcastStream {
 
 	/** {@inheritDoc} */
+	@Override
 	void close();
 
 	/** {@inheritDoc} */
 	void dispatchEvent(IEvent event);
 
 	/** {@inheritDoc} */
+	@Override
 	Notify getMetaData();
 
 	/** {@inheritDoc} */
@@ -68,6 +70,7 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
 	long getBytesReceived();
 
 	/** {@inheritDoc} */
+	@Override
 	void saveAs(String name, boolean append) throws IOException;
 
 	/**
@@ -83,10 +86,11 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
 	void stopRecording();
 
 	void addAuxOut(AuxOut audio);
+
 	/**
 	 * Sets the guid of the native module and queue of 'Ingredients'. <br>
 	 * Use within an implementation of MediaProcessorAware streamProcessorStart
-	 * 
+	 *
 	 * <pre>
 	 * streamProcessorStart(IProStream stream) {
 	 * 	Potion p = new Potion("face");
@@ -95,15 +99,15 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
 	 * 	stream.setPotion(p);
 	 * }
 	 * </pre>
-	 * 
+	 *
 	 * Since Potion extends Queue, later in the application, you can add/update
 	 * 'Ingredients'. The ProStream empties the Ingredient queue before processing
 	 * each frame.
-	 * 
+	 *
 	 * <pre>
 	 * stream.getPotion().add(new Ingredient("maskShape", "round"));
 	 * </pre>
-	 * 
+	 *
 	 * @param potion
 	 *            Potion
 	 */
@@ -114,11 +118,11 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
 	 * from. <br>
 	 * Since Potion extends Queue, in an application, you can add 'Ingredients'. The
 	 * ProStream empties the Ingredient queue before processing each frame.
-	 * 
+	 *
 	 * <pre>
 	 * stream.getPotion().add(new Ingredient("maskShape", "round"));
 	 * </pre>
-	 * 
+	 *
 	 * @return Potion
 	 */
 	Potion getPotion();
@@ -127,32 +131,35 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
 	 * Sets the core processor class. Required to activate API.
 	 * <p>
 	 * This can also be set in red5-commons. file
-	 * 
+	 *
 	 * <pre>
 	 * com.red5pro.media.transform.codec.AVCProcessor
 	 * </pre>
-	 * 
+	 *
 	 * @param clazz
 	 *            The class with core native bindings.
-	 * 
+	 *
 	 */
 	void setProcessorClass(String clazz);
+
 	/**
 	 * Sets the output parameters for the processor.
-	 * 
+	 *
 	 * @param config
 	 *            output parameters
 	 */
 	void setProcessConfiguration(ProcessConfiguration config);
+
 	/**
 	 * Add a Listener to be called at stream stop.
-	 * 
+	 *
 	 * @param handler
 	 *            the callee at stream-stop event.
 	 */
 	void addTerminationEventListener(ProStreamTerminationEventListener handler);
+
 	/**
-	 * 
+	 *
 	 * @param clazz
 	 *            processor class. Use null for default.
 	 * @param params
@@ -160,4 +167,20 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
 	 */
 	void usePreprocessor(String clazz, Map<String, Object> params);
 
+	/**
+	 * Return the number of subscribers for the given sidestream by id, or return
+	 * null.
+	 *
+	 * @see ProStream.getSideStream(String)
+	 * @param id
+	 *            the sidestream ID
+	 * @return the number of subscribers, or null if no stream, wrong stream type,
+	 *         etc.
+	 */
+	Integer getSideStreamSubscriberCount(String id);
+
+	/**
+	 * Return the total number of subscribers for the all sidestreams.
+	 */
+	int getAllSubscriberCount();
 }
