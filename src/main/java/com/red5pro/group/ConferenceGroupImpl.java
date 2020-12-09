@@ -75,7 +75,6 @@ public class ConferenceGroupImpl extends Scope implements IGroupCore {
 		super.stop();
 	}
 
-
 	/** {@inheritDoc} */
 	@Override
 	public void dispatchEvent(IEvent event) {
@@ -98,14 +97,14 @@ public class ConferenceGroupImpl extends Scope implements IGroupCore {
 
 	/** {@inheritDoc} */
 	public int getActiveClients() {
-	    log.debug("Active clients {}", participants.size()); 
+		log.debug("Active clients {}", participants.size());
 		return participants.size();
 	}
-    public int getActiveConncetions(){
-        int k = super.getActiveConnections();
-        log.debug("Active connections {}", k); 
-        return k;
-    }
+	public int getActiveConncetions() {
+		int k = super.getActiveConnections();
+		log.debug("Active connections {}", k);
+		return k;
+	}
 	public void setProvision(Provision provision) {
 		this.provision = provision;
 	}
@@ -148,7 +147,6 @@ public class ConferenceGroupImpl extends Scope implements IGroupCore {
 		}
 		return null;
 	}
-
 
 	public IParticipant getParticipantByPublisherId(String publisherId) {
 		Optional<IParticipant> opt = participants.stream()

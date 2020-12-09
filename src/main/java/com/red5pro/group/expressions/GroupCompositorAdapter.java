@@ -200,21 +200,21 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 	public void mainProgramStop() {
 		log.info("main stop");
 		hasMain = false;
-	    if(!hasReferenceCount()){
-              for(ICompositorRegistry regist:IGroupCore.registry){
-                    regist.release(provisionRef.get().getGuid());           
-                }
-        }
+		if (!hasReferenceCount()) {
+			for (ICompositorRegistry regist : IGroupCore.registry) {
+				regist.release(provisionRef.get().getGuid());
+			}
+		}
 	}
 
 	@Override
-	public void stop() {	    
-	    if(!hasReferenceCount()){
-            for(ICompositorRegistry regist:IGroupCore.registry){
-                regist.release(provisionRef.get().getGuid()); 	        
-            }
-	    }else{
-	        log.warn("Compositor has references: {}", getReferenceCount());
-	    }
+	public void stop() {
+		if (!hasReferenceCount()) {
+			for (ICompositorRegistry regist : IGroupCore.registry) {
+				regist.release(provisionRef.get().getGuid());
+			}
+		} else {
+			log.warn("Compositor has references: {}", getReferenceCount());
+		}
 	}
 }

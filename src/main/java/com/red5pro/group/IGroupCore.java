@@ -18,8 +18,8 @@ import com.red5pro.media.MediaTrack;
  */
 public interface IGroupCore {
 
-    public static List<ICompositorRegistry> registry = new CopyOnWriteArrayList<>();
-    
+	public static List<ICompositorRegistry> registry = new CopyOnWriteArrayList<>();
+
 	/**
 	 * Returns all the audio tracks.
 	 * 

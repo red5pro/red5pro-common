@@ -138,11 +138,12 @@ public interface ExpressionCompositor {
 	public void stop();
 	/**
 	 * Stream with context and name matching this objects Provision has started.
+	 * 
 	 * @param stream
 	 */
-    public void mainProgramStart(IProStream stream);
-    /**
-     * Stream with context and name matching this objects Provision has stopped.
-     */
-    public void mainProgramStop();
+	public void mainProgramStart(IProStream stream);
+	/**
+	 * Stream with context and name matching this objects Provision has stopped.
+	 */
+	public void mainProgramStop();
 }
