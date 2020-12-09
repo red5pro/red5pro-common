@@ -5,6 +5,7 @@ import com.red5pro.group.GroupEvent;
 import com.red5pro.group.IGroupCore;
 import com.red5pro.group.IParticipant;
 import com.red5pro.media.MediaTrack;
+import com.red5pro.override.IProStream;
 
 public interface ExpressionCompositor {
 
@@ -132,7 +133,16 @@ public interface ExpressionCompositor {
 	 */
 	public int getParticipantCount();
 	/**
-	 * 
+	 * If there are no references, release resources.
 	 */
 	public void stop();
+	/**
+	 * Stream with context and name matching this objects Provision has started.
+	 * @param stream
+	 */
+    public void mainProgramStart(IProStream stream);
+    /**
+     * Stream with context and name matching this objects Provision has stopped.
+     */
+    public void mainProgramStop();
 }

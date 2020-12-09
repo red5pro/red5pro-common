@@ -1,5 +1,8 @@
 package com.red5pro.group;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.red5.server.api.event.IEvent;
 
 import com.red5pro.cluster.streams.Provision;
@@ -15,6 +18,8 @@ import com.red5pro.media.MediaTrack;
  */
 public interface IGroupCore {
 
+    public static List<ICompositorRegistry> registry = new CopyOnWriteArrayList<>();
+    
 	/**
 	 * Returns all the audio tracks.
 	 * 
@@ -88,15 +93,6 @@ public interface IGroupCore {
 	IParticipant getParticipant(String id);
 
 	/**
-	 * Returns a participant by their publisher id.
-	 * 
-	 * @param publisherId
-	 *            of the participant
-	 * @return participant matching the given publisherId or null if not found
-	 */
-	IParticipant getParticipantByPublisherId(String publisherId);
-
-	/**
 	 * Returns the participant count.
 	 * 
 	 * @return total participants
@@ -124,5 +120,4 @@ public interface IGroupCore {
 	 * @return true if event was handled and false otherwise
 	 */
 	boolean handleEvent(IEvent event);
-
 }

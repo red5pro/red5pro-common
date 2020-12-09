@@ -9,11 +9,13 @@ import org.slf4j.Logger;
 
 import com.red5pro.cluster.streams.Provision;
 import com.red5pro.group.GroupEvent;
+import com.red5pro.group.ICompositorRegistry;
 import com.red5pro.group.IGroupCore;
 import com.red5pro.group.IParticipant;
 import com.red5pro.media.FourCC;
 import com.red5pro.media.MediaTrack;
 import com.red5pro.media.MediaType;
+import com.red5pro.override.IProStream;
 
 /**
  * Group focused base implementation of ExpressionCompositor.
@@ -190,7 +192,7 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 		this.owner = owner;
 	}
 
-	public void mainProgramStart() {
+	public void mainProgramStart(IProStream stream) {
 		log.info("main start");
 		hasMain = true;
 	}
@@ -198,11 +200,21 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 	public void mainProgramStop() {
 		log.info("main stop");
 		hasMain = false;
+	    if(!hasReferenceCount()){
+              for(ICompositorRegistry regist:IGroupCore.registry){
+                    regist.release(provisionRef.get().getGuid());           
+                }
+        }
 	}
 
 	@Override
-	public void stop() {
-
+	public void stop() {	    
+	    if(!hasReferenceCount()){
+            for(ICompositorRegistry regist:IGroupCore.registry){
+                regist.release(provisionRef.get().getGuid()); 	        
+            }
+	    }else{
+	        log.warn("Compositor has references: {}", getReferenceCount());
+	    }
 	}
-
 }
