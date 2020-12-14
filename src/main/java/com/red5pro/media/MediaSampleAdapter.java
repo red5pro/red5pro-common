@@ -135,4 +135,10 @@ public class MediaSampleAdapter implements IMediaSample {
 		return null;
 	}
 
+	@Override
+	public FourCC getContainer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

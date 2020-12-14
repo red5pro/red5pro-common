@@ -42,6 +42,9 @@ public class MediaSample implements IMediaSample {
 	// fourCC code for the content
 	private FourCC fourCC;
 
+	// container format of the bytes.
+	private FourCC container;
+
 	private int trackNum;
 
 	protected MediaSample() {
@@ -130,6 +133,11 @@ public class MediaSample implements IMediaSample {
 		this.privateData = critical;
 		this.sequenceNumber = sequenceNumber;
 		this.decoded = decoded;
+	}
+
+	public MediaSample(Buffer buffer, MediaType type) {
+		this.buffer = buffer;
+		this.type = type;
 	}
 
 	public boolean isCritical() {
@@ -289,7 +297,13 @@ public class MediaSample implements IMediaSample {
 	public boolean isComposite() {
 		return false;
 	}
-
+	@Override
+	public FourCC getContainer() {
+		return container;
+	}
+	public void setContainer(FourCC container) {
+		this.container = container;
+	}
 	/**
 	 * Returns an FMJ/JMF Buffer based on this MediaSample.
 	 * 
@@ -297,6 +311,9 @@ public class MediaSample implements IMediaSample {
 	 */
 	@SuppressWarnings("incomplete-switch")
 	public Buffer toBuffer() {
+		if (buffer instanceof Buffer) {
+			return (Buffer) buffer;
+		}
 		Buffer buf = new Buffer();
 		buf.setFlags(flags);
 		if (privateData) {
@@ -374,6 +391,10 @@ public class MediaSample implements IMediaSample {
 	 * @return Buffer
 	 */
 	public Buffer toBuffer(boolean stripRtmp) {
+		if (buffer instanceof Buffer) {
+			return (Buffer) buffer;
+		}
+
 		Buffer buf = new Buffer();
 		buf.setFlags(flags);
 		if (privateData) {
@@ -457,6 +478,10 @@ public class MediaSample implements IMediaSample {
 		return "MediaSample [type=" + (isAudio() ? "audio" : "video") + ", sourceName=" + sourceName + ", encoding="
 				+ encoding + ", privateData=" + privateData + ", keyframe=" + isKeyframe() + ", startTime=" + timestamp
 				+ ",  sequenceNumber=" + sequenceNumber + ", decoded=" + decoded + ", buffer=" + buffer + "]";
+	}
+
+	public static MediaSample build(Buffer buffer, MediaType type) {
+		return new MediaSample(buffer, type);
 	}
 
 	public static MediaSample build(long startTime, byte[] buf, MediaType type) {

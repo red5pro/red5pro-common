@@ -172,6 +172,15 @@ public interface IMediaSample {
 	 * 
 	 */
 	void setTrackNum(int id);
-
+	/**
+	 * 
+	 * @return fourcc of media if known.
+	 */
 	FourCC getFourCC();
+	/**
+	 * 
+	 * @return container format, if any.
+	 */
+	FourCC getContainer();
+
 }

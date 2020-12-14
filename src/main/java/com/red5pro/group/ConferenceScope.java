@@ -17,11 +17,11 @@ import com.red5pro.media.MediaTrack;
  * Represents a subscope to other scopes which represents a group of
  * participants in a conference scenario. To use this class as the
  * Implementation, add parameter 'core' to the provision with value
- * 'com.red5pro.group.ConferenceGroupImpl'
+ * 'com.red5pro.group.ConferenceScope'
  * 
  * @author Paul Gregoire
  */
-public class ConferenceGroupImpl extends Scope implements IGroupCore {
+public class ConferenceScope extends Scope implements IGroupCore {
 
 	/**
 	 * Provision representing this conference grouping.
@@ -46,7 +46,7 @@ public class ConferenceGroupImpl extends Scope implements IGroupCore {
 	 * Creates a scope (this isnt expected to be called)
 	 */
 	@ConstructorProperties(value = {""})
-	public ConferenceGroupImpl() {
+	public ConferenceScope() {
 		this(null, ScopeType.ROOM, null, false);
 	}
 
@@ -58,7 +58,7 @@ public class ConferenceGroupImpl extends Scope implements IGroupCore {
 	 * @param name
 	 * @param persistent
 	 */
-	public ConferenceGroupImpl(IScope parent, ScopeType type, String name, boolean persistent) {
+	public ConferenceScope(IScope parent, ScopeType type, String name, boolean persistent) {
 		super(parent, type, name, persistent);
 	}
 
@@ -100,12 +100,12 @@ public class ConferenceGroupImpl extends Scope implements IGroupCore {
 	/** {@inheritDoc} */
 	public int getActiveClients() {
 		log.debug("Active clients {}", participants.size());
-		return participants.size();
+		return participants.size();// plus mixer program + anecdotal shared objects/etc
 	}
 	public int getActiveConncetions() {
 		int k = super.getActiveConnections();
 		log.debug("Active connections {}", k);
-		return k;
+		return k;// plus mixer program + anecdotal shared objects/etc
 	}
 	public void setProvision(Provision provision) {
 		this.provision = provision;

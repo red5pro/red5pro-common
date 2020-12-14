@@ -17,7 +17,28 @@ import com.red5pro.media.MediaTrack;
  *
  */
 public interface IGroupCore {
-
+	/**
+	 * Provision parameter that defines the class handler alias of the Compositor.
+	 * Group handlers are registered by alias. See ICompositorRegistry
+	 */
+	public static final String PARAMS_GROUP_TYPE = "group";
+	/**
+	 * Provision parameter that defines the class implementation to use as the
+	 * IGroupCore handler. Supports IScope implementations. Core handlers are
+	 * defined by full java clazz path. See ICompositorRegistry.
+	 */
+	public static final String PARAMS_CORE_IMPL = "core";
+	/**
+	 * Provision Parameter to set Mixing bus options.
+	 */
+	public static final String PARAMS_VIDEO_TRACKS = "videotracks";
+	/**
+	 * Provision Parameter to set Mixing bus options.
+	 */
+	public static final String PARAMS_AUDIO_TRACKS = "audiotracks";
+	/**
+	 * End user handle to server core API implementation.
+	 */
 	public static List<ICompositorRegistry> registry = new CopyOnWriteArrayList<>();
 
 	/**
@@ -70,7 +91,8 @@ public interface IGroupCore {
 	 * Adds a participant.
 	 * 
 	 * @param participant
-	 * @return true if added and false otherwise
+	 * @return true if added and false if compositor is stopped or participant is
+	 *         already added.
 	 */
 	boolean addParticipant(IParticipant participant);
 
