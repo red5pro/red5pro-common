@@ -9,11 +9,13 @@ import org.slf4j.Logger;
 
 import com.red5pro.cluster.streams.Provision;
 import com.red5pro.group.GroupEvent;
+import com.red5pro.group.ICompositorRegistry;
 import com.red5pro.group.IGroupCore;
 import com.red5pro.group.IParticipant;
 import com.red5pro.media.FourCC;
 import com.red5pro.media.MediaTrack;
 import com.red5pro.media.MediaType;
+import com.red5pro.override.IProStream;
 
 /**
  * Group focused base implementation of ExpressionCompositor.
@@ -24,9 +26,17 @@ import com.red5pro.media.MediaType;
 public class GroupCompositorAdapter implements ExpressionCompositor {
 
 	protected Logger log = null;// LoggerFactory.getLogger(GroupCompositorAdapter.class);
-
+	/**
+	 * true if logging stream packets.
+	 */
 	protected boolean isTrace;
-
+	/**
+	 * true if logging session events.
+	 */
+	protected boolean isDebug;
+	/**
+	 * List of mixing channel IO busses.
+	 */
 	protected Map<String, IParticipant> participants = new ConcurrentHashMap<>();
 
 	/**
@@ -44,7 +54,7 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 	protected int videoTrackCount = 1;
 	/**
 	 * Number of tracks in this group. By default we initialize with 3 audio and 1
-	 * video.
+	 * video. Runtime values are set by Provision parameters.
 	 */
 	private int trackCount = audioTrackCount + videoTrackCount;
 
@@ -52,7 +62,9 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 	 * Media tracks which make up the conference group.
 	 */
 	protected MediaTrack[] tracks = new MediaTrack[trackCount];
-
+	/**
+	 * Stream named after Provision stream name is live.
+	 */
 	private boolean hasMain;
 
 	@Override
@@ -114,12 +126,12 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 	@Override
 	public void push(GroupEvent event) {
 		if (isTrace) {
-			log.trace("Event pushed in from id: {} fourCC: {}", event.getSourceId(), event.getFourCC());
+			log.trace("Event pushed in from id: {} fourCC: {}", event.getSource(), event.getFourCC());
 		}
 	}
 
 	@Override
-	public void doExpressionEvent(Object obj) {
+	public void doExpressionEvent(GroupEvent obj) {
 		if (isTrace) {
 			log.trace("Do expression event");
 		}
@@ -155,13 +167,8 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 	}
 
 	@Override
-	public void setTrackCount(int trackCount) {
-		this.trackCount = trackCount;
-	}
-
-	@Override
 	public int getTrackCount() {
-		return trackCount;
+		return audioTrackCount + videoTrackCount;
 	}
 
 	@Override
@@ -190,7 +197,7 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 		this.owner = owner;
 	}
 
-	public void mainProgramStart() {
+	public void mainProgramStart(IProStream stream) {
 		log.info("main start");
 		hasMain = true;
 	}
@@ -198,11 +205,21 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
 	public void mainProgramStop() {
 		log.info("main stop");
 		hasMain = false;
+		if (!hasReferenceCount()) {
+			for (ICompositorRegistry regist : IGroupCore.registry) {
+				regist.release(provisionRef.get().getGuid());
+			}
+		}
 	}
 
 	@Override
 	public void stop() {
-
+		if (!hasReferenceCount()) {
+			for (ICompositorRegistry regist : IGroupCore.registry) {
+				regist.release(provisionRef.get().getGuid());
+			}
+		} else {
+			log.warn("Compositor has references: {}", getReferenceCount());
+		}
 	}
-
 }

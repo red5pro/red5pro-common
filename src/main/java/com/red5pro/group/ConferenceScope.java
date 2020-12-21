@@ -4,13 +4,8 @@ import java.beans.ConstructorProperties;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.red5.server.Server;
-import org.red5.server.api.IClient;
-import org.red5.server.api.IConnection;
-import org.red5.server.api.IServer;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.scope.IScope;
-import org.red5.server.api.scope.IScopeHandler;
 import org.red5.server.api.scope.ScopeType;
 import org.red5.server.scope.Scope;
 
@@ -20,7 +15,9 @@ import com.red5pro.media.MediaTrack;
 
 /**
  * Represents a subscope to other scopes which represents a group of
- * participants in a conference scenario.
+ * participants in a conference scenario. To use this class as the
+ * Implementation, add parameter 'core' to the provision with value
+ * 'com.red5pro.group.ConferenceScope'
  * 
  * @author Paul Gregoire
  */
@@ -74,102 +71,10 @@ public class ConferenceScope extends Scope implements IGroupCore {
 	@Override
 	public void stop() {
 		log.debug("Scope stop");
-		if (compositor != null) {
+		if (compositor != null && !compositor.hasReferenceCount()) {
 			compositor.stop();
 		}
 		super.stop();
-	}
-
-	@Override
-	public boolean connect(IConnection conn, Object[] params) {
-		log.debug("Connect - scope: {} connection: {}", this, conn);
-		if (hasParent() && !parent.connect(conn, params)) {
-			log.debug("Connection to parent failed");
-			return false;
-		}
-		if (hasHandler() && !getHandler().connect(conn, this, params)) {
-			log.debug("Connection to handler failed");
-			return false;
-		}
-		if (!conn.isConnected()) {
-			log.debug("Connection is not connected");
-			// timeout while connecting client
-			return false;
-		}
-		final IClient client = conn.getClient();
-		// we would not get this far if there is no handler
-		if (hasHandler() && !getHandler().join(client, this)) {
-			return false;
-		}
-		// checking the connection again? why?
-		if (!conn.isConnected()) {
-			// timeout while connecting client
-			return false;
-		}
-		// add the client and event listener
-		if (addEventListener(conn)) {
-			log.debug("Added client");
-			// increment conn stats
-			connectionStats.increment();
-			// get connected scope
-			IScope connScope = conn.getScope();
-			log.trace("Connection scope: {}", connScope);
-			if (this.equals(connScope)) {
-				final IServer server = getServer();
-				if (server instanceof Server) {
-					((Server) server).notifyConnected(conn);
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void disconnect(IConnection conn) {
-		log.debug("Disconnect: {}", conn);
-		// call disconnect handlers in reverse order of connection. ie. roomDisconnect
-		// is called before appDisconnect.
-		final IClient client = conn.getClient();
-		if (client == null) {
-			// early bail out
-			removeEventListener(conn);
-			connectionStats.decrement();
-			if (hasParent()) {
-				parent.disconnect(conn);
-			}
-			return;
-		}
-		// remove it if it exists
-		IScopeHandler handler = getHandler();
-		if (handler != null) {
-			try {
-				handler.disconnect(conn, this);
-			} catch (Exception e) {
-				log.error("Error while executing \"disconnect\" for connection {} on handler {}. {}",
-						new Object[]{conn, handler, e});
-			}
-			try {
-				// there may be a timeout here ?
-				handler.leave(client, this);
-			} catch (Exception e) {
-				log.error("Error while executing \"leave\" for client {} on handler {}. {}",
-						new Object[]{conn, handler, e});
-			}
-		}
-		// remove listener
-		removeEventListener(conn);
-		// decrement if there was a set of connections
-		connectionStats.decrement();
-		if (this.equals(conn.getScope())) {
-			final IServer server = getServer();
-			if (server instanceof Server) {
-				((Server) server).notifyDisconnected(conn);
-			}
-		}
-		if (hasParent()) {
-			parent.disconnect(conn);
-		}
 	}
 
 	/** {@inheritDoc} */
@@ -178,6 +83,7 @@ public class ConferenceScope extends Scope implements IGroupCore {
 		log.debug("dispatchEvent: {}", event);
 		// dispatch to participants
 		participants.forEach(participant -> participant.notifyEvent(event));
+		super.dispatchEvent(event);
 	}
 
 	@Override
@@ -193,9 +99,14 @@ public class ConferenceScope extends Scope implements IGroupCore {
 
 	/** {@inheritDoc} */
 	public int getActiveClients() {
-		return participants.size();
+		log.debug("Active clients {}", participants.size());
+		return participants.size();// plus mixer program + anecdotal shared objects/etc
 	}
-
+	public int getActiveConncetions() {
+		int k = super.getActiveConnections();
+		log.debug("Active connections {}", k);
+		return k;// plus mixer program + anecdotal shared objects/etc
+	}
 	public void setProvision(Provision provision) {
 		this.provision = provision;
 	}
@@ -239,7 +150,6 @@ public class ConferenceScope extends Scope implements IGroupCore {
 		return null;
 	}
 
-	@Override
 	public IParticipant getParticipantByPublisherId(String publisherId) {
 		Optional<IParticipant> opt = participants.stream()
 				.filter(participant -> participant.getPublisherId().equals(publisherId)).findFirst();
@@ -273,5 +183,4 @@ public class ConferenceScope extends Scope implements IGroupCore {
 	public MediaTrack getTrackById(String id) {
 		return compositor != null ? compositor.getTrackById(id) : null;
 	}
-
 }

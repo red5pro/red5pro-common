@@ -25,11 +25,6 @@ public class GroupEvent implements IEvent {
 	private final IEventListener source;
 
 	/**
-	 * Events source identifier.
-	 */
-	private final String sourceId;
-
-	/**
 	 * Event target object. If an event carries more than one version of data, use
 	 * CompositeMediaSample.
 	 */
@@ -49,7 +44,6 @@ public class GroupEvent implements IEvent {
 	private GroupEvent(Type type, IEventListener source, Object data) {
 		this.type = type;
 		this.source = source;
-		this.sourceId = source != null ? ((IParticipant) source).getId() : null;
 		this.data = data;
 		this.fourCC = FourCC.UNDEFINED;
 		this.timestamp = System.currentTimeMillis();
@@ -58,7 +52,6 @@ public class GroupEvent implements IEvent {
 	private GroupEvent(Type type, IEventListener source, Object data, FourCC fourCC) {
 		this.type = type;
 		this.source = source;
-		this.sourceId = source != null ? ((IParticipant) source).getId() : null;
 		this.data = data;
 		this.fourCC = fourCC;
 		this.timestamp = System.currentTimeMillis();
@@ -67,7 +60,6 @@ public class GroupEvent implements IEvent {
 	private GroupEvent(Type type, Object data, FourCC fourCC, String sourceId) {
 		this.type = type;
 		this.source = null;
-		this.sourceId = sourceId;
 		this.data = data;
 		this.fourCC = fourCC;
 		this.timestamp = System.currentTimeMillis();
@@ -76,7 +68,6 @@ public class GroupEvent implements IEvent {
 	private GroupEvent(Type type, IEventListener source, Object data, FourCC fourCC, long timestamp) {
 		this.type = type;
 		this.source = source;
-		this.sourceId = source != null ? ((IParticipant) source).getId() : null;
 		this.data = data;
 		this.fourCC = fourCC;
 		this.timestamp = timestamp;
@@ -85,7 +76,6 @@ public class GroupEvent implements IEvent {
 	private GroupEvent(Type type, Object data, FourCC fourCC, long timestamp, String sourceId) {
 		this.type = type;
 		this.source = null;
-		this.sourceId = sourceId;
 		this.data = data;
 		this.fourCC = fourCC;
 		this.timestamp = timestamp;
@@ -115,10 +105,13 @@ public class GroupEvent implements IEvent {
 	public IEventListener getSource() {
 		return source;
 	}
-
-	public String getSourceId() {
-		return sourceId;
-	}
+	// /**
+	// * PublisherId or iparticipant id of source.
+	// * @return
+	// */
+	// public String getSourceId() {
+	// return sourceId;
+	// }
 
 	public long getTimestamp() {
 		return timestamp;

@@ -5,16 +5,28 @@ import com.red5pro.group.GroupEvent;
 import com.red5pro.group.IGroupCore;
 import com.red5pro.group.IParticipant;
 import com.red5pro.media.MediaTrack;
-
+import com.red5pro.override.IProStream;
+/**
+ * ExpressionCompositor is a Mixing bus interface which creates a way for app
+ * writers to build conference presentations with sophisticated audio and video
+ * routing.
+ * 
+ * @author Andy
+ *
+ */
 public interface ExpressionCompositor {
 
 	/**
-	 * Returns the owner of this; expected to be set in constructor or builder.
+	 * Returns the owner of this;
 	 * 
 	 * @return IGroup
 	 */
 	IGroupCore getOwner();
-
+	/**
+	 * Compositor factory will set owner after creation.
+	 * 
+	 * @param owner
+	 */
 	void setOwner(IGroupCore owner);
 
 	/**
@@ -25,21 +37,21 @@ public interface ExpressionCompositor {
 	void setProvision(Provision provision);
 
 	/**
-	 * Returns the local provision reference, primary instance is in the owner.
+	 * Returns the local provision reference.
 	 * 
 	 * @return Provision or null if not set
 	 */
 	Provision getProvision();
 
 	/**
-	 * Returns whether or not participants exist.
+	 * Returns whether or not participants and/or input programs exist.
 	 * 
-	 * @return true if there are participants and false otherwise
+	 * @return true if there are providers or consumers and false otherwise
 	 */
 	boolean hasReferenceCount();
 
 	/**
-	 * Returns the number of participants in the group.
+	 * Returns the number of providers and/or consumers in the group.
 	 * 
 	 * @return participant count
 	 */
@@ -50,7 +62,7 @@ public interface ExpressionCompositor {
 	 * 
 	 * @param trackCount
 	 */
-	void setTrackCount(int trackCount);
+	// void setTrackCount(int trackCount);
 
 	/**
 	 * Returns the track count.
@@ -83,7 +95,7 @@ public interface ExpressionCompositor {
 	MediaTrack getTrack(int index);
 
 	/**
-	 * Returns a track with a matching id.
+	 * Returns track with a matching id.
 	 * 
 	 * @param id
 	 *            tracks identifier
@@ -103,12 +115,12 @@ public interface ExpressionCompositor {
 	 * @param user
 	 *            defined event.
 	 */
-	void doExpressionEvent(Object event);
+	void doExpressionEvent(GroupEvent event);
 
 	/**
 	 * 
 	 * @param participant
-	 * @return
+	 * @return true if added. False if compositor was stopped or is already added.
 	 */
 	public boolean addParticipant(IParticipant participant);
 
@@ -132,7 +144,17 @@ public interface ExpressionCompositor {
 	 */
 	public int getParticipantCount();
 	/**
-	 * 
+	 * If there are no references, releases resources.
 	 */
 	public void stop();
+	/**
+	 * Stream with context and name matching this objects Provision has started.
+	 * 
+	 * @param stream
+	 */
+	public void mainProgramStart(IProStream stream);
+	/**
+	 * Stream with context and name matching this objects Provision has stopped.
+	 */
+	public void mainProgramStop();
 }
