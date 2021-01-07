@@ -39,26 +39,26 @@ import java.util.List;
  */
 public interface MediaProcessor {
 
-	static List<MediaProcessorAware> listeners = new ArrayList<>();
+    static List<MediaProcessorAware> listeners = new ArrayList<>();
 
-	/**
-	 * Add a listener to access the processing API.
-	 * 
-	 * @param listener
-	 *            MediaProcessorAware listener
-	 */
-	static void addProcessListener(MediaProcessorAware listener) {
-		listeners.add(listener);
-	}
+    /**
+     * Add a listener to access the processing API.
+     * 
+     * @param listener
+     *            MediaProcessorAware listener
+     */
+    static void addProcessListener(MediaProcessorAware listener) {
+        listeners.add(listener);
+    }
 
-	/**
-	 * Remove a listener.
-	 * 
-	 * @param listener
-	 *            MediaProcessorAware listener
-	 */
-	static void removeProcessListener(MediaProcessorAware listener) {
-		listeners.remove(listener);
-	}
+    /**
+     * Remove a listener.
+     * 
+     * @param listener
+     *            MediaProcessorAware listener
+     */
+    static void removeProcessListener(MediaProcessorAware listener) {
+        listeners.remove(listener);
+    }
 
 }

@@ -18,39 +18,39 @@ import net.minidev.json.JSONObject;
  */
 public interface IPeerConnectionCapable extends IConnection {
 
-	IScope getScope();
+    IScope getScope();
 
-	IRTCStreamSession getSession();
+    IRTCStreamSession getSession();
 
-	void setSession(IRTCStreamSession session);
+    void setSession(IRTCStreamSession session);
 
-	String getUserAgent();
+    String getUserAgent();
 
-	SDPUserAgent getUserAgentEnum();
+    SDPUserAgent getUserAgentEnum();
 
-	SignalingChannel getSignalChannel();
+    SignalingChannel getSignalChannel();
 
-	void setSignalChannel(Object signalChannel);
+    void setSignalChannel(Object signalChannel);
 
-	IClient getClient();
+    IClient getClient();
 
-	boolean hasAttribute(ConnectionAttributeKey dataChannel);
+    boolean hasAttribute(ConnectionAttributeKey dataChannel);
 
-	Object getAttribute(ConnectionAttributeKey key);
+    Object getAttribute(ConnectionAttributeKey key);
 
-	void setAttribute(ConnectionAttributeKey key, Object value);
+    void setAttribute(ConnectionAttributeKey key, Object value);
 
-	String getStringAttribute(ConnectionAttributeKey rtcStyle);
+    String getStringAttribute(ConnectionAttributeKey rtcStyle);
 
-	boolean isRecord();
+    boolean isRecord();
 
-	void mute(JSONObject jsonObject);
+    void mute(JSONObject jsonObject);
 
-	void notifyUnpublished(boolean notify);
+    void notifyUnpublished(boolean notify);
 
-	void writeMessage(String format);
+    void writeMessage(String format);
 
-	@Deprecated
-	boolean isEdge(); // remove traces of this once we stop supporting Edge
+    @Deprecated
+    boolean isEdge(); // remove traces of this once we stop supporting Edge
 
 }

@@ -10,14 +10,14 @@ package javax.media;
  */
 public class ResourceUnavailableException extends MediaException {
 
-	private static final long serialVersionUID = 4457827273708249965L;
+    private static final long serialVersionUID = 4457827273708249965L;
 
-	public ResourceUnavailableException() {
-		super();
-	}
+    public ResourceUnavailableException() {
+        super();
+    }
 
-	public ResourceUnavailableException(String message) {
-		super(message);
-	}
+    public ResourceUnavailableException(String message) {
+        super(message);
+    }
 
 }

@@ -13,24 +13,24 @@ import com.red5pro.override.IProStream;
  */
 public interface IRTCStreamSession {
 
-	void start(SDPUserAgent userAgentEnum);
+    void start(SDPUserAgent userAgentEnum);
 
-	void stop();
+    void stop();
 
-	boolean isStarted();
+    boolean isStarted();
 
-	void setHandler(Object rtcSessionService);
+    void setHandler(Object rtcSessionService);
 
-	long getCreated();
+    long getCreated();
 
-	Object getRtcStream();
+    Object getRtcStream();
 
-	IProStream getFlashStream();
+    IProStream getFlashStream();
 
-	Future<?> getCreationFuture();
+    Future<?> getCreationFuture();
 
-	void setCreationFuture(Future<Boolean> createFuture);
+    void setCreationFuture(Future<Boolean> createFuture);
 
-	void updateFlashStream(IProStream stream);
+    void updateFlashStream(IProStream stream);
 
 }

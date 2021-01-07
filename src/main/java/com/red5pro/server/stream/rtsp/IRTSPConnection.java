@@ -37,29 +37,29 @@ import com.red5pro.server.stream.IoSessionAware;
  */
 public interface IRTSPConnection extends IoSessionAware {
 
-	public final static int fourCC = 'r' | ('t' << 8) | ('s' << 16) | ('p' << 24);
+    public final static int fourCC = 'r' | ('t' << 8) | ('s' << 16) | ('p' << 24);
 
-	/**
-	 * From RTMPConnection / IConnection
-	 */
-	public void close();
+    /**
+     * From RTMPConnection / IConnection
+     */
+    public void close();
 
-	/**
-	 * Use IoSessionAware.getIoSession().
-	 * 
-	 * @return session
-	 */
-	@Deprecated
-	IoSession getIOSession();
+    /**
+     * Use IoSessionAware.getIoSession().
+     * 
+     * @return session
+     */
+    @Deprecated
+    IoSession getIOSession();
 
-	String getSessionId();
+    String getSessionId();
 
-	/**
-	 * Apply a QoS value to the connection.
-	 * 
-	 * @param qos
-	 *            quality of service.
-	 */
-	void applyQoS(int qos);
+    /**
+     * Apply a QoS value to the connection.
+     * 
+     * @param qos
+     *            quality of service.
+     */
+    void applyQoS(int qos);
 
 }

@@ -26,6 +26,7 @@
 package com.red5pro.override.cauldron;
 
 import java.nio.ByteBuffer;
+
 /**
  * Implementors of IProStream preprocessor classes must call output handler
  * receiveVideo method from native or java. Configure a IPreprocessorFactory
@@ -36,5 +37,5 @@ import java.nio.ByteBuffer;
  *
  */
 public interface IMIRVReceiver {
-	void receiveVideo(int index, int timestamp, ByteBuffer buffer);
+    void receiveVideo(int index, int timestamp, ByteBuffer buffer);
 }

@@ -39,22 +39,22 @@ import org.springframework.core.io.Resource;
  */
 public interface IPluginService {
 
-	/**
-	 * Handle an incoming request with supplied args.
-	 * 
-	 * @param args
-	 *            method args
-	 * @return true if successful and false otherwise
-	 */
-	boolean handleRequest(Object... args);
+    /**
+     * Handle an incoming request with supplied args.
+     * 
+     * @param args
+     *            method args
+     * @return true if successful and false otherwise
+     */
+    boolean handleRequest(Object... args);
 
-	/**
-	 * Handle an incoming request with supplied args.
-	 * 
-	 * @param args
-	 *            method args
-	 * @return list of resources or empty list if no matching items found
-	 */
-	List<Resource> handleResourceRequest(Object... args);
+    /**
+     * Handle an incoming request with supplied args.
+     * 
+     * @param args
+     *            method args
+     * @return list of resources or empty list if no matching items found
+     */
+    List<Resource> handleResourceRequest(Object... args);
 
 }
