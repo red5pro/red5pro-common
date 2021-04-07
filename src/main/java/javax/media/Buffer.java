@@ -952,4 +952,12 @@ public class Buffer {
 		return rtcpBaseAge;
 	}
 
+	public RTPCodecEnum getCodec() {
+		return codec;
+	}
+
+	public void setCodec(RTPCodecEnum codec) {
+		this.codec = codec;
+	}
+
 }
