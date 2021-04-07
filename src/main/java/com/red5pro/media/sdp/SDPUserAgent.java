@@ -7,6 +7,6 @@ package com.red5pro.media.sdp;
  */
 public enum SDPUserAgent {
 
-	undefined, chrome, firefox, mozilla, edge, opera, safari, android_chrome, android_firefox, red5pro;
+    undefined, chrome, firefox, mozilla, edge, opera, safari, android_chrome, android_firefox, red5pro;
 
 }

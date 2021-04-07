@@ -11,24 +11,24 @@ import javax.media.Buffer;
  */
 public interface IBufferHandler {
 
-	/**
-	 * Called by an audio encoder, supplying an encoded buffer data for output.
-	 * 
-	 * @param outBuf
-	 *            encoded and often already packetized buffer
-	 */
-	void audioBufferReceived(Buffer outBuffer);
+    /**
+     * Called by an audio encoder, supplying an encoded buffer data for output.
+     * 
+     * @param outBuf
+     *            encoded and often already packetized buffer
+     */
+    void audioBufferReceived(Buffer outBuffer);
 
-	/**
-	 * Called by an video encoder, supplying an encoded buffer data for output.
-	 * 
-	 * @param outBuf
-	 *            encoded and often already packetized buffer
-	 */
-	void videoBufferReceived(Buffer outBuffer);
+    /**
+     * Called by an video encoder, supplying an encoded buffer data for output.
+     * 
+     * @param outBuf
+     *            encoded and often already packetized buffer
+     */
+    void videoBufferReceived(Buffer outBuffer);
 
-	void setVideoGroupSize(int size);
+    void setVideoGroupSize(int size);
 
-	void setKeyGroup(List<Buffer> keyGroup);
+    void setKeyGroup(List<Buffer> keyGroup);
 
 }

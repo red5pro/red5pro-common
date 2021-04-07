@@ -9,8 +9,8 @@ package com.red5pro.server.stream.mpegts;
  */
 public interface ISegmentListener {
 
-	void onNewSegment(ITSPlaylist list);
+    void onNewSegment(ITSPlaylist list);
 
-	void onWriteComplete(ITSStreamSegment segment);
+    void onWriteComplete(ITSStreamSegment segment);
 
 }

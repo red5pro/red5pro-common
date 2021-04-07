@@ -8,12 +8,12 @@ package com.red5pro.group;
  */
 public enum GroupEventType {
 
-	START, // conference / group start
-	END, // conference / group end
-	JOIN, // conference / group join/ed
-	LEAVE, // conference / group leave / left
-	ACTION, // action / control event
-	MEDIA, // media event
-	STATUS; // status event
+    START, // conference / group start
+    END, // conference / group end
+    JOIN, // conference / group join/ed
+    LEAVE, // conference / group leave / left
+    ACTION, // action / control event
+    MEDIA, // media event
+    STATUS; // status event
 
 }

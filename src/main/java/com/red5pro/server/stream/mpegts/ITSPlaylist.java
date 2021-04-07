@@ -7,18 +7,18 @@ import java.nio.file.Path;
  */
 public interface ITSPlaylist {
 
-	void newSegment(boolean discontinuity);
+    void newSegment(boolean discontinuity);
 
-	Path writePlaylist(String dirPath, String playList);
+    Path writePlaylist(String dirPath, String playList);
 
-	void addSegmentListener(ISegmentListener listener);
+    void addSegmentListener(ISegmentListener listener);
 
-	boolean removeSegmentListener(ISegmentListener listener);
+    boolean removeSegmentListener(ISegmentListener listener);
 
-	String getCodecs();
+    String getCodecs();
 
-	long getIndex();
+    long getIndex();
 
-	int getSegmentLength();
+    int getSegmentLength();
 
 }

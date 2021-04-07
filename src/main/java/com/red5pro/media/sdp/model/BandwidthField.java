@@ -15,43 +15,43 @@ import java.util.regex.Pattern;
  */
 public class BandwidthField {
 
-	public final static Pattern PATTERN = Pattern.compile("([A-Z]{2}):([0-9]{1,4})");
+    public final static Pattern PATTERN = Pattern.compile("([A-Z]{2}):([0-9]{1,4})");
 
-	private String type = "AS";
+    private String type = "AS";
 
-	private int bandwidth;
+    private int bandwidth;
 
-	public BandwidthField() {
-	}
+    public BandwidthField() {
+    }
 
-	public BandwidthField(int bandwidth) {
-		this.bandwidth = bandwidth;
-	}
+    public BandwidthField(int bandwidth) {
+        this.bandwidth = bandwidth;
+    }
 
-	public BandwidthField(String type, int bandwidth) {
-		this.type = type;
-		this.bandwidth = bandwidth;
-	}
+    public BandwidthField(String type, int bandwidth) {
+        this.type = type;
+        this.bandwidth = bandwidth;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public int getBandwidth() {
-		return bandwidth;
-	}
+    public int getBandwidth() {
+        return bandwidth;
+    }
 
-	public void setBandwidth(int bandwidth) {
-		this.bandwidth = bandwidth;
-	}
+    public void setBandwidth(int bandwidth) {
+        this.bandwidth = bandwidth;
+    }
 
-	@Override
-	public String toString() {
-		return String.format("b=%s:%d\n", type, bandwidth);
-	}
+    @Override
+    public String toString() {
+        return String.format("b=%s:%d\n", type, bandwidth);
+    }
 
 }

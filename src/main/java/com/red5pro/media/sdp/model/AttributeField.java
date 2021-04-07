@@ -23,54 +23,54 @@ import java.util.regex.Pattern;
  */
 public class AttributeField {
 
-	public final static Pattern PATTERN = Pattern.compile("([\\w|-]+)(:(.*)){0,1}");
+    public final static Pattern PATTERN = Pattern.compile("([\\w|-]+)(:(.*)){0,1}");
 
-	// indication that this is a binary attribute (ie. no ':')
-	private boolean binary;
+    // indication that this is a binary attribute (ie. no ':')
+    private boolean binary;
 
-	private AttributeKey attribute;
+    private AttributeKey attribute;
 
-	private String value;
+    private String value;
 
-	public AttributeField(AttributeKey attribute, String value) {
-		this.attribute = attribute;
-		if (value == null) {
-			binary = true;
-		} else {
-			this.value = value;
-		}
-	}
+    public AttributeField(AttributeKey attribute, String value) {
+        this.attribute = attribute;
+        if (value == null) {
+            binary = true;
+        } else {
+            this.value = value;
+        }
+    }
 
-	public boolean isBinary() {
-		return binary;
-	}
+    public boolean isBinary() {
+        return binary;
+    }
 
-	public void setBinary(boolean binary) {
-		this.binary = binary;
-	}
+    public void setBinary(boolean binary) {
+        this.binary = binary;
+    }
 
-	public AttributeKey getAttribute() {
-		return attribute;
-	}
+    public AttributeKey getAttribute() {
+        return attribute;
+    }
 
-	public void setAttribute(AttributeKey attribute) {
-		this.attribute = attribute;
-	}
+    public void setAttribute(AttributeKey attribute) {
+        this.attribute = attribute;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	@Override
-	public String toString() {
-		if (!binary) {
-			return String.format("a=%s:%s\n", attribute, value);
-		}
-		return String.format("a=%s\n", attribute);
-	}
+    @Override
+    public String toString() {
+        if (!binary) {
+            return String.format("a=%s:%s\n", attribute, value);
+        }
+        return String.format("a=%s\n", attribute);
+    }
 
 }

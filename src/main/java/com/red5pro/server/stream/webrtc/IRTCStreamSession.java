@@ -11,20 +11,20 @@ import com.red5pro.override.IProStream;
  */
 public interface IRTCStreamSession {
 
-	void start(SDPUserAgent userAgentEnum);
+    void start(SDPUserAgent userAgentEnum);
 
-	void stop();
+    void stop();
 
-	boolean isStarted();
+    boolean isStarted();
 
-	void setHandler(Object rtcSessionService);
+    void setHandler(Object rtcSessionService);
 
-	long getCreated();
+    long getCreated();
 
-	IRTCStream getRtcStream();
+    IRTCStream getRtcStream();
 
-	IProStream getProStream();
+    IProStream getProStream();
 
-	void updateProStream(IProStream stream);
+    void updateProStream(IProStream stream);
 
 }

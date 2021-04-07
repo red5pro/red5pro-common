@@ -11,28 +11,25 @@ import org.slf4j.LoggerFactory;
 
 public class ProvisionTest {
 
-	private static Logger log = LoggerFactory.getLogger(ProvisionTest.class);
+    private static Logger log = LoggerFactory.getLogger(ProvisionTest.class);
 
-	static String groupProv = "{\"guid\": \"live/conference1\"," + "      \"context\": \"live/conference1\","
-			+ "      \"name\": \"conference1\"," + "      \"level\": 0," + "      \"isRestricted\": false,"
-			+ "      \"restrictions\": []," + "      \"primaries\": []," + "      \"secondaries\": [],"
-			+ "      \"parameters\": {" + "        \"group\": true," + "        \"audiotracks\": 3,"
-			+ "        \"videotracks\": 1" + "      }" + "    }";
+    static String groupProv = "{\"guid\": \"live/conference1\"," + "      \"context\": \"live/conference1\"," + "      \"name\": \"conference1\"," + "      \"level\": 0," + "      \"isRestricted\": false," + "      \"restrictions\": []," + "      \"primaries\": []," + "      \"secondaries\": []," + "      \"parameters\": {" + "        \"group\": true," + "        \"audiotracks\": 3," + "        \"videotracks\": 1"
+            + "      }" + "    }";
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	@Test
-	public void testGroup() {
-		Provision prov = Provision.buildFromJson(groupProv);
-		log.info("Deserialized: {}", prov);
-		assertNotNull(prov.getStreamName());
-		assertTrue((Boolean) prov.getParameters().get("group"));
-	}
+    @Test
+    public void testGroup() {
+        Provision prov = Provision.buildFromJson(groupProv);
+        log.info("Deserialized: {}", prov);
+        assertNotNull(prov.getStreamName());
+        assertTrue((Boolean) prov.getParameters().get("group"));
+    }
 
 }

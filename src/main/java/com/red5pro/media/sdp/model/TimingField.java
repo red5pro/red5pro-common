@@ -17,29 +17,29 @@ package com.red5pro.media.sdp.model;
  */
 public class TimingField {
 
-	private long start = 0l;
+    private long start = 0l;
 
-	private long stop = 0l;
+    private long stop = 0l;
 
-	public long getStart() {
-		return start;
-	}
+    public long getStart() {
+        return start;
+    }
 
-	public void setStart(long start) {
-		this.start = start;
-	}
+    public void setStart(long start) {
+        this.start = start;
+    }
 
-	public long getStop() {
-		return stop;
-	}
+    public long getStop() {
+        return stop;
+    }
 
-	public void setStop(long stop) {
-		this.stop = stop;
-	}
+    public void setStop(long stop) {
+        this.stop = stop;
+    }
 
-	@Override
-	public String toString() {
-		return String.format("t=%d %d\n", start, stop);
-	}
+    @Override
+    public String toString() {
+        return String.format("t=%d %d\n", start, stop);
+    }
 
 }

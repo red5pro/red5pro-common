@@ -10,14 +10,14 @@ package javax.media;
  */
 public class IncompatibleTimeBaseException extends MediaException {
 
-	private static final long serialVersionUID = -3438317563542022924L;
+    private static final long serialVersionUID = -3438317563542022924L;
 
-	public IncompatibleTimeBaseException() {
-		super();
-	}
+    public IncompatibleTimeBaseException() {
+        super();
+    }
 
-	public IncompatibleTimeBaseException(String message) {
-		super(message);
-	}
+    public IncompatibleTimeBaseException(String message) {
+        super(message);
+    }
 
 }

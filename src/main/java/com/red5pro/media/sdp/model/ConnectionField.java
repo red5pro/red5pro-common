@@ -19,53 +19,52 @@ import com.red5pro.server.util.NetworkManager;
  */
 public class ConnectionField {
 
-	private NetworkManager.NetworkType networkType = NetworkManager.NetworkType.IN;
+    private NetworkManager.NetworkType networkType = NetworkManager.NetworkType.IN;
 
-	private NetworkManager.AddressType addressType = NetworkManager.AddressType.IP4;
+    private NetworkManager.AddressType addressType = NetworkManager.AddressType.IP4;
 
-	private String address = "0.0.0.0";
+    private String address = "0.0.0.0";
 
-	public ConnectionField() {
-	}
+    public ConnectionField() {
+    }
 
-	public ConnectionField(String address) {
-		this.address = address;
-	}
+    public ConnectionField(String address) {
+        this.address = address;
+    }
 
-	public ConnectionField(String address, NetworkManager.NetworkType networkType,
-			NetworkManager.AddressType addressType) {
-		this.address = address;
-		this.networkType = networkType;
-		this.addressType = addressType;
-	}
+    public ConnectionField(String address, NetworkManager.NetworkType networkType, NetworkManager.AddressType addressType) {
+        this.address = address;
+        this.networkType = networkType;
+        this.addressType = addressType;
+    }
 
-	public NetworkManager.NetworkType getNetworkType() {
-		return networkType;
-	}
+    public NetworkManager.NetworkType getNetworkType() {
+        return networkType;
+    }
 
-	public void setNetworkType(NetworkManager.NetworkType networkType) {
-		this.networkType = networkType;
-	}
+    public void setNetworkType(NetworkManager.NetworkType networkType) {
+        this.networkType = networkType;
+    }
 
-	public NetworkManager.AddressType getAddressType() {
-		return addressType;
-	}
+    public NetworkManager.AddressType getAddressType() {
+        return addressType;
+    }
 
-	public void setAddressType(NetworkManager.AddressType addressType) {
-		this.addressType = addressType;
-	}
+    public void setAddressType(NetworkManager.AddressType addressType) {
+        this.addressType = addressType;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	@Override
-	public String toString() {
-		return String.format("c=%s %s %s\n", networkType, addressType, address);
-	}
+    @Override
+    public String toString() {
+        return String.format("c=%s %s %s\n", networkType, addressType, address);
+    }
 
 }

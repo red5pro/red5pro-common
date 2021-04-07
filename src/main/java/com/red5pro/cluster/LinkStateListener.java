@@ -35,11 +35,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public interface LinkStateListener {
 
-	public static final CopyOnWriteArraySet<LinkStateListener> linkListeners = new CopyOnWriteArraySet<>();
+    public static final CopyOnWriteArraySet<LinkStateListener> linkListeners = new CopyOnWriteArraySet<>();
 
-	void originAck(String origin);
+    void originAck(String origin);
 
-	void originClose(String host);
+    void originClose(String host);
 
-	void edgeClose(String host);
+    void edgeClose(String host);
 }

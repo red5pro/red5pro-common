@@ -7,6 +7,6 @@ package com.red5pro.media;
  */
 public enum SourceType {
 
-	RTMP, RTSP, RTP, RTC, HLS, MPEGTS, SRT;
+    RTMP, RTSP, RTP, RTC, HLS, MPEGTS, SRT;
 
 }

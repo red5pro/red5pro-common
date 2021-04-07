@@ -10,24 +10,24 @@ package javax.media;
  */
 public interface Controller extends Clock, Duration {
 
-	public static final Time LATENCY_UNKNOWN = new Time(Long.MAX_VALUE);
+    public static final Time LATENCY_UNKNOWN = new Time(Long.MAX_VALUE);
 
-	public void close();
+    public void close();
 
-	public void deallocate();
+    public void deallocate();
 
-	public Control getControl(String forName);
+    public Control getControl(String forName);
 
-	public Control[] getControls();
+    public Control[] getControls();
 
-	public Time getStartLatency();
+    public Time getStartLatency();
 
-	public State getState();
+    public State getState();
 
-	public State getTargetState();
+    public State getTargetState();
 
-	public void prefetch();
+    public void prefetch();
 
-	public void realize();
+    public void realize();
 
 }

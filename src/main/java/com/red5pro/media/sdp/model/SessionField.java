@@ -14,28 +14,28 @@ import java.util.regex.Pattern;
  */
 public class SessionField {
 
-	public final static Pattern PATTERN = Pattern.compile("([\\w|\\d|\\s|-]+)");
+    public final static Pattern PATTERN = Pattern.compile("([\\w|\\d|\\s|-]+)");
 
-	private String name = "-";
+    private String name = "-";
 
-	public SessionField() {
-	}
+    public SessionField() {
+    }
 
-	public SessionField(String name) {
-		this.name = name;
-	}
+    public SessionField(String name) {
+        this.name = name;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return String.format("s=%s\n", name);
-	}
+    @Override
+    public String toString() {
+        return String.format("s=%s\n", name);
+    }
 
 }

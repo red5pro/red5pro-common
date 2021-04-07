@@ -17,129 +17,133 @@ import com.red5pro.media.MediaTrack;
  *
  */
 public interface IGroupCore {
-	/**
-	 * Provision parameter that defines the class handler alias of the Compositor.
-	 * Group handlers are registered by alias. See ICompositorRegistry
-	 */
-	public static final String PARAMS_GROUP_TYPE = "group";
-	/**
-	 * Provision parameter that defines the class implementation to use as the
-	 * IGroupCore handler. Supports IScope implementations. Core handlers are
-	 * defined by full java clazz path. See ICompositorRegistry.
-	 */
-	public static final String PARAMS_CORE_IMPL = "core";
-	/**
-	 * Provision Parameter to set Mixing bus options.
-	 */
-	public static final String PARAMS_VIDEO_TRACKS = "videotracks";
-	/**
-	 * Provision Parameter to set Mixing bus options.
-	 */
-	public static final String PARAMS_AUDIO_TRACKS = "audiotracks";
-	/**
-	 * End user handle to server core API implementation.
-	 */
-	public static List<ICompositorRegistry> registry = new CopyOnWriteArrayList<>();
+    /**
+     * Provision parameter that defines the class handler alias of the Compositor.
+     * Group handlers are registered by alias. See ICompositorRegistry
+     */
+    public static final String PARAMS_GROUP_TYPE = "group";
 
-	/**
-	 * Returns all the audio tracks.
-	 * 
-	 * @return Audio tracks
-	 */
-	MediaTrack[] getAudioTracks();
+    /**
+     * Provision parameter that defines the class implementation to use as the
+     * IGroupCore handler. Supports IScope implementations. Core handlers are
+     * defined by full java clazz path. See ICompositorRegistry.
+     */
+    public static final String PARAMS_CORE_IMPL = "core";
 
-	/**
-	 * Returns all the video tracks.
-	 * 
-	 * @return video tracks
-	 */
-	MediaTrack[] getVideoTracks();
+    /**
+     * Provision Parameter to set Mixing bus options.
+     */
+    public static final String PARAMS_VIDEO_TRACKS = "videotracks";
 
-	/**
-	 * Returns a track at the given index or null if one does not exist.
-	 * 
-	 * @param index
-	 *            track index
-	 * @return MediaTrack or null if indexed track doesnt exist
-	 */
-	MediaTrack getTrack(int index);
+    /**
+     * Provision Parameter to set Mixing bus options.
+     */
+    public static final String PARAMS_AUDIO_TRACKS = "audiotracks";
 
-	/**
-	 * Returns a track matching the given id or null if one does not exist.
-	 * 
-	 * @param id
-	 *            tracks identifier
-	 * @return MediaTrack or null if the track doesnt exist
-	 */
-	MediaTrack getTrackById(String id);
+    /**
+     * End user handle to server core API implementation.
+     */
+    public static List<ICompositorRegistry> registry = new CopyOnWriteArrayList<>();
 
-	/**
-	 * Sets the compositor.
-	 * 
-	 * @param compositor
-	 */
-	void setCompositor(ExpressionCompositor compositor);
+    /**
+     * Returns all the audio tracks.
+     * 
+     * @return Audio tracks
+     */
+    MediaTrack[] getAudioTracks();
 
-	/**
-	 * Returns the compositor.
-	 * 
-	 * @return ExpressionCompositor
-	 */
-	ExpressionCompositor getCompositor();
+    /**
+     * Returns all the video tracks.
+     * 
+     * @return video tracks
+     */
+    MediaTrack[] getVideoTracks();
 
-	/**
-	 * Adds a participant.
-	 * 
-	 * @param participant
-	 * @return true if added and false if compositor is stopped or participant is
-	 *         already added.
-	 */
-	boolean addParticipant(IParticipant participant);
+    /**
+     * Returns a track at the given index or null if one does not exist.
+     * 
+     * @param index
+     *            track index
+     * @return MediaTrack or null if indexed track doesnt exist
+     */
+    MediaTrack getTrack(int index);
 
-	/**
-	 * Removes a participant by its id.
-	 * 
-	 * @param id
-	 *            participant id
-	 * @return true if removed or false if not
-	 */
-	boolean removeParticipant(String id);
+    /**
+     * Returns a track matching the given id or null if one does not exist.
+     * 
+     * @param id
+     *            tracks identifier
+     * @return MediaTrack or null if the track doesnt exist
+     */
+    MediaTrack getTrackById(String id);
 
-	/**
-	 * Returns a participant by their id.
-	 * 
-	 * @param id
-	 *            of the participant
-	 * @return participant matching the given id or null if not found
-	 */
-	IParticipant getParticipant(String id);
+    /**
+     * Sets the compositor.
+     * 
+     * @param compositor
+     */
+    void setCompositor(ExpressionCompositor compositor);
 
-	/**
-	 * Returns the participant count.
-	 * 
-	 * @return total participants
-	 */
-	int getParticipantCount();
+    /**
+     * Returns the compositor.
+     * 
+     * @return ExpressionCompositor
+     */
+    ExpressionCompositor getCompositor();
 
-	/**
-	 * Set the provision.
-	 * 
-	 * @param provision
-	 */
-	void setProvision(Provision provision);
+    /**
+     * Adds a participant.
+     * 
+     * @param participant
+     * @return true if added and false if compositor is stopped or participant is
+     *         already added.
+     */
+    boolean addParticipant(IParticipant participant);
 
-	/**
-	 * Returns the provision.
-	 * 
-	 * @return Provision
-	 */
-	Provision getProvision();
+    /**
+     * Removes a participant by its id.
+     * 
+     * @param id
+     *            participant id
+     * @return true if removed or false if not
+     */
+    boolean removeParticipant(String id);
 
-	/**
-	 * Overrides Scope.handleEvent() for visibility in groups.
-	 * 
-	 * @param event
-	 * @return true if event was handled and false otherwise
-	 */
-	boolean handleEvent(IEvent event);
+    /**
+     * Returns a participant by their id.
+     * 
+     * @param id
+     *            of the participant
+     * @return participant matching the given id or null if not found
+     */
+    IParticipant getParticipant(String id);
+
+    /**
+     * Returns the participant count.
+     * 
+     * @return total participants
+     */
+    int getParticipantCount();
+
+    /**
+     * Set the provision.
+     * 
+     * @param provision
+     */
+    void setProvision(Provision provision);
+
+    /**
+     * Returns the provision.
+     * 
+     * @return Provision
+     */
+    Provision getProvision();
+
+    /**
+     * Overrides Scope.handleEvent() for visibility in groups.
+     * 
+     * @param event
+     * @return true if event was handled and false otherwise
+     */
+    boolean handleEvent(IEvent event);
 }

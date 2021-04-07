@@ -11,210 +11,209 @@ import java.util.EnumSet;
  */
 public enum FourCC {
 
-	/**
-	 * Undefined / unknown / not set
-	 */
-	UNDEFINED('U', 'N', 'K', '0'),
+    /**
+     * Undefined / unknown / not set
+     */
+    UNDEFINED('U', 'N', 'K', '0'),
 
-	/**
-	 * 541934416 // assumes PCMU
-	 */
-	PCM('P', 'C', 'M', ' '),
+    /**
+     * 541934416 // assumes PCMU
+     */
+    PCM('P', 'C', 'M', ' '),
 
-	/**
-	 * ?
-	 */
-	PCMA('P', 'C', 'M', 'A'),
+    /**
+     * ?
+     */
+    PCMA('P', 'C', 'M', 'A'),
 
-	/**
-	 * ?
-	 */
-	RGBA('R', 'G', 'B', 'A'),
+    /**
+     * ?
+     */
+    RGBA('R', 'G', 'B', 'A'),
 
-	/**
-	 * 808596553
-	 */
-	I420('I', '4', '2', '0'),
+    /**
+     * 808596553
+     */
+    I420('I', '4', '2', '0'),
 
-	/**
-	 * 1398100047
-	 */
-	OPUS('O', 'P', 'U', 'S'),
+    /**
+     * 1398100047
+     */
+    OPUS('O', 'P', 'U', 'S'),
 
-	/**
-	 * 
-	 */
-	SPX('S', 'P', 'X', ' '),
+    /**
+     * 
+     */
+    SPX('S', 'P', 'X', ' '),
 
-	/**
-	 * 
-	 */
-	MP3('M', 'P', '3', ' '),
+    /**
+     * 
+     */
+    MP3('M', 'P', '3', ' '),
 
-	/**
-	 * 541278529
-	 */
-	AAC('A', 'A', 'C', ' '),
+    /**
+     * 541278529
+     */
+    AAC('A', 'A', 'C', ' '),
 
-	/**
-	 * 540561494
-	 */
-	VP8('V', 'P', '8', ' '),
+    /**
+     * 540561494
+     */
+    VP8('V', 'P', '8', ' '),
 
-	/**
-	 * 540627030
-	 */
-	VP9('V', 'P', '9', ' '),
+    /**
+     * 540627030
+     */
+    VP9('V', 'P', '9', ' '),
 
-	/**
-	 * 875967048
-	 */
-	H264('H', '2', '6', '4'),
+    /**
+     * 875967048
+     */
+    H264('H', '2', '6', '4'),
 
-	/**
-	 * ?
-	 */
-	HEVC('H', 'E', 'V', 'C'),
+    /**
+     * ?
+     */
+    HEVC('H', 'E', 'V', 'C'),
 
-	/**
-	 * ?
-	 */
-	AV1('A', 'V', '1', ' '),
+    /**
+     * ?
+     */
+    AV1('A', 'V', '1', ' '),
 
-	/**
-	 * 1096041805
-	 */
-	METADATA('M', 'E', 'T', 'A'),
+    /**
+     * 1096041805
+     */
+    METADATA('M', 'E', 'T', 'A'),
 
-	/**
-	 * 541478209
-	 */
-	AMF('A', 'M', 'F', ' '),
+    /**
+     * 541478209
+     */
+    AMF('A', 'M', 'F', ' '),
 
-	/**
-	 * ?
-	 */
-	RTMP('R', 'T', 'M', 'P'),
+    /**
+     * ?
+     */
+    RTMP('R', 'T', 'M', 'P'),
 
-	/**
-	 * ?
-	 */
-	RTC('R', 'T', 'C', ' '),
+    /**
+     * ?
+     */
+    RTC('R', 'T', 'C', ' '),
 
-	/**
-	 * 542135378
-	 */
-	RTP('R', 'T', 'P', ' '),
+    /**
+     * 542135378
+     */
+    RTP('R', 'T', 'P', ' '),
 
-	/**
-	 * ?
-	 */
-	SRTP('R', 'T', 'P', 'S'),
+    /**
+     * ?
+     */
+    SRTP('R', 'T', 'P', 'S'),
 
-	/**
-	 * ?
-	 */
-	RTSP('R', 'T', 'S', 'P'),
+    /**
+     * ?
+     */
+    RTSP('R', 'T', 'S', 'P'),
 
-	/**
-	 * ?
-	 */
-	SRT('S', 'R', 'T', ' '),
+    /**
+     * ?
+     */
+    SRT('S', 'R', 'T', ' '),
 
-	/**
-	 * 1398034509
-	 */
-	MPTS('M', 'P', 'T', 'S'),
+    /**
+     * 1398034509
+     */
+    MPTS('M', 'P', 'T', 'S'),
 
-	/**
-	 * ?
-	 */
-	XML('X', 'M', 'L', ' '),
+    /**
+     * ?
+     */
+    XML('X', 'M', 'L', ' '),
 
-	/**
-	 * 1313821514
-	 */
-	JSON('J', 'S', 'O', 'N'),
+    /**
+     * 1313821514
+     */
+    JSON('J', 'S', 'O', 'N'),
 
-	/**
-	 * ?
-	 */
-	JSON_RPC('J', 'R', 'P', 'C');
+    /**
+     * ?
+     */
+    JSON_RPC('J', 'R', 'P', 'C');
 
-	// audio fourcc identifiers
-	private static EnumSet<FourCC> audios = EnumSet.of(FourCC.AAC, FourCC.OPUS, FourCC.PCM, FourCC.PCMA);
+    // audio fourcc identifiers
+    private static EnumSet<FourCC> audios = EnumSet.of(FourCC.AAC, FourCC.OPUS, FourCC.PCM, FourCC.PCMA);
 
-	// video fourcc identifiers
-	private static EnumSet<FourCC> videos = EnumSet.of(FourCC.AV1, FourCC.H264, FourCC.HEVC, FourCC.I420, FourCC.RGBA,
-			FourCC.VP8, FourCC.VP9);
+    // video fourcc identifiers
+    private static EnumSet<FourCC> videos = EnumSet.of(FourCC.AV1, FourCC.H264, FourCC.HEVC, FourCC.I420, FourCC.RGBA, FourCC.VP8, FourCC.VP9);
 
-	final int code;
+    final int code;
 
-	FourCC(char a, char b, char c, char d) {
-		this.code = fourCC(a, b, c, d);
-	}
+    FourCC(char a, char b, char c, char d) {
+        this.code = fourCC(a, b, c, d);
+    }
 
-	/**
-	 * Returns the integer value of the FourCC code.
-	 * 
-	 * @return fourCC code
-	 */
-	public int getCode() {
-		return code;
-	}
+    /**
+     * Returns the integer value of the FourCC code.
+     * 
+     * @return fourCC code
+     */
+    public int getCode() {
+        return code;
+    }
 
-	/**
-	 * Returns a FourCC enum based on the supplied characters.
-	 * 
-	 * @param a
-	 * @param b
-	 * @param c
-	 * @param d
-	 * @return FourCC
-	 */
-	public static FourCC getFourCC(char a, char b, char c, char d) {
-		int target = FourCC.fourCC(a, b, c, d);
-		for (FourCC fcc : FourCC.values()) {
-			if (fcc.code == target) {
-				return fcc;
-			}
-		}
-		return null;
-	}
+    /**
+     * Returns a FourCC enum based on the supplied characters.
+     * 
+     * @param a
+     * @param b
+     * @param c
+     * @param d
+     * @return FourCC
+     */
+    public static FourCC getFourCC(char a, char b, char c, char d) {
+        int target = FourCC.fourCC(a, b, c, d);
+        for (FourCC fcc : FourCC.values()) {
+            if (fcc.code == target) {
+                return fcc;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * @param a
-	 *            char
-	 * @param b
-	 *            char
-	 * @param c
-	 *            char
-	 * @param d
-	 *            char
-	 * @return integer fourCC
-	 */
-	public static int fourCC(char a, char b, char c, char d) {
-		return (a << 24) | (b << 16) | (c << 8) | (d);
-	}
+    /**
+     * @param a
+     *            char
+     * @param b
+     *            char
+     * @param c
+     *            char
+     * @param d
+     *            char
+     * @return integer fourCC
+     */
+    public static int fourCC(char a, char b, char c, char d) {
+        return (a << 24) | (b << 16) | (c << 8) | (d);
+    }
 
-	/**
-	 * Returns true if the target FourCC identifier is of audio type.
-	 * 
-	 * @param target
-	 * @return true if audio and false otherwise
-	 */
-	public static boolean isAudio(FourCC target) {
-		return audios.contains(target);
-	}
+    /**
+     * Returns true if the target FourCC identifier is of audio type.
+     * 
+     * @param target
+     * @return true if audio and false otherwise
+     */
+    public static boolean isAudio(FourCC target) {
+        return audios.contains(target);
+    }
 
-	/**
-	 * Returns true if the target FourCC identifier is of video type.
-	 * 
-	 * @param target
-	 * @return true if video and false otherwise
-	 */
-	public static boolean isVideo(FourCC target) {
-		return videos.contains(target);
-	}
+    /**
+     * Returns true if the target FourCC identifier is of video type.
+     * 
+     * @param target
+     * @return true if video and false otherwise
+     */
+    public static boolean isVideo(FourCC target) {
+        return videos.contains(target);
+    }
 
 }
