@@ -39,7 +39,7 @@ public enum RTPCodecEnum {
     // Chrome is using id 107 for h264 pmode 1 and Firefox uses 126
 
     // audio
-    OPUS(111, "opus", "Opus", 48000, 2), PCMU(0, "PCMU", "PCM ulaw", 8000, 1), PCMA(8, "PCMA", "PCM alaw", 8000, 1), SPEEX(97, "speex", "Speex", 16000, 2),
+    OPUS(111, "opus", "Opus", 48000, 2), PCMU(0, "PCMU", "PCM ulaw", 8000, 1), PCMA(8, "PCMA", "PCM alaw", 8000, 1), SPEEX(97, "speex", "Speex", 16000, 2), AAC_48K(96, "aac", "AAC", 48000, 2), AAC_41K(96, "aac", "AAC", 41000, 2),
     // video
     H264_PMODE1(126, "H264", "h.264", 90000), H264_PMODE0(97, "H264", "h.264", 90000), VP8(100, "VP8", "VP8", 90000), VP9(101, "VP9", "VP9", 90000), AV1(103, "AV1", "AV1", 90000), HEVC(104, "H265", "h.265", 90000),
     // other

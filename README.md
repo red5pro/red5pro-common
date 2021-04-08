@@ -10,7 +10,7 @@ Including in your maven pom is as easy as adding this xml to your dependencies
 <dependency>
     <groupId>com.red5pro</groupId>
     <artifactId>red5pro-common</artifactId>
-    <version>7.3.0</version>
+    <version>8.1.1</version>
     <scope>provided</scope>
 </dependency>
 ```

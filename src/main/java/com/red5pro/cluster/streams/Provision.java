@@ -236,6 +236,10 @@ public class Provision {
         return gson;
     }
 
+    public static Provision buildFromJson(String json) {
+        return gson.fromJson(json, Provision.class);
+    }
+
     public static Provision build(String guid, String contextPath, String streamName, int qualityLevel) {
         return new Provision(guid, contextPath, streamName, qualityLevel, null, new HashMap<>());
     }

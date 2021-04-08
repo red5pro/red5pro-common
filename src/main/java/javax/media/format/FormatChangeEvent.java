@@ -13,9 +13,7 @@ import javax.media.Format;
  * @author Ken Larson
  */
 public class FormatChangeEvent extends ControllerEvent {
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = 7416642567048750643L;
 
     protected Format oldFormat;

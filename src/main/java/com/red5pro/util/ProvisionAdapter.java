@@ -83,20 +83,24 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
             result.addProperty("isRestricted", provision.getRestrictions().isRestricted());
         }
         JsonArray primaries = new JsonArray();
-        provision.getPrimaries().forEach(primary -> {
-            JsonObject iasJ = new JsonObject();
-            iasJ.addProperty("host", primary.getHost());
-            iasJ.addProperty("port", primary.getPort());
-            primaries.add(iasJ);
-        });
+        if (provision.getPrimaries() != null) {
+            provision.getPrimaries().forEach(primary -> {
+                JsonObject iasJ = new JsonObject();
+                iasJ.addProperty("host", primary.getHost());
+                iasJ.addProperty("port", primary.getPort());
+                primaries.add(iasJ);
+            });
+        }
         result.add("primaries", primaries);
         JsonArray secondaries = new JsonArray();
-        provision.getSecondaries().forEach(secondary -> {
-            JsonObject iasJ = new JsonObject();
-            iasJ.addProperty("host", secondary.getHost());
-            iasJ.addProperty("port", secondary.getPort());
-            secondaries.add(iasJ);
-        });
+        if (provision.getSecondaries() != null) {
+            provision.getSecondaries().forEach(secondary -> {
+                JsonObject iasJ = new JsonObject();
+                iasJ.addProperty("host", secondary.getHost());
+                iasJ.addProperty("port", secondary.getPort());
+                secondaries.add(iasJ);
+            });
+        }
         result.add("secondaries", secondaries);
         return result;
     }

@@ -23,14 +23,14 @@ public interface IRTCStreamSession {
 
     long getCreated();
 
-    Object getRtcStream();
+    IRTCStream getRtcStream();
 
-    IProStream getFlashStream();
+    IProStream getProStream();
 
     Future<?> getCreationFuture();
 
     void setCreationFuture(Future<Boolean> createFuture);
 
-    void updateFlashStream(IProStream stream);
+    void updateProStream(IProStream stream);
 
 }

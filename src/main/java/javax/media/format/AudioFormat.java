@@ -6,7 +6,7 @@ import com.red5pro.media.AudioConstants;
 
 /**
  * Encapsulates format information for audio data. The attributes of an
- * <tt>AudioFormat</tt> include the sample rate, bits per sample, and number of
+ * <pre>AudioFormat</pre> include the sample rate, bits per sample, and number of
  * channels.
  */
 public class AudioFormat extends Format {
@@ -45,7 +45,7 @@ public class AudioFormat extends Format {
     boolean init = false;
 
     /**
-     * Constructs an <tt>AudioFormat</tt> with the specified encoding type.
+     * Constructs an <pre>AudioFormat</pre> with the specified encoding type.
      *
      * @param encoding
      *            The audio encoding type.
@@ -56,11 +56,11 @@ public class AudioFormat extends Format {
     }
 
     /**
-     * Constructs an <tt>AudioFormat</tt> with the specified attributes.
+     * Constructs an <pre>AudioFormat</pre> with the specified attributes.
      *
      * @param encoding
-     *            A <tt>String</tt> that describes the encoding type for this
-     *            <tt>AudioFormat</tt>.
+     *            A <pre>String</pre> that describes the encoding type for this
+     *            <pre>AudioFormat</pre>.
      * @param sampleRate
      *            The sample rate.
      * @param sampleSizeInBits
@@ -77,11 +77,11 @@ public class AudioFormat extends Format {
     }
 
     /**
-     * Constructs an <tt>AudioFormat</tt> with the specified attributes.
+     * Constructs an <pre>AudioFormat</pre> with the specified attributes.
      *
      * @param encoding
-     *            A <tt>String</tt> that describes the encoding type for this
-     *            <tt>AudioFormat</tt>.
+     *            A <pre>String</pre> that describes the encoding type for this
+     *            <pre>AudioFormat</pre>.
      * @param sampleRate
      *            The sample rate.
      * @param sampleSizeInBits
@@ -89,13 +89,13 @@ public class AudioFormat extends Format {
      * @param channels
      *            The number of channels.
      * @param endian
-     *            The sample byte ordering used for this <tt>AudioFormat</tt>--
-     *            <tt>BIG_ENDIAN</tt> or <tt>LITTLE_ENDIAN</tt>.
+     *            The sample byte ordering used for this <pre>AudioFormat</pre>--
+     *            <pre>BIG_ENDIAN</pre> or <pre>LITTLE_ENDIAN</pre>.
      * @param signed
      *            Indicates whether the samples are stored in a signed or unsigned
-     *            format. Specify <CITE><tt>true</tt></CITE> if the
-     *            <tt>AudioFormat</tt> is signed, <tt>false</tt> if the
-     *            <tt>AudioFormat</tt> is unsigned.
+     *            format. Specify <CITE><pre>true</pre></CITE> if the
+     *            <pre>AudioFormat</pre> is signed, <pre>false</pre> if the
+     *            <pre>AudioFormat</pre> is unsigned.
      */
     public AudioFormat(String encoding, double sampleRate, int sampleSizeInBits, int channels, int endian, int signed) {
         this(encoding, sampleRate, sampleSizeInBits, channels);
@@ -104,11 +104,11 @@ public class AudioFormat extends Format {
     }
 
     /**
-     * Constructs an <tt>AudioFormat</tt> with the specified attributes.
+     * Constructs an <pre>AudioFormat</pre> with the specified attributes.
      *
      * @param encoding
-     *            A <tt>String</tt> that describes the encoding type for this
-     *            <tt>AudioFormat</tt>.
+     *            A <pre>String</pre> that describes the encoding type for this
+     *            <pre>AudioFormat</pre>.
      * @param sampleRate
      *            The sample rate.
      * @param sampleSizeInBits
@@ -116,13 +116,13 @@ public class AudioFormat extends Format {
      * @param channels
      *            The number of channels.
      * @param endian
-     *            The sample byte ordering used for this <tt>AudioFormat</tt>--
-     *            <tt>BIG_ENDIAN</tt> or <tt>LITTLE_ENDIAN</tt>.
+     *            The sample byte ordering used for this <pre>AudioFormat</pre>--
+     *            <pre>BIG_ENDIAN</pre> or <pre>LITTLE_ENDIAN</pre>.
      * @param signed
      *            Indicates whether the samples are stored in a signed or unsigned
-     *            format. Specify <CITE><tt>true</tt></CITE> if the
-     *            <tt>AudioFormat</tt> is signed, <tt>false</tt> if the
-     *            <tt>AudioFormat</tt> is unsigned.
+     *            format. Specify <CITE><pre>true</pre></CITE> if the
+     *            <pre>AudioFormat</pre> is signed, <pre>false</pre> if the
+     *            <pre>AudioFormat</pre> is unsigned.
      * @param frameSizeInBits
      *            The frame size.
      * @param frameRate
@@ -138,10 +138,10 @@ public class AudioFormat extends Format {
     }
 
     /**
-     * Creates a clone of this <tt>AudioFormat</tt> by copying each field to the
+     * Creates a clone of this <pre>AudioFormat</pre> by copying each field to the
      * clone.
      *
-     * @return A clone of this <tt>AudioFormat</tt>.
+     * @return A clone of this <pre>AudioFormat</pre>.
      */
     @Override
     public Object clone() {
@@ -193,11 +193,11 @@ public class AudioFormat extends Format {
     }
 
     /**
-     * Copies the attributes from the specified <tt>Format</tt> into this
-     * <tt>AudioFormat</tt>.
+     * Copies the attributes from the specified <pre>Format</pre> into this
+     * <pre>AudioFormat</pre>.
      *
      * @param f
-     *            The <tt>Format</tt> to copy the attributes from.
+     *            The <pre>Format</pre> to copy the attributes from.
      */
     @Override
     protected void copy(Format f) {
@@ -213,15 +213,15 @@ public class AudioFormat extends Format {
     }
 
     /**
-     * Compares the specified <tt>Format</tt> with this <tt>AudioFormat</tt>.
-     * Returns <tt>true</tt> only if the specified <tt>Format</tt> is an
-     * <tt>AudioFormat</tt> and all of its attributes are identical to this
-     * <tt>AudioFormat</tt>.
+     * Compares the specified <pre>Format</pre> with this <pre>AudioFormat</pre>.
+     * Returns <pre>true</pre> only if the specified <pre>Format</pre> is an
+     * <pre>AudioFormat</pre> and all of its attributes are identical to this
+     * <pre>AudioFormat</pre>.
      *
      * @param format
-     *            The <tt>Format</tt> to compare with this one.
-     * @return <tt>true</tt> if the specified <tt>Format</tt> is the same,
-     *         <tt>false</tt> if it is not.
+     *            The <pre>Format</pre> to compare with this one.
+     * @return <pre>true</pre> if the specified <pre>Format</pre> is the same,
+     *         <pre>false</pre> if it is not.
      */
     @Override
     public boolean equals(Object format) {
@@ -255,15 +255,15 @@ public class AudioFormat extends Format {
      * Gets an integer that indicates whether the sample byte order is big endian or
      * little endian.
      *
-     * @return The sample byte order of this <tt>AudioFormat</tt>,
-     *         <tt>BIG_ENDIAN</tt> or <tt>LITTLE_ENDIAN</tt>.
+     * @return The sample byte order of this <pre>AudioFormat</pre>,
+     *         <pre>BIG_ENDIAN</pre> or <pre>LITTLE_ENDIAN</pre>.
      */
     public int getEndian() {
         return endian;
     }
 
     /**
-     * Gets the frame rate of this <tt>AudioFormat</tt>.
+     * Gets the frame rate of this <pre>AudioFormat</pre>.
      *
      * @return The frame rate.
      */
@@ -272,10 +272,10 @@ public class AudioFormat extends Format {
     }
 
     /**
-     * Gets the frame size of this <tt>AudioFormat</tt>. This method is used
+     * Gets the frame size of this <pre>AudioFormat</pre>. This method is used
      * primarily for compressed audio.
      *
-     * @return The frame size of this <tt>AudioFormat</tt> in bits.
+     * @return The frame size of this <pre>AudioFormat</pre> in bits.
      */
     public int getFrameSizeInBits() {
         return frameSizeInBits;
@@ -303,22 +303,22 @@ public class AudioFormat extends Format {
      * Gets a boolean that indicates whether the samples are stored in signed format
      * or an unsigned format.
      *
-     * @return <tt>SIGNED</tt> if this <tt>VideoFormat</tt> is signed,
-     *         <tt>UNSIGNED</tt> if it is not.
+     * @return <pre>SIGNED</pre> if this <pre>VideoFormat</pre> is signed,
+     *         <pre>UNSIGNED</pre> if it is not.
      */
     public int getSigned() {
         return signed;
     }
 
     /**
-     * Finds the attributes shared by two matching <tt>Format</tt> objects. If the
-     * specified <tt>Format</tt> does not match this one, the result is undefined.
+     * Finds the attributes shared by two matching <pre>Format</pre> objects. If the
+     * specified <pre>Format</pre> does not match this one, the result is undefined.
      *
      * @param format
-     *            The matching <tt>Format</tt> to intersect with this
-     *            <tt>AudioFormat</tt>.
-     * @return A <tt>Format</tt> object with its attributes set to those attributes
-     *         common to both <tt>Format</tt> objects.
+     *            The matching <pre>Format</pre> to intersect with this
+     *            <pre>AudioFormat</pre>.
+     * @return A <pre>Format</pre> object with its attributes set to those attributes
+     *         common to both <pre>Format</pre> objects.
      * @see #matches
      */
     @Override
@@ -341,19 +341,19 @@ public class AudioFormat extends Format {
     }
 
     /**
-     * Checks whether or not the specified <tt>Format</tt> <EM>matches</EM> this
-     * <tt>AudioFormat</tt>. Matches only compares the attributes that are defined
-     * in the specified <tt>Format</tt>, unspecified attributes are ignored.
+     * Checks whether or not the specified <pre>Format</pre> <EM>matches</EM> this
+     * <pre>AudioFormat</pre>. Matches only compares the attributes that are defined
+     * in the specified <pre>Format</pre>, unspecified attributes are ignored.
      * <p>
-     * The two <tt>Format</tt> objects do not have to be of the same class to match.
+     * The two <pre>Format</pre> objects do not have to be of the same class to match.
      * For example, if "A" are "B" are being compared, a match is possible if "A" is
      * derived from "B" or "B" is derived from "A". (The compared attributes must
-     * still match, or <tt>matches</tt> fails.)
+     * still match, or <pre>matches</pre> fails.)
      *
      * @param format
-     *            The <tt>Format</tt> to compare with this one.
-     * @return <tt>true</tt> if the specified <tt>Format</tt> matches this one,
-     *         <tt>false</tt> if it does not.
+     *            The <pre>Format</pre> to compare with this one.
+     * @return <pre>true</pre> if the specified <pre>Format</pre> matches this one,
+     *         <pre>false</pre> if it does not.
      */
     @Override
     public boolean matches(Format format) {
@@ -369,10 +369,10 @@ public class AudioFormat extends Format {
     }
 
     /**
-     * Gets a <tt>String</tt> representation of the attributes of this
-     * <tt>AudioFormat</tt>. For example: "PCM, 44.1 KHz, Stereo, Signed".
+     * Gets a <pre>String</pre> representation of the attributes of this
+     * <pre>AudioFormat</pre>. For example: "PCM, 44.1 KHz, Stereo, Signed".
      *
-     * @return A <tt>String</tt> that describes the <tt>AudioFormat</tt> attributes.
+     * @return A <pre>String</pre> that describes the <pre>AudioFormat</pre> attributes.
      */
     @Override
     public String toString() {

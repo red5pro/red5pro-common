@@ -76,19 +76,19 @@ public class YUVFormat extends VideoFormat {
     private static String ENCODING = VideoFormat.YUV;
 
     /**
-     * Constructs a <tt>YUVFormat</tt> object that represents all YUV formats.
+     * Constructs a <pre>YUVFormat</pre> object that represents all YUV formats.
      */
     public YUVFormat() {
         super(ENCODING);
     }
 
     /**
-     * Constructs a <tt>YUVFormat</tt> with the specified properties. Use this
+     * Constructs a <pre>YUVFormat</pre> with the specified properties. Use this
      * constructor for planar YUV formats. (YUV_411, YUV_420, YUV_422, YUV_111, or
      * YUV_YVU9.)
      *
      * @param size
-     *            A <tt>Dimension</tt> that specifies the frame size.
+     *            A <pre>Dimension</pre> that specifies the frame size.
      * @param maxDataLength
      *            The maximum size of the data array.
      * @param dataType
@@ -124,11 +124,11 @@ public class YUVFormat extends VideoFormat {
     }
 
     /**
-     * Constructs a <tt>YUVFormat</tt> with the specified properties. Use this
+     * Constructs a <pre>YUVFormat</pre> with the specified properties. Use this
      * constructor for interleaved YUV formats (YUV_YUYV).
      *
      * @param size
-     *            A <tt>Dimension</tt> that specifies the frame size.
+     *            A <pre>Dimension</pre> that specifies the frame size.
      * @param maxDataLength
      *            The maximum size of the data array.
      * @param dataType
@@ -154,10 +154,10 @@ public class YUVFormat extends VideoFormat {
     // }
 
     /**
-     * Constructs a <tt>YUVFormat</tt> object for a specific <tt>yuvType</tt>.
+     * Constructs a <pre>YUVFormat</pre> object for a specific <pre>yuvType</pre>.
      *
      * @param yuvType
-     *            The YUV type for this <tt>YUVFormat</tt>: YUV_411, YUV_420,
+     *            The YUV type for this <pre>YUVFormat</pre>: YUV_411, YUV_420,
      *            YUV_422, YUV_111, YUV_YVU9, or YUV_YUYV.
      */
     public YUVFormat(int yuvType) {
@@ -166,9 +166,9 @@ public class YUVFormat extends VideoFormat {
     }
 
     /**
-     * Creates a clone of this <tt>YUVFormat</tt>.
+     * Creates a clone of this <pre>YUVFormat</pre>.
      *
-     * @return A clone of this <tt>YUVFormat</tt>.
+     * @return A clone of this <pre>YUVFormat</pre>.
      */
     @Override
     public Object clone() {
@@ -178,11 +178,11 @@ public class YUVFormat extends VideoFormat {
     }
 
     /**
-     * Copies the attributes from the specified <tt>Format</tt> into this
-     * <tt>YUVFormat</tt>.
+     * Copies the attributes from the specified <pre>Format</pre> into this
+     * <pre>YUVFormat</pre>.
      *
      * @param f
-     *            The <tt>Format</tt> to copy the attributes from.
+     *            The <pre>Format</pre> to copy the attributes from.
      */
     @Override
     protected void copy(Format f) {
@@ -199,14 +199,14 @@ public class YUVFormat extends VideoFormat {
     }
 
     /**
-     * Compares the specified <tt>Format</tt> with this <tt>YUVFormat</tt>. Returns
-     * <tt>true</tt> only if the specified <tt>Format</tt> is a <tt>YUVFormat</tt>
+     * Compares the specified <pre>Format</pre> with this <pre>YUVFormat</pre>. Returns
+     * <pre>true</pre> only if the specified <pre>Format</pre> is a <pre>YUVFormat</pre>
      * object and all of its attributes are identical to the attributes in this
-     * <tt>YUVFormat</tt> .
+     * <pre>YUVFormat</pre> .
      *
      * @param format
-     *            The <tt>Format</tt> to compare.
-     * @return true if the specified <tt>Format</tt> is the same as this one.
+     *            The <pre>Format</pre> to compare.
+     * @return true if the specified <pre>Format</pre> is the same as this one.
      */
     @Override
     public boolean equals(Object format) {
@@ -274,14 +274,14 @@ public class YUVFormat extends VideoFormat {
     }
 
     /**
-     * Finds the attributes shared by two matching <tt>Format</tt> objects. If the
-     * specified <tt>Format</tt> does not match this one, the result is undefined.
+     * Finds the attributes shared by two matching <pre>Format</pre> objects. If the
+     * specified <pre>Format</pre> does not match this one, the result is undefined.
      *
      * @param format
-     *            The matching <tt>Format</tt> to intersect with this
-     *            <tt>YUVFormat</tt>.
-     * @return A <tt>Format</tt> object with its attributes set to those attributes
-     *         common to both <tt>Format</tt> objects.
+     *            The matching <pre>Format</pre> to intersect with this
+     *            <pre>YUVFormat</pre>.
+     * @return A <pre>Format</pre> object with its attributes set to those attributes
+     *         common to both <pre>Format</pre> objects.
      * @see #matches
      */
     @Override
@@ -305,19 +305,19 @@ public class YUVFormat extends VideoFormat {
     }
 
     /**
-     * Checks whether or not the specified <tt>Format</tt> <EM>matches</EM> this
-     * <tt>YUVFormat</tt>. Matches only compares the attributes that are defined in
-     * the specified <tt>Format</tt>, unspecified attributes are ignored.
+     * Checks whether or not the specified <pre>Format</pre> <EM>matches</EM> this
+     * <pre>YUVFormat</pre>. Matches only compares the attributes that are defined in
+     * the specified <pre>Format</pre>, unspecified attributes are ignored.
      * <p>
-     * The two <tt>Format</tt> objects do not have to be of the same class to match.
+     * The two <pre>Format</pre> objects do not have to be of the same class to match.
      * For example, if "A" are "B" are being compared, a match is possible if "A" is
      * derived from "B" or "B" is derived from "A". (The compared attributes must
-     * still match, or <tt>matches</tt> fails.)
+     * still match, or <pre>matches</pre> fails.)
      *
      * @param format
-     *            The <tt>Format</tt> to compare with this one.
-     * @return <tt>true</tt> if the specified <tt>Format</tt> matches this one,
-     *         <tt>false</tt> if it does not.
+     *            The <pre>Format</pre> to compare with this one.
+     * @return <pre>true</pre> if the specified <pre>Format</pre> matches this one,
+     *         <pre>false</pre> if it does not.
      */
     @Override
     public boolean matches(Format format) {
@@ -341,7 +341,7 @@ public class YUVFormat extends VideoFormat {
      * basic attributes that will make this resulting format useful for format
      * matching.
      *
-     * @return A <tt>Format</tt> that's less restrictive than the this format.
+     * @return A <pre>Format</pre> that's less restrictive than the this format.
      */
     @Override
     public Format relax() {
@@ -359,10 +359,10 @@ public class YUVFormat extends VideoFormat {
     }
 
     /**
-     * Gets a <tt>String</tt> representation of the attributes of this
-     * <tt>YUVFormat</tt>. For example: "YUV Video Format, 352x240, ...".
+     * Gets a <pre>String</pre> representation of the attributes of this
+     * <pre>YUVFormat</pre>. For example: "YUV Video Format, 352x240, ...".
      *
-     * @return A <tt>String</tt> that describes the format attributes.
+     * @return A <pre>String</pre> that describes the format attributes.
      */
     @Override
     public String toString() {

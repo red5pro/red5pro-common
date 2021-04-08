@@ -6,18 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A <tt>Format</tt> abstracts an exact media format. It carries no
+ * A <pre>Format</pre> abstracts an exact media format. It carries no
  * encoding-specific parameters or timing information global to the
  * presentation. <br>
  * <h3>Comparing different formats</h3> Not all of the attributes in a
- * <tt>Format</tt> object have to be specified. This enables selected attributes
- * to be specified, making it possible to locate a supported <tt>Format</tt>
+ * <pre>Format</pre> object have to be specified. This enables selected attributes
+ * to be specified, making it possible to locate a supported <pre>Format</pre>
  * that meets certain requirements without needing to find an exact match. <br>
- * Two methods are provided for comparing <tt>Formats</tt>. The <tt>equals</tt>
- * method returns <tt>true</tt> if two <tt>Format</tt> objects are exactly the
+ * Two methods are provided for comparing <pre>Formats</pre>. The <pre>equals</pre>
+ * method returns <pre>true</pre> if two <pre>Format</pre> objects are exactly the
  * same--they're the same type and all of their attributes are the same. The
- * <tt>matches</tt> method relaxes the comparison, comparing only the attributes
- * that are explicitly specified in the <tt>Format</tt> you are comparing.
+ * <pre>matches</pre> method relaxes the comparison, comparing only the attributes
+ * that are explicitly specified in the <pre>Format</pre> you are comparing.
  */
 public class Format implements Cloneable, Serializable {
 
@@ -34,23 +34,23 @@ public class Format implements Cloneable, Serializable {
     protected String encoding;
 
     /**
-     * The data object required by the <tt>Format</tt> is an integer array.
+     * The data object required by the <pre>Format</pre> is an integer array.
      */
     public static final Class<?> intArray = (new int[0]).getClass();
 
     /**
-     * The data object required by the <tt>Format</tt> is a short array.
+     * The data object required by the <pre>Format</pre> is a short array.
      */
     public static final Class<?> shortArray = (new short[0]).getClass();
 
     /**
-     * The data object required by the <tt>Format</tt> is a byte array.
+     * The data object required by the <pre>Format</pre> is a byte array.
      */
     public static final Class<?> byteArray = (new byte[0]).getClass();
 
     /**
-     * The data object required by the <tt>Format</tt> is an array of
-     * <tt>Format</tt> objects.
+     * The data object required by the <pre>Format</pre> is an array of
+     * <pre>Format</pre> objects.
      */
     public static final Class<?> formatArray = (new Format[0]).getClass();
 
@@ -62,27 +62,27 @@ public class Format implements Cloneable, Serializable {
     private long encodingCode = 0;
 
     /**
-     * Constructs a <tt>Format</tt> that has the specified encoding type.
+     * Constructs a <pre>Format</pre> that has the specified encoding type.
      *
      * @param encoding
-     *            A <tt>String</tt> that contains the encoding type of the
-     *            <tt>Format</tt> to be constructed.
+     *            A <pre>String</pre> that contains the encoding type of the
+     *            <pre>Format</pre> to be constructed.
      */
     public Format(String encoding) {
         this.encoding = encoding;
     }
 
     /**
-     * Constructs a <tt>Format</tt> that has the specified encoding and data types.
+     * Constructs a <pre>Format</pre> that has the specified encoding and data types.
      *
      * @param encoding
-     *            A <tt>String</tt> that contains the encoding type of the
-     *            <tt>Format</tt> to be constructed.
+     *            A <pre>String</pre> that contains the encoding type of the
+     *            <pre>Format</pre> to be constructed.
      * @param dataType
-     *            The type of data object required by the <tt>Format</tt> to be
-     *            constructed, such as: <tt>byteArray</tt>, <tt>intArray</tt>, or
-     *            <tt>shortArray</tt>. For example, for a byte array the data type
-     *            would be " <tt>Format.byteArray</tt>".
+     *            The type of data object required by the <pre>Format</pre> to be
+     *            constructed, such as: <pre>byteArray</pre>, <pre>intArray</pre>, or
+     *            <pre>shortArray</pre>. For example, for a byte array the data type
+     *            would be " <pre>Format.byteArray</pre>".
      */
     public Format(String encoding, Class<?> dataType) {
         this(encoding);
@@ -90,7 +90,7 @@ public class Format implements Cloneable, Serializable {
     }
 
     /**
-     * Creates a clone of this <tt>Format</tt>.
+     * Creates a clone of this <pre>Format</pre>.
      *
      * @return A clone of this format.
      */
@@ -102,25 +102,25 @@ public class Format implements Cloneable, Serializable {
     }
 
     /**
-     * Copies the attributes from the specified <tt>Format</tt> into this
-     * <tt>Format</tt>.
+     * Copies the attributes from the specified <pre>Format</pre> into this
+     * <pre>Format</pre>.
      *
      * @param f
-     *            The <tt>Format</tt> to copy the attributes from.
+     *            The <pre>Format</pre> to copy the attributes from.
      */
     protected void copy(Format f) {
         dataType = f.dataType;
     }
 
     /**
-     * Checks whether or not the specified <tt>Format</tt> is the same as this
-     * <tt>Format</tt>. To be equal, the two <tt>Formats</tt> must be of the same
+     * Checks whether or not the specified <pre>Format</pre> is the same as this
+     * <pre>Format</pre>. To be equal, the two <pre>Formats</pre> must be of the same
      * type and all of their attributes must be the same.
      *
      * @param format
-     *            The <tt>Format</tt> to compare with this one.
-     * @return <tt>true</tt> if the specified <tt>Format</tt> is the same as this
-     *         one, <tt>false</tt> if it is not.
+     *            The <pre>Format</pre> to compare with this one.
+     * @return <pre>true</pre> if the specified <pre>Format</pre> is the same as this
+     *         one, <pre>false</pre> if it is not.
      */
     @Override
     public boolean equals(Object format) {
@@ -134,22 +134,22 @@ public class Format implements Cloneable, Serializable {
     }
 
     /**
-     * Gets the type of the data that this <tt>Format</tt> requires. For example,
-     * for byte array it returns "<tt>byte[].class</tt>".
+     * Gets the type of the data that this <pre>Format</pre> requires. For example,
+     * for byte array it returns "<pre>byte[].class</pre>".
      *
-     * @return The data type of this <tt>Format</tt>.
+     * @return The data type of this <pre>Format</pre>.
      */
     public Class<?> getDataType() {
         return dataType;
     }
 
     /**
-     * Gets the uniquely-qualified encoding name for this <tt>Format</tt>.
+     * Gets the uniquely-qualified encoding name for this <pre>Format</pre>.
      * <p>
      * In the reference implementation of JMF, these strings follow the QuickTime
      * codec strings.
      *
-     * @return The encoding of the <tt>Format</tt>.
+     * @return The encoding of the <pre>Format</pre>.
      */
     public String getEncoding() {
         return encoding;
@@ -173,7 +173,7 @@ public class Format implements Cloneable, Serializable {
 
     /**
      * Intersects the attributes of this format and the specified format to create a
-     * new <tt>Format</tt> object. The two objects being intersected should either
+     * new <pre>Format</pre> object. The two objects being intersected should either
      * be of the same type or one should be a subclass of the other. The resulting
      * object will be the same type as the subclass.
      * <P>
@@ -187,9 +187,9 @@ public class Format implements Cloneable, Serializable {
      * result.
      *
      * @param other
-     *            The <tt>Format</tt> object to intersect with this <tt>Format</tt>.
-     * @return A <tt>Format</tt> object with its attributes set to those attributes
-     *         common to both <tt>Format</tt> objects.
+     *            The <pre>Format</pre> object to intersect with this <pre>Format</pre>.
+     * @return A <pre>Format</pre> object with its attributes set to those attributes
+     *         common to both <pre>Format</pre> objects.
      * @see #matches
      */
     public Format intersects(Format other) {
@@ -270,19 +270,19 @@ public class Format implements Cloneable, Serializable {
     }
 
     /**
-     * Checks whether or not the specified <tt>Format</tt> <EM>matches</EM> this
-     * <tt>Format</tt>. Matches only compares the attributes that are defined in the
-     * specified <tt>Format</tt>, unspecified attributes are ignored.
+     * Checks whether or not the specified <pre>Format</pre> <EM>matches</EM> this
+     * <pre>Format</pre>. Matches only compares the attributes that are defined in the
+     * specified <pre>Format</pre>, unspecified attributes are ignored.
      * <p>
-     * The two <tt>Format</tt> objects do not have to be of the same class to match.
+     * The two <pre>Format</pre> objects do not have to be of the same class to match.
      * For example, if "A" are "B" are being compared, a match is possible if "A" is
      * derived from "B" or "B" is derived from "A". (The compared attributes must
-     * still match, or <tt>matches</tt> fails.)
+     * still match, or <pre>matches</pre> fails.)
      *
      * @param format
-     *            The <tt>Format</tt> to compare with this one.
-     * @return <tt>true</tt> if the specified <tt>Format</tt> matches this one,
-     *         <tt>false</tt> if it does not.
+     *            The <pre>Format</pre> to compare with this one.
+     * @return <pre>true</pre> if the specified <pre>Format</pre> matches this one,
+     *         <pre>false</pre> if it does not.
      */
     public boolean matches(Format format) {
         // log.error("matches?\n{}\n{}", this, format);
@@ -303,17 +303,17 @@ public class Format implements Cloneable, Serializable {
      * basic attributes that will make this resulting format useful for format
      * matching.
      *
-     * @return A <tt>Format</tt> that's less restrictive than the this format.
+     * @return A <pre>Format</pre> that's less restrictive than the this format.
      */
     public Format relax() {
         return (Format) clone();
     }
 
     /**
-     * Gets a <tt>String</tt> representation of the <tt>Format</tt> attributes. For
+     * Gets a <pre>String</pre> representation of the <pre>Format</pre> attributes. For
      * example: "PCM, 44.1 KHz, Stereo, Signed".
      *
-     * @return A <tt>String</tt> that describes the <tt>Format</tt> attributes.
+     * @return A <pre>String</pre> that describes the <pre>Format</pre> attributes.
      */
     @Override
     public String toString() {
