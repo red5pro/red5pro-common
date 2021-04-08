@@ -88,28 +88,28 @@ public class YUVFormat extends VideoFormat {
      * YUV_YVU9.)
      *
      * @param size
-     *            A <pre>Dimension</pre> that specifies the frame size.
+     *            A <pre>Dimension</pre> that specifies the frame size
      * @param maxDataLength
-     *            The maximum size of the data array.
+     *            The maximum size of the data array
      * @param dataType
-     *            The type of the data.
+     *            The type of the data
      * @param frameRate
-     *            The frame rate.
+     *            The frame rate
      * @param yuvType
-     *            The YUV ordering type.
+     *            The YUV ordering type
      * @param strideY
      *            The number of data elements between the first Y component in a row
-     *            and the first Y component in the next row.
+     *            and the first Y component in the next row
      * @param strideUV
      *            The number of data elements between the first U component in a row
      *            and the first U component in the next row. The same value is
      *            expected for the V component.
      * @param offsetY
-     *            The offset into the data array where the Y plane begins.
+     *            The offset into the data array where the Y plane begins
      * @param offsetU
-     *            The offset into the data array where the U plane begins.
+     *            The offset into the data array where the U plane begins
      * @param offsetV
-     *            The offset into the data array where the V plane begins.
+     *            The offset into the data array where the V plane begins
      */
     public YUVFormat(Dimension size, int maxDataLength, Class<?> dataType, float frameRate, int yuvType, int strideY, int strideUV, int offsetY, int offsetU, int offsetV) {
         // Call VideoFormat constructor
@@ -128,16 +128,16 @@ public class YUVFormat extends VideoFormat {
      * constructor for interleaved YUV formats (YUV_YUYV).
      *
      * @param size
-     *            A <pre>Dimension</pre> that specifies the frame size.
+     *            A <pre>Dimension</pre> that specifies the frame size
      * @param maxDataLength
-     *            The maximum size of the data array.
+     *            The maximum size of the data array
      * @param dataType
-     *            The type of the data.
+     *            The type of the data
      * @param yuvType
-     *            The YUV ordering type.
+     *            The YUV ordering type
      * @param strideY
      *            The number of data elements between the first Y component in a row
-     *            and the first Y component in the next row.
+     *            and the first Y component in the next row
      */
     // public YUVFormat(Dimension size, int maxDataLength,
     // Class dataType,
@@ -158,7 +158,7 @@ public class YUVFormat extends VideoFormat {
      *
      * @param yuvType
      *            The YUV type for this <pre>YUVFormat</pre>: YUV_411, YUV_420,
-     *            YUV_422, YUV_111, YUV_YVU9, or YUV_YUYV.
+     *            YUV_422, YUV_111, YUV_YVU9, or YUV_YUYV
      */
     public YUVFormat(int yuvType) {
         super(ENCODING);
@@ -168,7 +168,7 @@ public class YUVFormat extends VideoFormat {
     /**
      * Creates a clone of this <pre>YUVFormat</pre>.
      *
-     * @return A clone of this <pre>YUVFormat</pre>.
+     * @return A clone of this <pre>YUVFormat</pre>
      */
     @Override
     public Object clone() {
@@ -182,7 +182,7 @@ public class YUVFormat extends VideoFormat {
      * <pre>YUVFormat</pre>.
      *
      * @param f
-     *            The <pre>Format</pre> to copy the attributes from.
+     *            The <pre>Format</pre> to copy the attributes from
      */
     @Override
     protected void copy(Format f) {
@@ -205,8 +205,8 @@ public class YUVFormat extends VideoFormat {
      * <pre>YUVFormat</pre> .
      *
      * @param format
-     *            The <pre>Format</pre> to compare.
-     * @return true if the specified <pre>Format</pre> is the same as this one.
+     *            The <pre>Format</pre> to compare
+     * @return true if the specified <pre>Format</pre> is the same as this one
      */
     @Override
     public boolean equals(Object format) {
@@ -279,9 +279,9 @@ public class YUVFormat extends VideoFormat {
      *
      * @param format
      *            The matching <pre>Format</pre> to intersect with this
-     *            <pre>YUVFormat</pre>.
+     *            <pre>YUVFormat</pre>
      * @return A <pre>Format</pre> object with its attributes set to those attributes
-     *         common to both <pre>Format</pre> objects.
+     *         common to both <pre>Format</pre> objects
      * @see #matches
      */
     @Override
@@ -315,9 +315,9 @@ public class YUVFormat extends VideoFormat {
      * still match, or <pre>matches</pre> fails.)
      *
      * @param format
-     *            The <pre>Format</pre> to compare with this one.
+     *            The <pre>Format</pre> to compare with this one
      * @return <pre>true</pre> if the specified <pre>Format</pre> matches this one,
-     *         <pre>false</pre> if it does not.
+     *         <pre>false</pre> if it does not
      */
     @Override
     public boolean matches(Format format) {
@@ -341,7 +341,7 @@ public class YUVFormat extends VideoFormat {
      * basic attributes that will make this resulting format useful for format
      * matching.
      *
-     * @return A <pre>Format</pre> that's less restrictive than the this format.
+     * @return A <pre>Format</pre> that's less restrictive than the this format
      */
     @Override
     public Format relax() {
@@ -362,7 +362,7 @@ public class YUVFormat extends VideoFormat {
      * Gets a <pre>String</pre> representation of the attributes of this
      * <pre>YUVFormat</pre>. For example: "YUV Video Format, 352x240, ...".
      *
-     * @return A <pre>String</pre> that describes the format attributes.
+     * @return A <pre>String</pre> that describes the format attributes
      */
     @Override
     public String toString() {

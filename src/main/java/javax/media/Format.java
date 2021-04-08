@@ -137,7 +137,7 @@ public class Format implements Cloneable, Serializable {
      * Gets the type of the data that this <pre>Format</pre> requires. For example,
      * for byte array it returns "<pre>byte[].class</pre>".
      *
-     * @return The data type of this <pre>Format</pre>.
+     * @return The data type of this <pre>Format</pre>
      */
     public Class<?> getDataType() {
         return dataType;
@@ -149,7 +149,7 @@ public class Format implements Cloneable, Serializable {
      * In the reference implementation of JMF, these strings follow the QuickTime
      * codec strings.
      *
-     * @return The encoding of the <pre>Format</pre>.
+     * @return The encoding of the <pre>Format</pre>
      */
     public String getEncoding() {
         return encoding;
@@ -303,7 +303,7 @@ public class Format implements Cloneable, Serializable {
      * basic attributes that will make this resulting format useful for format
      * matching.
      *
-     * @return A <pre>Format</pre> that's less restrictive than the this format.
+     * @return A <pre>Format</pre> that's less restrictive than the this format
      */
     public Format relax() {
         return (Format) clone();
@@ -313,7 +313,7 @@ public class Format implements Cloneable, Serializable {
      * Gets a <pre>String</pre> representation of the <pre>Format</pre> attributes. For
      * example: "PCM, 44.1 KHz, Stereo, Signed".
      *
-     * @return A <pre>String</pre> that describes the <pre>Format</pre> attributes.
+     * @return A <pre>String</pre> that describes the <pre>Format</pre> attributes
      */
     @Override
     public String toString() {

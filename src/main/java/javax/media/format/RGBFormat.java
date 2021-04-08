@@ -163,7 +163,7 @@ public class RGBFormat extends VideoFormat {
     /**
      * Creates a clone of this <pre>RGBFormat</pre>.
      *
-     * @return A clone of this <pre>RGBFormat</pre>.
+     * @return A clone of this <pre>RGBFormat</pre>
      */
     @Override
     public Object clone() {
@@ -177,7 +177,7 @@ public class RGBFormat extends VideoFormat {
      * <pre>RGBFormat</pre>.
      *
      * @param f
-     *            The <pre>Format</pre> to copy the attributes from.
+     *            The <pre>Format</pre> to copy the attributes from
      */
     @Override
     protected void copy(Format f) {
@@ -202,8 +202,8 @@ public class RGBFormat extends VideoFormat {
      * <pre>RGBFormat</pre> .
      *
      * @param format
-     *            The <pre>Format</pre> to compare.
-     * @return true if the specified <pre>Format</pre> is the same as this one.
+     *            The <pre>Format</pre> to compare
+     * @return true if the specified <pre>Format</pre> is the same as this one
      */
     @Override
     public boolean equals(Object format) {
@@ -364,7 +364,7 @@ public class RGBFormat extends VideoFormat {
      * basic attributes that will make this resulting format useful for format
      * matching.
      *
-     * @return A <pre>Format</pre> that's less restrictive than the this format.
+     * @return A <pre>Format</pre> that's less restrictive than the this format
      */
     @Override
     public Format relax() {
@@ -382,7 +382,7 @@ public class RGBFormat extends VideoFormat {
      * Gets a <pre>String</pre> representation of the attributes of this
      * <pre>RGBFormat</pre>. For example: "RGB, 352x240, ...".
      *
-     * @return A <pre>String</pre> that describes the format attributes.
+     * @return A <pre>String</pre> that describes the format attributes
      */
     @Override
     public String toString() {

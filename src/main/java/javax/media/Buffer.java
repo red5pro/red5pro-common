@@ -837,7 +837,7 @@ public class Buffer {
     /**
      * Gets the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>.
      * 
-     * @return the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>.
+     * @return the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>
      */
     public RTPHeaderExtension getHeaderExtension() {
         return headerExtension;
@@ -847,7 +847,7 @@ public class Buffer {
      * Sets the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>.
      * 
      * @param headerExtension
-     *            the <pre>RTPHeaderExtension</pre> to set.
+     *            the <pre>RTPHeaderExtension</pre> to set
      */
     public void setHeaderExtension(RTPHeaderExtension headerExtension) {
         this.headerExtension = headerExtension;

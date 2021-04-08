@@ -60,11 +60,11 @@ public class AudioFormat extends Format {
      *
      * @param encoding
      *            A <pre>String</pre> that describes the encoding type for this
-     *            <pre>AudioFormat</pre>.
+     *            <pre>AudioFormat</pre>
      * @param sampleRate
-     *            The sample rate.
+     *            The sample rate
      * @param sampleSizeInBits
-     *            The sample size in bits.
+     *            The sample size in bits
      * @param channels
      *            The number of channels as an integer. For example, 1 for mono, 2
      *            for stereo.
@@ -141,7 +141,7 @@ public class AudioFormat extends Format {
      * Creates a clone of this <pre>AudioFormat</pre> by copying each field to the
      * clone.
      *
-     * @return A clone of this <pre>AudioFormat</pre>.
+     * @return A clone of this <pre>AudioFormat</pre>
      */
     @Override
     public Object clone() {
@@ -256,7 +256,7 @@ public class AudioFormat extends Format {
      * little endian.
      *
      * @return The sample byte order of this <pre>AudioFormat</pre>,
-     *         <pre>BIG_ENDIAN</pre> or <pre>LITTLE_ENDIAN</pre>.
+     *         <pre>BIG_ENDIAN</pre> or <pre>LITTLE_ENDIAN</pre>
      */
     public int getEndian() {
         return endian;
@@ -265,7 +265,7 @@ public class AudioFormat extends Format {
     /**
      * Gets the frame rate of this <pre>AudioFormat</pre>.
      *
-     * @return The frame rate.
+     * @return The frame rate
      */
     public double getFrameRate() {
         return frameRate;
@@ -275,7 +275,7 @@ public class AudioFormat extends Format {
      * Gets the frame size of this <pre>AudioFormat</pre>. This method is used
      * primarily for compressed audio.
      *
-     * @return The frame size of this <pre>AudioFormat</pre> in bits.
+     * @return The frame size of this <pre>AudioFormat</pre> in bits
      */
     public int getFrameSizeInBits() {
         return frameSizeInBits;
@@ -304,7 +304,7 @@ public class AudioFormat extends Format {
      * or an unsigned format.
      *
      * @return <pre>SIGNED</pre> if this <pre>VideoFormat</pre> is signed,
-     *         <pre>UNSIGNED</pre> if it is not.
+     *         <pre>UNSIGNED</pre> if it is not
      */
     public int getSigned() {
         return signed;
@@ -372,7 +372,7 @@ public class AudioFormat extends Format {
      * Gets a <pre>String</pre> representation of the attributes of this
      * <pre>AudioFormat</pre>. For example: "PCM, 44.1 KHz, Stereo, Signed".
      *
-     * @return A <pre>String</pre> that describes the <pre>AudioFormat</pre> attributes.
+     * @return A <pre>String</pre> that describes the <pre>AudioFormat</pre> attributes
      */
     @Override
     public String toString() {
