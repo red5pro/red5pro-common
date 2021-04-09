@@ -29,5 +29,4 @@ public interface PlugIn {
     public void open() throws ResourceUnavailableException;
 
     public void reset();
-
 }
