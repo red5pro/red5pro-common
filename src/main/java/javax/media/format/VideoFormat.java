@@ -36,7 +36,7 @@ public class VideoFormat extends Format {
      *
      * @param encoding
      *            A <pre>String</pre> that describes the encoding type for this
-     *            <pre>VideoFormat</pre>.
+     *            <pre>VideoFormat</pre>
      */
     public VideoFormat(String encoding) {
         super(encoding);
@@ -47,15 +47,15 @@ public class VideoFormat extends Format {
      *
      * @param encoding
      *            A <pre>String</pre> that describes the encoding type for this
-     *            <pre>VideoFormat</pre>.
+     *            <pre>VideoFormat</pre>
      * @param size
-     *            The size of a video frame.
+     *            The size of a video frame
      * @param maxDataLength
-     *            The maximum length of a data chunk.
+     *            The maximum length of a data chunk
      * @param dataType
-     *            The type of data. For example, byte array.
+     *            The type of data. For example, byte array
      * @param frameRate
-     *            The frame rate.
+     *            The frame rate
      */
     public VideoFormat(String encoding, Dimension size, int maxDataLength, Class<?> dataType, float frameRate) {
         this(encoding);
@@ -70,7 +70,7 @@ public class VideoFormat extends Format {
      * Creates a clone of this <pre>VideoFormat</pre> by copying each field to the
      * clone.
      *
-     * @return A clone of this <pre>VideoFormat</pre>.
+     * @return A clone of this <pre>VideoFormat</pre>
      */
     @Override
     public Object clone() {
@@ -84,7 +84,7 @@ public class VideoFormat extends Format {
      * <pre>VideoFormat</pre>.
      *
      * @param f
-     *            The <pre>Format</pre> to copy the attributes from.
+     *            The <pre>Format</pre> to copy the attributes from
      */
     @Override
     protected void copy(Format f) {
@@ -103,8 +103,8 @@ public class VideoFormat extends Format {
      * attributes in this <pre>VideoFormat</pre>.
      *
      * @param format
-     *            The <pre>Format</pre> to compare.
-     * @return true if the specified <pre>Format</pre> is the same as this one.
+     *            The <pre>Format</pre> to compare
+     * @return true if the specified <pre>Format</pre> is the same as this one
      */
     @Override
     public boolean equals(Object format) {
@@ -127,7 +127,7 @@ public class VideoFormat extends Format {
     /**
      * Gets the frame rate associated with this <pre>VideoFormat</pre>.
      *
-     * @return The frame rate.
+     * @return The frame rate
      */
     public float getFrameRate() {
         return frameRate;
@@ -137,7 +137,7 @@ public class VideoFormat extends Format {
      * Gets the length of the largest data chunk associated with this
      * <pre>VideoFormat</pre>.
      *
-     * @return The maximum length of a data chunk in this <pre>VideoFormat</pre>.
+     * @return The maximum length of a data chunk in this <pre>VideoFormat</pre>
      */
     public int getMaxDataLength() {
         return maxDataLength;
@@ -146,7 +146,7 @@ public class VideoFormat extends Format {
     /**
      * Gets the dimensions of a video frame in this <pre>VideoFormat</pre>.
      *
-     * @return A <pre>Dimension</pre> that specifies the frame size.
+     * @return A <pre>Dimension</pre> that specifies the frame size
      */
     public Dimension getSize() {
         return size;
@@ -158,9 +158,9 @@ public class VideoFormat extends Format {
      *
      * @param format
      *            The matching <pre>Format</pre> to intersect with this
-     *            <pre>VideoFormat</pre>.
+     *            <pre>VideoFormat</pre>
      * @return A <pre>Format</pre> object with its attributes set to those attributes
-     *         common to both <pre>Format</pre> objects.
+     *         common to both <pre>Format</pre> objects
      * @see #matches
      */
     @Override
@@ -189,9 +189,9 @@ public class VideoFormat extends Format {
      * still match, or <pre>matches</pre> fails.)
      *
      * @param format
-     *            The <pre>Format</pre> to compare with this one.
+     *            The <pre>Format</pre> to compare with this one
      * @return <pre>true</pre> if the specified <pre>Format</pre> matches this one,
-     *         <pre>false</pre> if it does not.
+     *         <pre>false</pre> if it does not
      */
     @Override
     public boolean matches(Format format) {
@@ -210,7 +210,7 @@ public class VideoFormat extends Format {
      * basic attributes that will make this resulting format useful for format
      * matching.
      *
-     * @return A <pre>Format</pre> that's less restrictive than the this format.
+     * @return A <pre>Format</pre> that's less restrictive than the this format
      */
     @Override
     public Format relax() {
@@ -229,7 +229,7 @@ public class VideoFormat extends Format {
      * Gets a <pre>String</pre> representation of the attributes of this
      * <pre>VideoFormat</pre>. For example: "RGB, 352x240, ...".
      *
-     * @return A <pre>String</pre> that describes the <pre>VideoFormat</pre> attributes.
+     * @return A <pre>String</pre> that describes the <pre>VideoFormat</pre> attributes
      */
     @Override
     public String toString() {

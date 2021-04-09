@@ -30,7 +30,7 @@ package com.red5pro.media;
  */
 public class AudioConstants {
     /**
-     * The <pre>/rtp</pre> constant. Introduced in order to achieve consistency in the
+     * The <tt>/rtp</tt> constant. Introduced in order to achieve consistency in the
      * casing of the String.
      */
     public static final String _RTP = "/rtp";
