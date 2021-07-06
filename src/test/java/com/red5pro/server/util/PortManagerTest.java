@@ -46,7 +46,17 @@ public class PortManagerTest {
     }
 
     @Test
+    public void testGetRTPServerPort() {
+        log.info("\n testGetRTPServerPort");
+        assertTrue(PortManager.getCount() == 0);
+        int a = PortManager.getRTPServerPort();
+        assertEquals(49152, a);
+        assertTrue(PortManager.getCount() == 1);
+    }
+
+    @Test
     public void testGetRTPServerPortPair() {
+        log.info("\n testGetRTPServerPortPair");
         int a = PortManager.getRTPServerPort();
         int b = PortManager.getRTPServerPort();
         int[] ports = new int[] { a, b };
@@ -71,6 +81,7 @@ public class PortManagerTest {
 
     @Test
     public void testPortStayingAllocated() throws SocketException {
+        log.info("\n testPortStayingAllocated");
         int intitialCount = PortManager.getCount();
         int port = PortManager.getRTPServerPort();
         System.out.println("Port returned: " + port);
@@ -82,7 +93,7 @@ public class PortManagerTest {
         assertTrue(PortManager.checkAvailable(port));
         assertEquals(PortManager.getCount(), intitialCount);
         PortManager.cleanAllocations();
-        assertEquals(PortManager.getCount(), 1);
+        assertEquals(PortManager.getCount(), 0);
     }
 
     @Test

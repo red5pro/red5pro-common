@@ -124,8 +124,10 @@ public class NetworkManager {
                 DatagramSocket socket = null;
                 try {
                     socket = new DatagramSocket();
-                    socket.connect(InetAddress.getByName("8.8.8.8"), PortManager.findFreeUdpPort());
+                    int port = PortManager.findFreeUdpPort();
+                    socket.connect(InetAddress.getByName("8.8.8.8"), port);
                     ipAddress = socket.getLocalAddress().getHostAddress();
+                    PortManager.clearRTPServerPort(port);
                 } catch (Exception ioe) {
                     log.warn("Exception getting local address via dgram", ioe);
                 } finally {
