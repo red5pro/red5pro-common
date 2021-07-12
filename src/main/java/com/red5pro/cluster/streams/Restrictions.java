@@ -1,5 +1,5 @@
 //
-// Copyright © 2015 Infrared5, Inc. All rights reserved.
+// Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -32,25 +32,25 @@ package com.red5pro.cluster.streams;
  */
 public class Restrictions {
 
-	private final boolean restricted;
+    private final boolean restricted;
 
-	private final String[] conditions;
+    private final String[] conditions;
 
-	private Restrictions(boolean restricted, String[] conditions) {
-		this.restricted = restricted;
-		this.conditions = conditions;
-	}
+    private Restrictions(boolean restricted, String[] conditions) {
+        this.restricted = restricted;
+        this.conditions = conditions;
+    }
 
-	public boolean isRestricted() {
-		return restricted;
-	}
+    public boolean isRestricted() {
+        return restricted;
+    }
 
-	public String[] getConditions() {
-		return conditions;
-	}
+    public String[] getConditions() {
+        return conditions;
+    }
 
-	public static Restrictions build(boolean restricted, String[] conditions) {
-		return new Restrictions(restricted, conditions);
-	}
+    public static Restrictions build(boolean restricted, String[] conditions) {
+        return new Restrictions(restricted, conditions);
+    }
 
 }

@@ -1,5 +1,5 @@
 //
-// Copyright © 2015 Infrared5, Inc. All rights reserved.
+// Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -27,15 +27,15 @@ package com.red5pro.qos;
 
 public enum IPTOS {
 
-	IPTOS_LOWCOST(0x02), IPTOS_RELIABILITY(0x04), IPTOS_THROUGHPUT(0x08), IPTOS_LOWDELAY(0x10);
+    IPTOS_LOWCOST(0x02), IPTOS_RELIABILITY(0x04), IPTOS_THROUGHPUT(0x08), IPTOS_LOWDELAY(0x10);
 
-	private final int id;
+    private final int id;
 
-	private IPTOS(int id) {
-		this.id = id;
-	}
+    private IPTOS(int id) {
+        this.id = id;
+    }
 
-	public int getValue() {
-		return id;
-	}
+    public int getValue() {
+        return id;
+    }
 }

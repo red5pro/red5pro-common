@@ -1,5 +1,5 @@
 //
-// Copyright © 2015 Infrared5, Inc. All rights reserved.
+// Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -38,50 +38,50 @@ import org.red5.server.api.IConnection;
  */
 public interface RestrictorEval {
 
-	/**
-	 * Add restrictions to this list.
-	 */
-	static final CopyOnWriteArraySet<RestrictorEval> restrictions = new CopyOnWriteArraySet<RestrictorEval>();
+    /**
+     * Add restrictions to this list.
+     */
+    static final CopyOnWriteArraySet<RestrictorEval> restrictions = new CopyOnWriteArraySet<RestrictorEval>();
 
-	/**
-	 * 
-	 * @param provision
-	 *            stream provision
-	 * @param conn
-	 *            the subscriber
-	 * @return boolean true if access is allowed
-	 */
-	static boolean isAllowed(Restrictions provision, IConnection conn) {
-		boolean allow = provision.isRestricted();
-		if (allow) {
-			return true;
-		}
-		String allowIfEquals = null;// no permissions needed.
-		for (RestrictorEval restriction : restrictions) {
-			allowIfEquals = restriction.getRestriction(conn);
-			if (allowIfEquals == null) {
+    /**
+     * 
+     * @param provision
+     *            stream provision
+     * @param conn
+     *            the subscriber
+     * @return boolean true if access is allowed
+     */
+    static boolean isAllowed(Restrictions provision, IConnection conn) {
+        boolean allow = provision.isRestricted();
+        if (allow) {
+            return true;
+        }
+        String allowIfEquals = null;// no permissions needed.
+        for (RestrictorEval restriction : restrictions) {
+            allowIfEquals = restriction.getRestriction(conn);
+            if (allowIfEquals == null) {
 
-			}
-			String[] perms = provision.getConditions();
-			if (allowIfEquals == null || perms == null) {
-				continue;
-			}
-			for (String condition : perms) {
-				if (condition.equals(allowIfEquals)) {
-					return true;
-				}
-			}
-		}
-		return allow;
-	}
+            }
+            String[] perms = provision.getConditions();
+            if (allowIfEquals == null || perms == null) {
+                continue;
+            }
+            for (String condition : perms) {
+                if (condition.equals(allowIfEquals)) {
+                    return true;
+                }
+            }
+        }
+        return allow;
+    }
 
-	/**
-	 * Called on play attempt. Use with geo location or similar restrictions.
-	 * 
-	 * @param conn
-	 *            IConnection calling play.
-	 * @return null if permission will use default.
-	 */
-	String getRestriction(IConnection conn);
+    /**
+     * Called on play attempt. Use with geo location or similar restrictions.
+     * 
+     * @param conn
+     *            IConnection calling play.
+     * @return null if permission will use default.
+     */
+    String getRestriction(IConnection conn);
 
 }

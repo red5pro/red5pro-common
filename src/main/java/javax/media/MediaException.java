@@ -10,14 +10,14 @@ package javax.media;
  */
 public class MediaException extends Exception {
 
-	private static final long serialVersionUID = -5346295861743653629L;
+    private static final long serialVersionUID = -5346295861743653629L;
 
-	public MediaException() {
-		super();
-	}
+    public MediaException() {
+        super();
+    }
 
-	public MediaException(String message) {
-		super(message);
-	}
+    public MediaException(String message) {
+        super(message);
+    }
 
 }

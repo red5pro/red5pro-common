@@ -1,5 +1,5 @@
 //
-// Copyright © 2015 Infrared5, Inc. All rights reserved.
+// Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -37,24 +37,29 @@ import com.red5pro.server.stream.IoSessionAware;
  */
 public interface IRTSPConnection extends IoSessionAware {
 
-	public final static int fourCC = 'r' | ('t' << 8) | ('s' << 16) | ('p' << 24);
+    public final static int fourCC = 'r' | ('t' << 8) | ('s' << 16) | ('p' << 24);
 
-	/**
-	 * Use IoSessionAware.getIoSession().
-	 * 
-	 * @return session
-	 */
-	@Deprecated
-	IoSession getIOSession();
+    /**
+     * From RTMPConnection / IConnection
+     */
+    public void close();
 
-	String getSessionId();
+    /**
+     * Use IoSessionAware.getIoSession().
+     * 
+     * @return session
+     */
+    @Deprecated
+    IoSession getIOSession();
 
-	/**
-	 * Apply a QoS value to the connection.
-	 * 
-	 * @param qos
-	 *            quality of service.
-	 */
-	void applyQoS(int qos);
+    String getSessionId();
+
+    /**
+     * Apply a QoS value to the connection.
+     * 
+     * @param qos
+     *            quality of service.
+     */
+    void applyQoS(int qos);
 
 }

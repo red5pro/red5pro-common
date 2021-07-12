@@ -1,5 +1,5 @@
 //
-// Copyright © 2015 Infrared5, Inc. All rights reserved.
+// Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -29,17 +29,17 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 public interface IClientReportReceiver {
 
-	static final CopyOnWriteArraySet<IClientReportReceiver> receivers = new CopyOnWriteArraySet<>();
+    static final CopyOnWriteArraySet<IClientReportReceiver> receivers = new CopyOnWriteArraySet<>();
 
-	/**
-	 * 
-	 * @param fourCC
-	 *            IoSessionAware foucCC
-	 * @param timestamp
-	 *            time stamp
-	 * @param info
-	 *            information
-	 */
-	public void logReport(int fourCC, long timestamp, String info);
+    /**
+     * 
+     * @param fourCC
+     *            IoSessionAware foucCC
+     * @param timestamp
+     *            time stamp
+     * @param info
+     *            information
+     */
+    public void logReport(int fourCC, long timestamp, String info);
 
 }

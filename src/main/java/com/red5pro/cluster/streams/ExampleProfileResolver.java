@@ -1,5 +1,5 @@
 //
-// Copyright © 2015 Infrared5, Inc. All rights reserved.
+// Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -38,29 +38,29 @@ package com.red5pro.cluster.streams;
  */
 public class ExampleProfileResolver implements ProfileLevelResolver {
 
-	private String spliterator = "_";;
+    private String spliterator = "_";;
 
-	public ExampleProfileResolver() {
-		ProfileLevelResolver.levelResolvers.add(this);
-	}
+    public ExampleProfileResolver() {
+        ProfileLevelResolver.levelResolvers.add(this);
+    }
 
-	@Override
-	public int getLevel(String contect, String name) {
-		// Parse name to determine which bitrate level priority this stream is.
-		// lowest name_3
-		String[] parts = name.split(spliterator);
-		// last part should be integer.
-		int level = 0;
-		try {
-			level = Integer.parseInt(parts[parts.length - 1]);
-		} catch (NumberFormatException nfe) {
-		}
-		return level;
-	}
+    @Override
+    public int getLevel(String contect, String name) {
+        // Parse name to determine which bitrate level priority this stream is.
+        // lowest name_3
+        String[] parts = name.split(spliterator);
+        // last part should be integer.
+        int level = 0;
+        try {
+            level = Integer.parseInt(parts[parts.length - 1]);
+        } catch (NumberFormatException nfe) {
+        }
+        return level;
+    }
 
-	@Override
-	public void setSpliteration(String pattern) {
-		this.spliterator = pattern;
-	}
+    @Override
+    public void setSpliteration(String pattern) {
+        this.spliterator = pattern;
+    }
 
 }

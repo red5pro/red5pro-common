@@ -1,5 +1,5 @@
 //
-// Copyright © 2015 Infrared5, Inc. All rights reserved.
+// Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -39,26 +39,26 @@ import java.util.List;
  */
 public interface MediaProcessor {
 
-	static List<MediaProcessorAware> listeners = new ArrayList<>();
+    static List<MediaProcessorAware> listeners = new ArrayList<>();
 
-	/**
-	 * Add a listener to access the processing API.
-	 * 
-	 * @param listener
-	 *            MediaProcessorAware listener
-	 */
-	static void addProcessListener(MediaProcessorAware listener) {
-		listeners.add(listener);
-	}
+    /**
+     * Add a listener to access the processing API.
+     * 
+     * @param listener
+     *            MediaProcessorAware listener
+     */
+    static void addProcessListener(MediaProcessorAware listener) {
+        listeners.add(listener);
+    }
 
-	/**
-	 * Remove a listener.
-	 * 
-	 * @param listener
-	 *            MediaProcessorAware listener
-	 */
-	static void removeProcessListener(MediaProcessorAware listener) {
-		listeners.remove(listener);
-	}
+    /**
+     * Remove a listener.
+     * 
+     * @param listener
+     *            MediaProcessorAware listener
+     */
+    static void removeProcessListener(MediaProcessorAware listener) {
+        listeners.remove(listener);
+    }
 
 }

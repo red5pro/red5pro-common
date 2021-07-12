@@ -1,5 +1,5 @@
 //
-// Copyright © 2015 Infrared5, Inc. All rights reserved.
+// Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -26,6 +26,7 @@
 package com.red5pro.server.stream.mpegts;
 
 import java.util.concurrent.CopyOnWriteArraySet;
+
 /**
  * Use to receive HLS player stats.
  * 
@@ -33,21 +34,22 @@ import java.util.concurrent.CopyOnWriteArraySet;
  *
  */
 public interface IConsumerStatistics {
-	static final CopyOnWriteArraySet<IConsumerStatistics> listeners = new CopyOnWriteArraySet<>();
-	/**
-	 * Called after client session stops requesting segments and play lists.
-	 * 
-	 * @param remoteAddress
-	 *            host and port
-	 * @param path
-	 *            stream context path
-	 * @param name
-	 *            stream name
-	 * @param bytes
-	 *            total bytes
-	 * @param seconds
-	 *            total duration of stream segments downloaded.
-	 */
-	public void receiveStats(String remoteAddress, String path, String name, long bytes, double seconds);
+    static final CopyOnWriteArraySet<IConsumerStatistics> listeners = new CopyOnWriteArraySet<>();
+
+    /**
+     * Called after client session stops requesting segments and play lists.
+     * 
+     * @param remoteAddress
+     *            host and port
+     * @param path
+     *            stream context path
+     * @param name
+     *            stream name
+     * @param bytes
+     *            total bytes
+     * @param seconds
+     *            total duration of stream segments downloaded.
+     */
+    public void receiveStats(String remoteAddress, String path, String name, long bytes, double seconds);
 
 }

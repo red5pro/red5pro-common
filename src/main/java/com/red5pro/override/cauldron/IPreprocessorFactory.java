@@ -1,5 +1,5 @@
 //
-// Copyright © 2015 Infrared5, Inc. All rights reserved.
+// Copyright © 2020 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -29,14 +29,15 @@ import com.red5pro.override.IProStream;
 
 public interface IPreprocessorFactory {
 
-	static final String BeanName = "ipreprocessorFactory";
-	/**
-	 * When called, use IProStream.usePreprocessor(clazz,params);<br>
-	 * Call with nulls for defaults. Uses same Provision parameters as mbr but with
-	 * optionally width/height of zero for canceling resize.<br>
-	 * 
-	 * @param stream
-	 *            stream to configure and scrub/re-key
-	 */
-	void configure(IProStream stream);
+    static final String BeanName = "ipreprocessorFactory";
+
+    /**
+     * When called, use IProStream.usePreprocessor(clazz,params);<br>
+     * Call with nulls for defaults. Uses same Provision parameters as mbr but with
+     * optionally width/height of zero for canceling resize.<br>
+     * 
+     * @param stream
+     *            stream to configure and scrub/re-key
+     */
+    void configure(IProStream stream);
 }

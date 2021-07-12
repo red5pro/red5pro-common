@@ -5,6 +5,6 @@ package com.red5pro.server.stream.mpegts;
  */
 public interface ITSStreamSegment {
 
-	int getId();
+    int getId();
 
 }
