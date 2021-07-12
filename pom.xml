@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.red5pro</groupId>
     <artifactId>red5pro-common</artifactId>
     <packaging>jar</packaging>
     <name>red5pro-common</name>
-    <version>7.3.8611</version>
+    <version>9.1.0</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -46,19 +47,20 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <skipTests>true</skipTests>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.11</maven.compiler.source>
+        <maven.compiler.target>1.11</maven.compiler.target>
+        <java.release.level>11</java.release.level>
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
-        <red5.version>1.1.1</red5.version>
-        <tomcatplugin.version>2.2.4</tomcatplugin.version>
+        <red5.version>1.2.8</red5.version>
+        <tomcatplugin.version>2.2.10</tomcatplugin.version>
         <mina.version>2.0.21</mina.version>
-        <spring.version>4.3.12.RELEASE</spring.version>
+        <spring.version>5.3.5</spring.version>
+        <commons-text.version>1.9</commons-text.version>
         <httpcomponents.version>4.5.13</httpcomponents.version>
         <gson.version>2.8.5</gson.version>
-        <json.version>2.2.1</json.version>
+        <json.version>[2.4.1,)</json.version>
         <bc.version>1.62</bc.version>
-        <commons-text.version>1.6</commons-text.version>
         <junit.version>4.13.1</junit.version>
     </properties>
     <distributionManagement>
@@ -83,15 +85,15 @@
                 <exclusion>
                     <groupId>org.red5</groupId>
                     <artifactId>red5-io</artifactId>
-                </exclusion>  
+                </exclusion>
                 <exclusion>
                     <groupId>org.red5</groupId>
                     <artifactId>red5-server-common</artifactId>
-                </exclusion>         
+                </exclusion>
                 <exclusion>
                     <groupId>org.red5</groupId>
                     <artifactId>red5-service</artifactId>
-                </exclusion>                
+                </exclusion>
                 <exclusion>
                     <groupId>org.apache.mina</groupId>
                     <artifactId>*</artifactId>
@@ -112,6 +114,10 @@
                 <exclusion>
                     <groupId>com.zaxxer</groupId>
                     <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -215,7 +221,7 @@
             <plugin>
                 <groupId>net.revelc.code.formatter</groupId>
                 <artifactId>formatter-maven-plugin</artifactId>
-                <version>2.7.0</version>
+                <version>2.8.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -229,19 +235,93 @@
                     <lineEnding>LF</lineEnding>
                     <!-- Exclude xml and props files -->
                     <excludes>
-                      <exclude>**/*.xml</exclude>
-                      <exclude>**/*.html</exclude>
-                      <exclude>**/*.properties</exclude>
+                        <exclude>**/*.xml</exclude>
+                        <exclude>**/*.html</exclude>
+                        <exclude>**/*.properties</exclude>
                     </excludes>
                 </configuration>
             </plugin>
+            <!-- mvn versions:display-plugin-updates -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.0.5</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <!-- compile everything to ensure module-info contains right entries -->
+                            <release>${java.release.level}</release>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>base-compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <!-- recompile everything for target VM except the module-info.java -->
+                        <configuration>
+                            <excludes>
+                                <exclude>module-info.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+                <!-- defaults for compile and testCompile -->
                 <configuration>
-                    <fork>true</fork>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <!-- Only required when JAVA_HOME isn't at least Java 9 and when haven't 
+                        configured the maven-toolchains-plugin -->
+                    <jdkToolchain>
+                        <version>11</version>
+                    </jdkToolchain>
+                    <verbose>true</verbose>
+                    <release>${java.release.level}</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- https://maven.apache.org/guides/mini/guide-using-toolchains.html -->
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>[1.11,)</version>
+                        </jdk>
+                    </toolchains>
                 </configuration>
             </plugin>
             <plugin>
@@ -258,7 +338,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -268,7 +348,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <verbose>true</verbose>
+                    <verbose>false</verbose>
                     <failOnError>false</failOnError>
                     <sourcepath>${basedir}/src/main/java</sourcepath>
                     <includeDependencySources>false</includeDependencySources>
@@ -284,6 +364,26 @@
                             <head>To do:</head>
                         </tag>
                     </tags>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <!-- Use 7 available chars from git commit -->
+                    <shortRevisionLength>7</shortRevisionLength>
+                    <scmBranchPropertyName>buildScmBranch</scmBranchPropertyName>
                 </configuration>
             </plugin>
             <plugin>
@@ -327,16 +427,15 @@
                     <version>2.19.1</version>
                     <configuration>
                         <skipTests>${skipTests}</skipTests>
-                        <!--
-                        forkCount=1/reuseForks=false executes each test class in its own JVM process, one after another. It creates the highest level of separation for the test execution, but it would probably also give you the longest execution time of all the available options. Consider it as a last resort.
-                        -->
+                        <!-- forkCount=1/reuseForks=false executes each test class in its own 
+                            JVM process, one after another. It creates the highest level of separation 
+                            for the test execution, but it would probably also give you the longest execution 
+                            time of all the available options. Consider it as a last resort. -->
                         <forkCount>1</forkCount>
                         <reuseForks>false</reuseForks>
-                        <argLine>-Xms512m -Xmx1024m -server -XX:+UseParallelGC -Xverify:none</argLine>
-                        <!--
-                        <useSystemClassLoader>false</useSystemClassLoader>
-                        <useManifestOnlyJar>false</useManifestOnlyJar>
-                        -->
+                        <argLine>-Xms512m -Xmx1024m -server -XX:+UseParallelGC
+                            -Xverify:none</argLine>
+                        <!-- <useSystemClassLoader>false</useSystemClassLoader> <useManifestOnlyJar>false</useManifestOnlyJar> -->
                         <!-- kill forks -->
                         <shutdown>kill</shutdown>
                     </configuration>
@@ -355,7 +454,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.0.1</version>
+                    <version>4.2.1</version>
                     <extensions>true</extensions>
                 </plugin>
                 <plugin>
@@ -371,6 +470,7 @@
             </plugins>
         </pluginManagement>
     </build>
+<!--
     <profiles>
         <profile>
             <id>release</id>
@@ -392,4 +492,5 @@
             </build>
         </profile>
     </profiles>
+-->
 </project>

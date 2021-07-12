@@ -190,6 +190,11 @@ public class MediaSample implements IMediaSample {
         this.buffer = buffer;
     }
 
+    /**
+     * Returns whether or not the sample has a buffer which has data within it.
+     * 
+     * @return true if the buffer exists and has data
+     */
     public boolean hasBuffer() {
         return buffer != null && getBufferSize() > 0;
     }
@@ -356,10 +361,9 @@ public class MediaSample implements IMediaSample {
             if (isAudio()) {
                 AudioCodec audioCodec = AudioCodec.valueOf(encoding);
                 switch (audioCodec) {
-                    // case OPUS: // not linkable in the build due to red5pro classifier/special io
-                    // build
-                    // buf.setCodec(RTPCodecEnum.OPUS);
-                    // break;
+                    case OPUS:
+                        buf.setCodec(RTPCodecEnum.OPUS);
+                        break;
                     case AAC:
                         buf.setCodec(RTPCodecEnum.AAC_48K);
                         break;
@@ -373,10 +377,18 @@ public class MediaSample implements IMediaSample {
                     case AVC:
                         buf.setCodec(RTPCodecEnum.H264_PMODE1);
                         break;
-                    // case VP8: // not linkable in the build due to red5pro classifier/special io
-                    // build
-                    // buf.setCodec(RTPCodecEnum.VP8);
-                    // break;
+                    case VP8:
+                        buf.setCodec(RTPCodecEnum.VP8);
+                        break;
+                    case VP9: // while unlikely, support added anyway
+                        buf.setCodec(RTPCodecEnum.VP9);
+                        break;
+                    case HEVC: // while unlikely, support added anyway
+                        buf.setCodec(RTPCodecEnum.HEVC);
+                        break;
+                    case AV1: // while unlikely, support added anyway
+                        buf.setCodec(RTPCodecEnum.AV1);
+                        break;
                 }
             }
         }

@@ -9,21 +9,21 @@ import javax.media.format.VideoFormat;
 import com.red5pro.media.rtp.RTPCodecEnum;
 
 /**
- * A <tt>Buffer</tt> is a media-data container that carries media data from one
- * processing stage to the next inside of a <tt>Player</tt> or
- * <tt>Processor</tt>. <tt>Buffer</tt> objects are also used to carry data
+ * A <pre>Buffer</pre> is a media-data container that carries media data from one
+ * processing stage to the next inside of a <pre>Player</pre> or
+ * <pre>Processor</pre>. <pre>Buffer</pre> objects are also used to carry data
  * between a buffer stream and its handler. <br>
- * A <tt>Buffer</tt> object maintains information such as the time stamp,
- * length, and <tt>Format</tt> of the data it carries, as well as any header
+ * A <pre>Buffer</pre> object maintains information such as the time stamp,
+ * length, and <pre>Format</pre> of the data it carries, as well as any header
  * information that might be required to process the media data.
  */
 public class Buffer {
 
     /**
-     * The time stamp of the data held in this <tt>Buffer</tt>, in nanoseconds. The
-     * time stamp marks the time when presentation of this <tt>Buffer</tt> is to
-     * begin. If the start time for this <tt>Buffer</tt> is not known, this time
-     * stamp is set to <tt>TIME_UNKNOWN</tt>.
+     * The time stamp of the data held in this <pre>Buffer</pre>, in nanoseconds. The
+     * time stamp marks the time when presentation of this <pre>Buffer</pre> is to
+     * begin. If the start time for this <pre>Buffer</pre> is not known, this time
+     * stamp is set to <pre>TIME_UNKNOWN</pre>.
      */
     protected long timeStamp = TIME_UNKNOWN;
 
@@ -32,26 +32,26 @@ public class Buffer {
     private double seconds = 0.0;
 
     /**
-     * The RTP time stamp of the data in this <tt>Buffer</tt>.
+     * The RTP time stamp of the data in this <pre>Buffer</pre>.
      */
     protected long rtpTimeStamp = TIME_UNKNOWN;
 
     /**
-     * The duration of the data held in this <tt>Buffer</tt>, in nanoseconds. The
-     * duration specifies how long it will take for this <tt>Buffer</tt> to be
+     * The duration of the data held in this <pre>Buffer</pre>, in nanoseconds. The
+     * duration specifies how long it will take for this <pre>Buffer</pre> to be
      * presented when the playback rate is 1.0. If the duration for this
-     * <tt>Buffer</tt> is not known, it is set to <tt>TIME_UNKNOWN</tt>.
+     * <pre>Buffer</pre> is not known, it is set to <pre>TIME_UNKNOWN</pre>.
      */
     protected long duration = TIME_UNKNOWN;
 
     /**
-     * The <tt>Format</tt> of the chunk of data in this <tt>Buffer</tt>.
+     * The <pre>Format</pre> of the chunk of data in this <pre>Buffer</pre>.
      */
     protected Format format;
 
     /**
      * A flag mask that describes the boolean attributes enabled for this
-     * <tt>Buffer</tt>. This mask is set to the logical sum of all of the flags that
+     * <pre>Buffer</pre>. This mask is set to the logical sum of all of the flags that
      * are set.
      *
      * @see #FLAG_EOM
@@ -72,15 +72,15 @@ public class Buffer {
     protected int flags = 0;
 
     /**
-     * The object that actually holds the media data chunk for this <tt>Buffer</tt>.
+     * The object that actually holds the media data chunk for this <pre>Buffer</pre>.
      * It can be an array type (such as byte[]) or any other type of object. Use
-     * <tt>instanceOf</tt> to determine what type it is.
+     * <pre>instanceOf</pre> to determine what type it is.
      */
     protected Object data;
 
     /**
      * Header information (such as RTP header) for this data chunk. It can be of any
-     * type. Use <tt>instanceOf</tt> to determine what type it is.
+     * type. Use <pre>instanceOf</pre> to determine what type it is.
      */
     protected Object header;
 
@@ -97,76 +97,76 @@ public class Buffer {
     protected int offset = 0;
 
     /**
-     * The sequence number of this <tt>Buffer</tt>. The sequence number of adjacent
-     * <tt>Buffer</tt> objects in a sequence should differ by 1: positive 1 if the
+     * The sequence number of this <pre>Buffer</pre>. The sequence number of adjacent
+     * <pre>Buffer</pre> objects in a sequence should differ by 1: positive 1 if the
      * media is playing forward, negative 1 if the media is played in reverse. If
      * the sequence number is not known, SEQUENCE_UNKNOWN is specified.
      */
     protected long sequenceNumber = SEQUENCE_UNKNOWN;
 
     /**
-     * The <tt>RTPHeaderExtension</tt> for this <tt>Buffer</tt>. Currently only a
-     * single instance per <tt>Buffer</tt> is allowed.
+     * The <pre>RTPHeaderExtension</pre> for this <pre>Buffer</pre>. Currently only a
+     * single instance per <pre>Buffer</pre> is allowed.
      */
     private RTPHeaderExtension headerExtension;
 
     /**
-     * Indicates that this <tt>Buffer</tt> marks the end of media for the data
+     * Indicates that this <pre>Buffer</pre> marks the end of media for the data
      * stream. The Buffer might or might not contain valid data to be processed. The
      * length and data attributes need to be examined to determine whether or not
-     * this <tt>Buffer</tt> contains valid data.
+     * this <pre>Buffer</pre> contains valid data.
      */
     public final static int FLAG_EOM = (1 << 0);
 
     /**
-     * Indicates that the media data in this <tt>Buffer</tt> should be ignored.
+     * Indicates that the media data in this <pre>Buffer</pre> should be ignored.
      */
     public final static int FLAG_DISCARD = (1 << 1);
 
     /**
-     * Indicates that this <tt>Buffer</tt> contains only silence frames.
+     * Indicates that this <pre>Buffer</pre> contains only silence frames.
      */
     public final static int FLAG_SILENCE = (1 << 2);
 
     /**
-     * Indicates that this <tt>Buffer</tt> contains only SID (silence information
+     * Indicates that this <pre>Buffer</pre> contains only SID (silence information
      * description) frames.
      */
     public final static int FLAG_SID = (1 << 3);
 
     /**
-     * Indicates that this <tt>Buffer</tt> starts with a key frame.
+     * Indicates that this <pre>Buffer</pre> starts with a key frame.
      */
     public final static int FLAG_KEY_FRAME = (1 << 4);
 
     /**
-     * Indicates that this <tt>Buffer</tt> will not be dropped even if the frame is
+     * Indicates that this <pre>Buffer</pre> will not be dropped even if the frame is
      * behind the presentation schedule.
      */
     public final static int FLAG_NO_DROP = (1 << 5);
 
     /**
-     * Indicates that this <tt>Buffer</tt> will not be waited on even if the frame
+     * Indicates that this <pre>Buffer</pre> will not be waited on even if the frame
      * is ahead of the presentation schedule.
      */
     public final static int FLAG_NO_WAIT = (1 << 6);
 
     /**
-     * Indicates that this <tt>Buffer</tt> is not to be presented in sync with the
-     * scheduled presentation time. In other words, the <tt>Buffer</tt> will not be
+     * Indicates that this <pre>Buffer</pre> is not to be presented in sync with the
+     * scheduled presentation time. In other words, the <pre>Buffer</pre> will not be
      * dropped or waited on if it's behind or ahead of schedule.
      */
     public final static int FLAG_NO_SYNC = (FLAG_NO_DROP | FLAG_NO_WAIT);
 
     /**
-     * Indicates that the <tt>Buffer</tt> carries a time stamp that's relative to
+     * Indicates that the <pre>Buffer</pre> carries a time stamp that's relative to
      * the SystemTimeBase. This flag is generally set for data transferred from
      * hardware capture DataSources that uses the system clock.
      */
     public final static int FLAG_SYSTEM_TIME = (1 << 7);
 
     /**
-     * Indicates that the <tt>Buffer</tt> carries a time stamp that's in relative
+     * Indicates that the <pre>Buffer</pre> carries a time stamp that's in relative
      * time units. This means that individual time stamps are not measured against
      * any identifiable absolute origin--only the difference between the time stamps
      * of two consecutive buffers carries useful information. (This is the time
@@ -176,7 +176,7 @@ public class Buffer {
 
     /**
      * This is a marker bit used by the system. When this flag is set, it marks a
-     * zero-length <tt>Buffer</tt> generated by the system to flush the data path.
+     * zero-length <pre>Buffer</pre> generated by the system to flush the data path.
      * Do not attempt to use or overwrite this flag.
      */
     public final static int FLAG_FLUSH = (1 << 9);
@@ -188,14 +188,14 @@ public class Buffer {
     public final static int FLAG_SYSTEM_MARKER = (1 << 10);
 
     /**
-     * This is a marker bit for RTP. Indicates that the <tt>Buffer</tt> is the last
+     * This is a marker bit for RTP. Indicates that the <pre>Buffer</pre> is the last
      * packet of a video frame.
      *
      */
     public final static int FLAG_RTP_MARKER = (1 << 11);
 
     /**
-     * Indicates that the <tt>Buffer</tt> carries a time stamp that's in RTP (NTP)
+     * Indicates that the <pre>Buffer</pre> carries a time stamp that's in RTP (NTP)
      * time units.
      */
     public final static int FLAG_RTP_TIME = (1 << 12);
@@ -222,18 +222,18 @@ public class Buffer {
     public final static int FLAG_LIVE_DATA = (1 << 15);
 
     /**
-     * Indicates that FEC data should not be decoded for this <tt>Buffer</tt>
+     * Indicates that FEC data should not be decoded for this <pre>Buffer</pre>
      */
     public final static int FLAG_SKIP_FEC = (1 << 16);
 
     /**
-     * The <tt>getTimeStamp</tt> method return this value if the time stamp of the
+     * The <pre>getTimeStamp</pre> method return this value if the time stamp of the
      * media is not known.
      */
     public final static long TIME_UNKNOWN = -1L;
 
     /**
-     * The <tt>getSequenceNumber</tt> method returns this value if the sequence
+     * The <pre>getSequenceNumber</pre> method returns this value if the sequence
      * number is not known.
      */
     public final static long SEQUENCE_UNKNOWN = Long.MAX_VALUE - 1;
@@ -314,23 +314,23 @@ public class Buffer {
     }
 
     /**
-     * Copy the attributes from the specified <tt>Buffer</tt> into this
-     * <tt>Buffer</tt>
+     * Copy the attributes from the specified <pre>Buffer</pre> into this
+     * <pre>Buffer</pre>
      *
      * @param buffer
-     *            The input <tt>Buffer</tt> the copy the attributes from.
+     *            The input <pre>Buffer</pre> the copy the attributes from.
      */
     public void copy(Buffer buffer) {
         copy(buffer, false);
     }
 
     /**
-     * Copy the attributes from the specified <tt>Buffer</tt> into this
-     * <tt>Buffer</tt>. If swapData is true, the data values are swapped between the
+     * Copy the attributes from the specified <pre>Buffer</pre> into this
+     * <pre>Buffer</pre>. If swapData is true, the data values are swapped between the
      * buffers, otherwise the data value is copied.
      *
      * @param buffer
-     *            the input <tt>Buffer</tt> the copy the attributes from
+     *            the input <pre>Buffer</pre> the copy the attributes from
      * @param swapData
      *            specifies whether the data objects are to be swapped
      */
@@ -384,11 +384,11 @@ public class Buffer {
 
     /**
      * Gets the internal data object that holds the media chunk contained in this
-     * <tt>Buffer</tt>.
+     * <pre>Buffer</pre>.
      *
-     * @return The data object that holds the media chunk for this <tt>Buffer</tt>.
+     * @return The data object that holds the media chunk for this <pre>Buffer</pre>.
      *         It can be an array type (such as byte[]) or any other type of object.
-     *         Use <tt>instanceOf</tt> to determine what type it is.
+     *         Use <pre>instanceOf</pre> to determine what type it is.
      * @see #data
      */
     public Object getData() {
@@ -396,9 +396,9 @@ public class Buffer {
     }
 
     /**
-     * Gets the duration of this <tt>Buffer</tt>.
+     * Gets the duration of this <pre>Buffer</pre>.
      *
-     * @return The <tt>Buffer</tt> duration, in nanoseconds.
+     * @return The <pre>Buffer</pre> duration, in nanoseconds.
      * @see #duration
      */
     public long getDuration() {
@@ -406,7 +406,7 @@ public class Buffer {
     }
 
     /**
-     * Gets the mask of the flags set for this <tt>Buffer</tt>. The integer value of
+     * Gets the mask of the flags set for this <pre>Buffer</pre>. The integer value of
      * the mask is equal to the logical sum of the flags that are set.
      *
      * @see #FLAG_EOM
@@ -429,7 +429,7 @@ public class Buffer {
     }
 
     /**
-     * Get the <tt>Format</tt> of the data in this <tt>Buffer</tt>.
+     * Get the <pre>Format</pre> of the data in this <pre>Buffer</pre>.
      * 
      * @return format
      */
@@ -439,9 +439,9 @@ public class Buffer {
 
     /**
      * Gets the header information for the media chunk contained in this
-     * <tt>Buffer</tt>.
+     * <pre>Buffer</pre>.
      *
-     * @return The object that holds the header information. Use <tt>instanceOf</tt>
+     * @return The object that holds the header information. Use <pre>instanceOf</pre>
      *         to determine what type the header object is
      * @see #header
      */
@@ -450,7 +450,7 @@ public class Buffer {
     }
 
     /**
-     * Gets the length of the valid data in this <tt>Buffer</tt> if the data is held
+     * Gets the length of the valid data in this <pre>Buffer</pre> if the data is held
      * in an array.
      *
      * @return The length of the valid data in the data array that holds the media
@@ -462,7 +462,7 @@ public class Buffer {
     }
 
     /**
-     * If the media chunk for this <tt>Buffer</tt> is held in an array, gets the
+     * If the media chunk for this <pre>Buffer</pre> is held in an array, gets the
      * offset into the data array where the valid data begins.
      *
      * @return offset
@@ -472,18 +472,18 @@ public class Buffer {
     }
 
     /**
-     * Gets the RTP time stamp of this <tt>Buffer</tt>.
+     * Gets the RTP time stamp of this <pre>Buffer</pre>.
      *
-     * @return the RTP time stamp of this <tt>Buffer</tt>.
+     * @return the RTP time stamp of this <pre>Buffer</pre>.
      */
     public long getRtpTimeStamp() {
         return rtpTimeStamp;
     }
 
     /**
-     * Gets the sequence number of this <tt>Buffer</tt>.
+     * Gets the sequence number of this <pre>Buffer</pre>.
      *
-     * @return The sequence number of this <tt>Buffer</tt>.
+     * @return The sequence number of this <pre>Buffer</pre>.
      * @see #sequenceNumber
      */
     public long getSequenceNumber() {
@@ -491,9 +491,9 @@ public class Buffer {
     }
 
     /**
-     * Gets the time stamp of this <tt>Buffer</tt>.
+     * Gets the time stamp of this <pre>Buffer</pre>.
      *
-     * @return The <tt>Buffer</tt> time stamp, in nanoseconds.
+     * @return The <pre>Buffer</pre> time stamp, in nanoseconds.
      * @see #timeStamp
      */
     public long getTimeStamp() {
@@ -501,12 +501,12 @@ public class Buffer {
     }
 
     /**
-     * Checks whether or not this <tt>Buffer</tt> contains a keyframe.
+     * Checks whether or not this <pre>Buffer</pre> contains a keyframe.
      * <p>
-     * This method provides a convenient alternative to using <tt>getFlags</tt> to
+     * This method provides a convenient alternative to using <pre>getFlags</pre> to
      * check the KEY_FRAME flag.
      *
-     * @return <tt>true</tt> if the KEY_FRAME flag is enabled, <tt>false</tt> if it
+     * @return <pre>true</pre> if the KEY_FRAME flag is enabled, <pre>false</pre> if it
      *         is not.
      * @see #getFlags
      * @see #FLAG_KEY_FRAME
@@ -557,12 +557,12 @@ public class Buffer {
     }
 
     /**
-     * Checks whether or not this <tt>Buffer</tt> is to be discarded.
+     * Checks whether or not this <pre>Buffer</pre> is to be discarded.
      * <p>
-     * This method provides a convenient alternative to using <tt>getFlags</tt> to
+     * This method provides a convenient alternative to using <pre>getFlags</pre> to
      * check the DISCARD flag.
      *
-     * @return <tt>true</tt> if the DISCARD flag is enabled, <tt>false</tt> if it is
+     * @return <pre>true</pre> if the DISCARD flag is enabled, <pre>false</pre> if it is
      *         not.
      * @see #getFlags
      * @see #FLAG_DISCARD
@@ -572,14 +572,14 @@ public class Buffer {
     }
 
     /**
-     * Checks whether or not this <tt>Buffer</tt> marks the end of the media stream.
-     * Even it <tt>isEOM</tt> returns <tt>true</tt>, the <tt>Buffer</tt> might still
-     * contain valid data--check the length of the <tt>Buffer</tt>.
+     * Checks whether or not this <pre>Buffer</pre> marks the end of the media stream.
+     * Even it <pre>isEOM</pre> returns <pre>true</pre>, the <pre>Buffer</pre> might still
+     * contain valid data--check the length of the <pre>Buffer</pre>.
      * <p>
-     * This method provides a convenient alternative to using <tt>getFlags</tt> to
+     * This method provides a convenient alternative to using <pre>getFlags</pre> to
      * check the EOM flag.
      *
-     * @return <tt>true</tt> if the EOM flag is enabled, <tt>false</tt> if it is
+     * @return <pre>true</pre> if the EOM flag is enabled, <pre>false</pre> if it is
      *         not.
      * @see #getFlags
      * @see #FLAG_EOM
@@ -609,7 +609,7 @@ public class Buffer {
      *
      * @param data
      *            The data object that holds the media data chunk for this
-     *            <tt>Buffer</tt>. It can be an array type (such as byte[]) or any
+     *            <pre>Buffer</pre>. It can be an array type (such as byte[]) or any
      *            other type of object.
      * @see #data
      */
@@ -618,16 +618,16 @@ public class Buffer {
     }
 
     /**
-     * Sets the DISCARD flag for this <tt>Buffer</tt>. If the DISCARD flag is
-     * enabled, this <tt>Buffer</tt> is to be discarded.
+     * Sets the DISCARD flag for this <pre>Buffer</pre>. If the DISCARD flag is
+     * enabled, this <pre>Buffer</pre> is to be discarded.
      * <p>
-     * This method provides a convenient alternative to using <tt>setFlags</tt> to
+     * This method provides a convenient alternative to using <pre>setFlags</pre> to
      * enable or disable the DISCARD flag.
      *
      * @param discard
      *            A boolean value that contains the DISCARD status of the
-     *            <tt>Buffer</tt>. Set to <tt>true</tt> to enable the EOM flag,
-     *            <tt>false</tt> to disable the flag.
+     *            <pre>Buffer</pre>. Set to <pre>true</pre> to enable the EOM flag,
+     *            <pre>false</pre> to disable the flag.
      * @see #setFlags
      * @see #FLAG_DISCARD
      */
@@ -639,10 +639,10 @@ public class Buffer {
     }
 
     /**
-     * Sets the duration of this <tt>Buffer</tt>.
+     * Sets the duration of this <pre>Buffer</pre>.
      *
      * @param duration
-     *            The duration for the <tt>Buffer</tt>, in nanoseconds.
+     *            The duration for the <pre>Buffer</pre>, in nanoseconds.
      * @see #duration
      */
     public void setDuration(long duration) {
@@ -650,16 +650,16 @@ public class Buffer {
     }
 
     /**
-     * Sets the EOM flag for this <tt>Buffer</tt>. If the EOM flag is enabled, this
-     * is the last <tt>Buffer</tt> in the media stream.
+     * Sets the EOM flag for this <pre>Buffer</pre>. If the EOM flag is enabled, this
+     * is the last <pre>Buffer</pre> in the media stream.
      * <p>
-     * This method provides a convenient alternative to using <tt>setFlags</tt> to
+     * This method provides a convenient alternative to using <pre>setFlags</pre> to
      * enable or disable the EOM flag.
      *
      * @param eom
      *            A boolean value that contains the EOM status of the
-     *            <tt>Buffer</tt>. Set to <tt>true</tt> to enable the EOM flag,
-     *            <tt>false</tt> to disable the flag.
+     *            <pre>Buffer</pre>. Set to <pre>true</pre> to enable the EOM flag,
+     *            <pre>false</pre> to disable the flag.
      * @see #setFlags
      * @see #FLAG_EOM
      */
@@ -671,7 +671,7 @@ public class Buffer {
     }
 
     /**
-     * Sets the flag mask for this <tt>Buffer</tt>. The integer value of the mask is
+     * Sets the flag mask for this <pre>Buffer</pre>. The integer value of the mask is
      * equal to the logical sum of the flags that are set.
      *
      * @see #FLAG_EOM
@@ -695,10 +695,10 @@ public class Buffer {
     }
 
     /**
-     * Sets the <tt>Format</tt> of the data in this <tt>Buffer</tt>.
+     * Sets the <pre>Format</pre> of the data in this <pre>Buffer</pre>.
      *
      * @param format
-     *            the <tt>Format</tt> of the data.
+     *            the <pre>Format</pre> of the data.
      */
     public void setFormat(Format format) {
         this.format = format;
@@ -741,7 +741,7 @@ public class Buffer {
      *
      * @param header
      *            The header object that holds the media data chunk for this
-     *            <tt>Buffer</tt>.
+     *            <pre>Buffer</pre>.
      * @see #header
      */
     public void setHeader(Object header) {
@@ -749,12 +749,12 @@ public class Buffer {
     }
 
     /**
-     * Sets the length of the valid data stored in this <tt>Buffer</tt> if the data
+     * Sets the length of the valid data stored in this <pre>Buffer</pre> if the data
      * is held in an array.
      *
      * @param length
      *            The length of the valid data in the data array that holds the
-     *            media chunk for this <tt>Buffer</tt>.
+     *            media chunk for this <pre>Buffer</pre>.
      * @see #length
      */
     public void setLength(int length) {
@@ -762,7 +762,7 @@ public class Buffer {
     }
 
     /**
-     * If the media chunk for this <tt>Buffer</tt> is held in an array, sets the
+     * If the media chunk for this <pre>Buffer</pre> is held in an array, sets the
      * offset into the array where the valid data begins.
      *
      * @param offset
@@ -774,7 +774,7 @@ public class Buffer {
     }
 
     /**
-     * Sets the RTP time stamp of this <tt>Buffer</tt>.
+     * Sets the RTP time stamp of this <pre>Buffer</pre>.
      *
      * @param rtpTimeStamp
      *            the value to set.
@@ -784,13 +784,13 @@ public class Buffer {
     }
 
     /**
-     * Sets the sequence number of this <tt>Buffer</tt>. Sequence numbers increase
-     * or decrease by 1 for each sequential <tt>Buffer</tt>, indicating the order in
+     * Sets the sequence number of this <pre>Buffer</pre>. Sequence numbers increase
+     * or decrease by 1 for each sequential <pre>Buffer</pre>, indicating the order in
      * which the data is to be processed. Can be used to identify lost samples of
      * data.
      *
      * @param number
-     *            The sequence number for the <tt>Buffer</tt>.
+     *            The sequence number for the <pre>Buffer</pre>.
      * @see #sequenceNumber
      */
     public void setSequenceNumber(long number) {
@@ -798,10 +798,10 @@ public class Buffer {
     }
 
     /**
-     * Sets the time stamp of this <tt>Buffer</tt>.
+     * Sets the time stamp of this <pre>Buffer</pre>.
      *
      * @param timeStamp
-     *            The time stamp for the <tt>Buffer</tt>, in nanoseconds.
+     *            The time stamp for the <pre>Buffer</pre>, in nanoseconds.
      * @see #timeStamp
      */
     public void setTimeStamp(long timeStamp) {
@@ -835,19 +835,19 @@ public class Buffer {
     }
 
     /**
-     * Gets the <tt>RTPHeaderExtension</tt> of this <tt>Buffer</tt>.
+     * Gets the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>.
      * 
-     * @return the <tt>RTPHeaderExtension</tt> of this <tt>Buffer</tt>.
+     * @return the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>
      */
     public RTPHeaderExtension getHeaderExtension() {
         return headerExtension;
     }
 
     /**
-     * Sets the <tt>RTPHeaderExtension</tt> of this <tt>Buffer</tt>.
+     * Sets the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>.
      * 
      * @param headerExtension
-     *            the <tt>RTPHeaderExtension</tt> to set.
+     *            the <pre>RTPHeaderExtension</pre> to set
      */
     public void setHeaderExtension(RTPHeaderExtension headerExtension) {
         this.headerExtension = headerExtension;
@@ -911,7 +911,7 @@ public class Buffer {
 
     /**
      * A simple structure that represents an RTP header extension. Defined here for
-     * ease of use as a <tt>Buffer</tt>'s header.
+     * ease of use as a <pre>Buffer</pre>'s header.
      */
     public static class RTPHeaderExtension {
         /**
@@ -925,7 +925,7 @@ public class Buffer {
         public byte[] value;
 
         /**
-         * Initializes a new <tt>RTPHeaderExtension</tt> with the given ID and value.
+         * Initializes a new <pre>RTPHeaderExtension</pre> with the given ID and value.
          * 
          * @param id
          *            the ID of the extension.

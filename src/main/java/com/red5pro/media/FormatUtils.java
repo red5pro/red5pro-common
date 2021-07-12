@@ -168,12 +168,12 @@ public class FormatUtils {
      * Determines whether a specific set of format parameters is equal to another
      * set of format parameters in the sense that they define an equal number of
      * parameters and assign them equal values. Since the values are Strings,
-     * presumes that a value of <tt>null</tt> is equal to the empty String. <br>
-     * The two <tt>Map</tt> instances of format parameters to be checked for
+     * presumes that a value of <pre>null</pre> is equal to the empty String. <br>
+     * The two <pre>Map</pre> instances of format parameters to be checked for
      * equality are presumed to be modifiable in the sense that if the lack of a
-     * format parameter in a given <tt>Map</tt> is equivalent to it having a
+     * format parameter in a given <pre>Map</pre> is equivalent to it having a
      * specific value, an association of the format parameter to the value in
-     * question may be added to or removed from the respective <tt>Map</tt> instance
+     * question may be added to or removed from the respective <pre>Map</pre> instance
      * for the purposes of determining equality. <br>
      * 
      * @param encoding
@@ -183,8 +183,8 @@ public class FormatUtils {
      *            the first set of format parameters to be tested for equality
      * @param fmtps2
      *            the second set of format parameters to be tested for equality
-     * @return <tt>true</tt> if the specified sets of format parameters are equal;
-     *         <tt>false</tt>, otherwise
+     * @return <pre>true</pre> if the specified sets of format parameters are equal;
+     *         <pre>false</pre>, otherwise
      */
     public static boolean formatParametersAreEqual(String encoding, Map<String, String> fmtps1, Map<String, String> fmtps2) {
         if (fmtps1 == null)

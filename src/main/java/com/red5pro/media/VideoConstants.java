@@ -38,7 +38,7 @@ public class VideoConstants {
     private static final Logger log = LoggerFactory.getLogger(VideoConstants.class);
 
     /**
-     * The <tt>/rtp</tt> constant. Introduced in order to achieve consistency in the
+     * The <pre>/rtp</pre> constant. Introduced in order to achieve consistency in the
      * casing of the String.
      */
     public static final String _RTP = "/rtp";
@@ -105,7 +105,7 @@ public class VideoConstants {
     public static final String MPEG_RTP = "mpeg/rtp";
 
     /**
-     * The default value of the <tt>clockRate</tt> property for video.
+     * The default value of the <pre>clockRate</pre> property for video.
      */
     public static final double DEFAULT_CLOCK_RATE = 90000d;
 
@@ -138,10 +138,10 @@ public class VideoConstants {
      *            to be matched
      * @param fmtps1
      *            the first set of format parameters which is to be matched against
-     *            <tt>fmtps2</tt>
+     *            <pre>fmtps2</pre>
      * @param fmtps2
      *            the second set of format parameters which is to be matched against
-     *            <tt>fmtps1</tt>
+     *            <pre>fmtps1</pre>
      * @return true if the two sets of format parameters match in the context of the
      *         encoding; otherwise, false
      */
@@ -165,14 +165,14 @@ public class VideoConstants {
      * Determines whether a specific set of format parameters is equal to another
      * set of format parameters in the sense that they define an equal number of
      * parameters and assign them equal values. Since the values are
-     * <tt>String</tt>s, presumes that a value of <tt>null</tt> is equal to the
-     * empty <tt>String</tt>.
+     * <pre>String</pre>s, presumes that a value of <pre>null</pre> is equal to the
+     * empty <pre>String</pre>.
      * <p>
-     * The two <tt>Map</tt> instances of format parameters to be checked for
+     * The two <pre>Map</pre> instances of format parameters to be checked for
      * equality are presumed to be modifiable in the sense that if the lack of a
-     * format parameter in a given <tt>Map</tt> is equivalent to it having a
+     * format parameter in a given <pre>Map</pre> is equivalent to it having a
      * specific value, an association of the format parameter to the value in
-     * question may be added to or removed from the respective <tt>Map</tt> instance
+     * question may be added to or removed from the respective <pre>Map</pre> instance
      * for the purposes of determining equality.
      * </p>
      *
@@ -183,8 +183,8 @@ public class VideoConstants {
      *            the first set of format parameters to be tested for equality
      * @param fmtps2
      *            the second set of format parameters to be tested for equality
-     * @return <tt>true</tt> if the specified sets of format parameters are equal;
-     *         <tt>false</tt>, otherwise
+     * @return <pre>true</pre> if the specified sets of format parameters are equal;
+     *         <pre>false</pre>, otherwise
      */
     public static boolean formatParametersAreEqual(String encoding, Map<String, String> fmtps1, Map<String, String> fmtps2) {
         /*

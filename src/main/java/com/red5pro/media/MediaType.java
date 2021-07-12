@@ -1,8 +1,8 @@
 package com.red5pro.media;
 
 /**
- * The <tt>MediaType</tt> enumeration contains a list of media types currently
- * known to and handled by the <tt>MediaService</tt>.
+ * The <pre>MediaType</pre> enumeration contains a list of media types currently
+ * known to and handled by the <pre>MediaService</pre>.
  *
  * @author Emil Ivov
  */
@@ -29,15 +29,15 @@ public enum MediaType {
     UNDEFINED("undefined");
 
     /**
-     * The name of this <tt>MediaType</tt>.
+     * The name of this <pre>MediaType</pre>.
      */
     private final String mediaTypeName;
 
     /**
-     * Creates a <tt>MediaType</tt> instance with the specified name.
+     * Creates a <pre>MediaType</pre> instance with the specified name.
      *
      * @param mediaTypeName
-     *            the name of the <tt>MediaType</tt> we'd like to create.
+     *            the name of the <pre>MediaType</pre> we'd like to create.
      */
     private MediaType(String mediaTypeName) {
         this.mediaTypeName = mediaTypeName;
