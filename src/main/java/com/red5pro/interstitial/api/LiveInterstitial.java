@@ -73,7 +73,7 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
         }
 
         if (packet instanceof VideoData) {
-            if (!isVideoPrimed) {// send codec configs if present.
+            if (!isVideoPrimed && isForwardVideo()) {// send codec configs if present.
                 isVideoPrimed = true;
                 if (newStream.getCodecInfo().getVideoCodec() != null && newStream.getCodecInfo().getVideoCodec().getDecoderConfiguration() != null) {
                     VideoData privateConfig = new VideoData(newStream.getCodecInfo().getVideoCodec().getDecoderConfiguration());
@@ -97,7 +97,7 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
             if (!hasKeyFrame) {// can't do nothin' with new vid yet.
                 return;
             }
-        } else if (!hasAudio && packet instanceof AudioData) {
+        } else if (isForwardAudio() && !hasAudio && packet instanceof AudioData) {
             // Check for codec private data.
             if (newStream.getCodecInfo().getAudioCodec() != null && newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration() != null) {
                 AudioData privateConfig = new AudioData(newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration());
