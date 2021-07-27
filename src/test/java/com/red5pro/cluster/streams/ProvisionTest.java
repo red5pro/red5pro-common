@@ -9,11 +9,19 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.red5pro.util.ProvisionAdapter;
+
 public class ProvisionTest {
 
     private static Logger log = LoggerFactory.getLogger(ProvisionTest.class);
 
     static String groupProv = "{\"guid\": \"live/conference1\"," + "      \"context\": \"live/conference1\"," + "      \"name\": \"conference1\"," + "      \"level\": 0," + "      \"isRestricted\": false," + "      \"restrictions\": []," + "      \"primaries\": []," + "      \"secondaries\": []," + "      \"parameters\": {" + "        \"group\": true," + "        \"audiotracks\": 3," + "        \"videotracks\": 1"
+            + "      }" + "    }";
+
+    static String floatProv = "{\"guid\": \"live/conference1\"," + "      \"context\": \"live/conference1\"," + "      \"name\": \"conference1\"," + "      \"level\": 1.0," + "      \"isRestricted\": false," + "      \"restrictions\": []," + "      \"primaries\": []," + "      \"secondaries\": []," + "      \"parameters\": {" + "        \"width\": 320.0," + "        \"audiotracks\": 3," + "        \"videotracks\": 1"
             + "      }" + "    }";
 
     @Before
@@ -30,6 +38,29 @@ public class ProvisionTest {
         log.info("Deserialized: {}", prov);
         assertNotNull(prov.getStreamName());
         assertTrue((Boolean) prov.getParameters().get("group"));
+
+        Provision floats = Provision.buildFromJson(floatProv);
+        ProvisionAdapter ad = new ProvisionAdapter();
+
+        //float on level input
+        JsonObject je = ad.serialize(floats, null, null).getAsJsonObject();
+        Provision newprov = Provision.getGson().fromJson(je, Provision.class);
+
+        //int parsed to double.(for adapter)
+        je.addProperty("level", 1);
+
+        int val = Double.valueOf(je.get("level").getAsString()).intValue();
+        assertTrue(val == 1);
+        newprov = Provision.getGson().fromJson(je, Provision.class);
+
+        //string input
+        je.addProperty("level", "1.0");
+
+        val = Double.valueOf(je.get("level").getAsString()).intValue();
+        assertTrue(val == 1);
+        newprov = Provision.getGson().fromJson(je, Provision.class);
+
+        log.info("Deserialized: {}", floats);
     }
 
 }
