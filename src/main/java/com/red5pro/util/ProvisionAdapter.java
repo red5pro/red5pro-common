@@ -111,7 +111,7 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
         String guid = provObj.get("guid").getAsString();
         String contextPath = provObj.get("context").getAsString();
         String streamName = provObj.get("name").getAsString();
-        int qualityLevel = provObj.get("level").getAsInt();
+        int qualityLevel = provObj.get("level").getAsNumber().intValue();
         Restrictions rObj = null;
         if (provObj.has("restrictions")) {
             JsonArray rest = provObj.get("restrictions").getAsJsonArray();
