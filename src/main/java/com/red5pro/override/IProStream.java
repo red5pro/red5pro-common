@@ -31,6 +31,7 @@ package com.red5pro.override;
 import java.io.IOException;
 import java.util.Map;
 
+import org.red5.server.api.IConnection;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.stream.IBroadcastStream;
 import org.red5.server.api.stream.IClientBroadcastStream;
@@ -183,4 +184,18 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
      * Return the total number of subscribers for the all sidestreams.
      */
     int getAllSubscriberCount();
+
+    /**
+     * Application facing helper api to control subscribers.
+     * @param conn the client
+     * @return true if added
+     */
+    boolean addSubscriber(IConnection conn);
+
+    /**
+     * Application facing helper api to control subscribers.
+     * @param conn the client
+     * @return true if remove
+     */
+    boolean removeSubscriber(IConnection conn);
 }
