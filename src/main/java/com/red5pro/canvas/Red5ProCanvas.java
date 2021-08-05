@@ -3,7 +3,10 @@ package com.red5pro.canvas;
 import java.io.IOException;
 import java.util.Map;
 
+import org.red5.client.net.rtmp.RTMPClient;
 import org.red5.server.api.scope.IScope;
+
+import com.red5pro.override.IProStream;
 
 public interface Red5ProCanvas {
     /**
@@ -61,7 +64,7 @@ public interface Red5ProCanvas {
      * @throws IOException
      *             if the stream cant be created
      */
-    void loopBack(IScope scope, String name, boolean record, boolean appeand) throws IOException;
+    IProStream loopBack(IScope scope, String name, boolean record, boolean appeand) throws IOException;
 
     /**
      * Start output engine option 2 rtmp publish to network. Call after calling
@@ -81,6 +84,12 @@ public interface Red5ProCanvas {
      *             if connection fails
      */
     void forward(String host, int port, String path, String name, Map<String, Object> connectParams) throws IOException;
+
+    /**
+     * When forwarding, this returns the rtmp client that is connected to the remote server.
+     * @return
+     */
+    RTMPClient getClient();
 
     /**
      * Stop streaming process.
