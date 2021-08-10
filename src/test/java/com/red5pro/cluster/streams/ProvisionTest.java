@@ -9,9 +9,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.red5pro.util.ProvisionAdapter;
 
 public class ProvisionTest {
@@ -44,6 +42,7 @@ public class ProvisionTest {
 
         //float on level input
         JsonObject je = ad.serialize(floats, null, null).getAsJsonObject();
+        @SuppressWarnings("unused")
         Provision newprov = Provision.getGson().fromJson(je, Provision.class);
 
         //int parsed to double.(for adapter)
