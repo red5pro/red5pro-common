@@ -114,29 +114,7 @@ public class NetworkManager {
             String IP_CHECK_URI = "http://checkip.amazonaws.com";
 
             String getPublicIP() {
-                String ipAddress = null;
-                BufferedReader in = null;
-                try {
-                    URL checkip = new URL(IP_CHECK_URI);
-                    URLConnection con = checkip.openConnection();
-                    con.setConnectTimeout(3000);
-                    con.setReadTimeout(3000);
-                    in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    // set ip from service
-                    ipAddress = in.readLine();
-                    log.debug("Public address (detected): {}", ipAddress);
-                } catch (Throwable t) {
-                    log.warn("Host could not be reached or timed-out", t);
-                } finally {
-                    if (in != null) {
-                        try {
-                            in.close();
-                        } catch (IOException e) {
-                            log.warn("Exception getting public IP", e);
-                        }
-                    }
-                }
-                return ipAddress;
+                return resolveIPOverHTTP(IP_CHECK_URI);
             }
 
             String getLocalAddress() {
@@ -186,9 +164,41 @@ public class NetworkManager {
                 }
                 return ipAddress;
             }
+
         },
         WAVELENGTH // uses wavelength services
         {
+
+            String getPublicIP() {
+                String ipAddress = System.getenv("PUBLIC_IP");
+                if (StringUtils.isBlank(ipAddress)) {
+                    // read from java params 
+                    ipAddress = System.getProperty("public.ip");
+                    if (StringUtils.isBlank(ipAddress)) {
+                        // resolve using http service
+                        ipAddress = resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/public-ipv4");
+                        if (StringUtils.isBlank(ipAddress)) {
+                            // read from network.properties file
+                            ipAddress = props.getProperty("force.public.ip");
+                        }
+                    }
+                }
+                return ipAddress;
+            }
+
+            String getLocalAddress() {
+                String ipAddress = System.getenv("LOCAL_IP");
+                if (StringUtils.isBlank(ipAddress)) {
+                    ipAddress = System.getProperty("local.ip");
+                    if (StringUtils.isBlank(ipAddress)) {
+                        ipAddress = resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/local-ipv4");
+                        if (StringUtils.isBlank(ipAddress)) {
+                            ipAddress = props.getProperty("force.local.ip");
+                        }
+                    }
+                }
+                return ipAddress;
+            }
 
         };
 
@@ -451,9 +461,41 @@ public class NetworkManager {
      * Resets the atomic references.
      */
     public static void reset() {
-        topologyMode = TopologyMode.DEFAULT;        
+        topologyMode = TopologyMode.DEFAULT;
         serverIp.set(NO_IP_ADDRESS);
         serverLocalIp.set(NO_IP_ADDRESS);
+    }
+
+    /**
+     * Resolves an IP with a given URL.
+     * 
+     * @param url location of IP resolver service
+     * @return IP address or null if some failure occurs
+     */
+    private static String resolveIPOverHTTP(String url) {
+        String ipAddress = null;
+        BufferedReader in = null;
+        try {
+            URL checkip = new URL(url);
+            URLConnection con = checkip.openConnection();
+            con.setConnectTimeout(3000);
+            con.setReadTimeout(3000);
+            in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            // set ip from service
+            ipAddress = in.readLine();
+            log.debug("Public address (detected): {}", ipAddress);
+        } catch (Throwable t) {
+            log.warn("Host could not be reached or timed-out", t);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    log.warn("Exception getting public IP", e);
+                }
+            }
+        }
+        return ipAddress;
     }
 
     /**
