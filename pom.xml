@@ -62,6 +62,7 @@
         <json.version>[2.4.1,)</json.version>
         <bc.version>1.62</bc.version>
         <junit.version>4.13.1</junit.version>
+        <ice4j.version>3.2.62</ice4j.version>
     </properties>
     <distributionManagement>
         <repository>
@@ -174,6 +175,13 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.jitsi</groupId>
+            <artifactId>ice4j</artifactId>
+            <version>${ice4j.version}</version>
+            <classifier>red5pro</classifier>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
