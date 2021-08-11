@@ -217,6 +217,10 @@ public class NetworkManager {
         try (InputStream input = new FileInputStream(System.getProperty("red5.config_root") + File.separatorChar + "network.properties")) {
             // load properties
             props.load(input);
+            // configure port range
+            PortManager.setRtpPortBase(Integer.valueOf(props.getProperty("port.min", "49152")));
+            PortManager.setRtpPortCeiling(Integer.valueOf(props.getProperty("port.max", "65535")));
+            log.info("Port range: {}", PortManager.getRange());
             // set local properties
             defaultTransport = props.getProperty("ice.default.transport", "udp");
             defaultStunAddress = props.getProperty("stun.address", "stun.l.google.com:19302");
