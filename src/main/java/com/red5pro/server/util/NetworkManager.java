@@ -79,7 +79,7 @@ public class NetworkManager {
     // network properties
     private static Properties props = new Properties();
 
-    // default transport for stun requests
+    // default transport for stun requests  ("udp" or "tcp")
     private static String defaultTransport = "udp";
 
     // default stun server address
@@ -220,6 +220,8 @@ public class NetworkManager {
             // set local properties
             defaultTransport = props.getProperty("ice.default.transport", "udp");
             defaultStunAddress = props.getProperty("stun.address", "stun.l.google.com:19302");
+            // set ice4j props
+            System.setProperty("org.ice4j.ice.harvest.NAT_HARVESTER_DEFAULT_TRANSPORT", defaultTransport);
         } catch (IOException e) {
             log.warn("Exception reading properties", e);
         }
@@ -629,6 +631,20 @@ public class NetworkManager {
 
     public static void setTopologyMode(TopologyMode topologyMode) {
         NetworkManager.topologyMode = topologyMode;
+    }
+
+    public static void setTopologyMode(String topologyMode) {
+        if (StringUtils.isNotBlank(topologyMode)) {
+            NetworkManager.topologyMode = TopologyMode.valueOf(topologyMode.toUpperCase());
+        }
+    }
+
+    public static String getDefaultTransport() {
+        return defaultTransport;
+    }
+
+    public static String getDefaultStunAddress() {
+        return defaultStunAddress;
     }
 
 }
