@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.future.IoFutureListener;
 import org.apache.mina.core.session.IdleStatus;
@@ -152,35 +153,10 @@ public class NetworkManager {
             String getPublicIP() {
                 String ipAddress = System.getenv("PUBLIC_IP");
                 if (StringUtils.isBlank(ipAddress)) {
-                    ipAddress = props.getProperty("force.public.ip");
-                }
-                return ipAddress;
-            }
-
-            String getLocalAddress() {
-                String ipAddress = System.getenv("LOCAL_IP");
-                if (StringUtils.isBlank(ipAddress)) {
-                    ipAddress = props.getProperty("force.local.ip");
-                }
-                return ipAddress;
-            }
-
-        },
-        WAVELENGTH // uses wavelength services
-        {
-
-            String getPublicIP() {
-                String ipAddress = System.getenv("PUBLIC_IP");
-                if (StringUtils.isBlank(ipAddress)) {
                     // read from java params 
                     ipAddress = System.getProperty("public.ip");
                     if (StringUtils.isBlank(ipAddress)) {
-                        // resolve using http service
-                        ipAddress = resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/public-ipv4");
-                        if (StringUtils.isBlank(ipAddress)) {
-                            // read from network.properties file
-                            ipAddress = props.getProperty("force.public.ip");
-                        }
+                        ipAddress = props.getProperty("force.public.ip");
                     }
                 }
                 return ipAddress;
@@ -191,13 +167,22 @@ public class NetworkManager {
                 if (StringUtils.isBlank(ipAddress)) {
                     ipAddress = System.getProperty("local.ip");
                     if (StringUtils.isBlank(ipAddress)) {
-                        ipAddress = resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/local-ipv4");
-                        if (StringUtils.isBlank(ipAddress)) {
-                            ipAddress = props.getProperty("force.local.ip");
-                        }
+                        ipAddress = props.getProperty("force.local.ip");
                     }
                 }
                 return ipAddress;
+            }
+
+        },
+        AWS // uses aws services
+        {
+
+            String getPublicIP() {
+                return resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/public-ipv4");
+            }
+
+            String getLocalAddress() {
+                return resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/local-ipv4");
             }
 
         };
@@ -487,9 +472,14 @@ public class NetworkManager {
             con.setConnectTimeout(3000);
             con.setReadTimeout(3000);
             in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            // set ip from service
-            ipAddress = in.readLine();
-            log.debug("Public address (detected): {}", ipAddress);
+            // read the first line and ensure that it starts with a number, if not we're most likely getting html
+            String line = in.readLine();
+            if (NumberUtils.isParsable(line.charAt(0) + "")) {
+                ipAddress = line.trim();
+                log.debug("Public address (detected): {}", ipAddress);
+            } else {
+                log.warn("Service returned unusable results: {}", line);
+            }
         } catch (Throwable t) {
             log.warn("Host could not be reached or timed-out", t);
         } finally {

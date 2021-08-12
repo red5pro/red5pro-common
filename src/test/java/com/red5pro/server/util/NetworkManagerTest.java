@@ -70,9 +70,9 @@ public class NetworkManagerTest {
     }
 
     @Test
-    public void testGetWavelengthAddress() {
+    public void testGetAWSAddress() {
         log.info("\n testGetWavelengthAddress");
-        NetworkManager.setTopologyMode(TopologyMode.WAVELENGTH);
+        NetworkManager.setTopologyMode(TopologyMode.AWS);
         String localIP = NetworkManager.getLocalAddress();
         log.info("Local IP: {}", localIP);
         assertNull(localIP);
