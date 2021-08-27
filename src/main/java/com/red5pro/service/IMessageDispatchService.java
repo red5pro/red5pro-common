@@ -13,43 +13,39 @@ public interface IMessageDispatchService {
     /**
      * Send a message with the given identifier to the destination path.
      * 
-     * @param destinationPath
-     * @param identifier
-     * @param originator
+     * @param sender
+     * @param destination where we're sending to
      * @param message
      */
-    void sendMessage(String destinationPath, String identifier, String originator, String message);
+    void sendMessage(String sender, String destination, String message);
 
     /**
      * Send a message with the given identifier to the destination path.
      * 
-     * @param destinationPath
-     * @param identifier
-     * @param originator
+     * @param sender
+     * @param destination where we're sending to
      * @param expirationTime time at which this expires
      * @param message
      */
-    void sendMessage(String destinationPath, String identifier, String originator, long expirationTime, String message);
+    void sendMessage(String sender, String destination, long expirationTime, String message);
 
     /**
      * Send a binary message with the given identifier to the destination path.
      * 
-     * @param destinationPath
-     * @param identifier
-     * @param originator
+     * @param sender
+     * @param destination where we're sending to
      * @param message
      */
-    void sendBinaryMessage(String destinationPath, String identifier, String originator, byte[] message);
+    void sendBinaryMessage(String sender, String destination, byte[] message);
 
     /**
      * Send a binary message with the given identifier to the destination path.
      * 
-     * @param destinationPath
-     * @param identifier
-     * @param originator
+     * @param sender
+     * @param destination where we're sending to
      * @param expirationTime time at which this expires
      * @param message
      */
-    void sendBinaryMessage(String destinationPath, String identifier, String originator, long expirationTime, byte[] message);
+    void sendBinaryMessage(String sender, String destination, long expirationTime, byte[] message);
 
 }
