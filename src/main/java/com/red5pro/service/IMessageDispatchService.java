@@ -48,4 +48,11 @@ public interface IMessageDispatchService {
      */
     void sendBinaryMessage(String sender, String destination, long expirationTime, byte[] message);
 
+    /**
+     * Returns the configured expiration time for a message in milliseconds.
+     * 
+     * @return messageExpirationMs
+     */
+    long getMessageExpirationMs();
+
 }
