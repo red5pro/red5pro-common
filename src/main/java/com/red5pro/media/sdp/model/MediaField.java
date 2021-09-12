@@ -343,6 +343,7 @@ public class MediaField {
     }
 
     // order of sections m, i, c, b, k, a
+    @SuppressWarnings("incomplete-switch")
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("m=");
@@ -383,7 +384,16 @@ public class MediaField {
         // next line(s) attributes
         if (attributes != null) {
             for (AttributeField attribute : attributes) {
-                sb.append(attribute);
+                switch (attribute.getAttribute()) {
+                    case fmtp:
+                    case rtpmap:
+                    case rtcpfb:
+                        if (Arrays.binarySearch(formats, Integer.valueOf(attribute.getValue().split("\\s")[0])) == -1) {
+                            break;
+                        }
+                    default:
+                        sb.append(attribute);
+                }
             }
         }
         return sb.toString();
