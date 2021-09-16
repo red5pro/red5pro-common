@@ -66,9 +66,10 @@ For *public* access to the artifacts, you'll need to modify your Maven `.m2/sett
 ```
 The `.m2` directory is located within your home directory, unless otherwise configured.
 
+[Directory Listing](https://red5pro.jfrog.io/ui/native/ext-release-local/com/red5pro/red5pro-common)
+
 #### Example Demo Application
 A simple example of using common in your projects is available [here](https://github.com/red5pro/red5pro-server-examples/tree/develop/common-demo).
-
 
 #### Deploy to Artifactory
 **For Internal Use Only**
