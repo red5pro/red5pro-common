@@ -53,6 +53,9 @@ public final class SDPFactory {
 
     private static boolean transportCC;
 
+    // utilized when multiple datachannels are in-use
+    private static ThreadLocal<Integer> dataChannelPortCounter = new ThreadLocal<Integer>();
+
     /**
      * Creates an SDP decoder that handles one line at a time.
      * 
@@ -210,25 +213,6 @@ public final class SDPFactory {
                 if (attr != null) {
                     media.addAttributeField(attr);
                 }
-                /*
-                 * Where rtcp-fb-pt is the payload type and rtcp-fb-val defines the type of the
-                 * feedback message such as ack, nack, trr-int, and rtcp-fb-id. For example, to
-                 * indicate the support of feedback of Picture Loss Indication, the sender
-                 * declares the following in SDP a=rtcp-fb:100 ccm fir a=rtcp-fb:100 nack
-                 * a=rtcp-fb:100 nack pli a=rtcp-fb:100 goog-remb In this document, we define a
-                 * new feedback value "ccm", which indicates the support of codec control using
-                 * RTCP feedback messages. The "ccm" feedback value SHOULD be used with
-                 * parameters that indicate the specific codec control commands supported. In
-                 * this document, we define four such parameters, namely: "fir" indicates
-                 * support of the Full Intra Request (FIR). "tmmbr" indicates support of the
-                 * Temporary Maximum Media Stream Bit Rate Request/Notification (TMMBR/TMMBN).
-                 * It has an optional sub-parameter to indicate the session maximum packet rate
-                 * (measured in packets per second) to be used. If not included, this defaults
-                 * to infinity. "tstr" indicates support of the Temporal-Spatial Trade-off
-                 * Request/Notification (TSTR/TSTN). "vbcm" indicates support of H.271 Video
-                 * Back Channel Messages (VBCMs). It has zero or more subparameters identifying
-                 * the supported H.271 "payloadType" values.
-                 */
                 if (fir) {
                     media.addAttributeField(new AttributeField(AttributeKey.rtcpfb, String.format("%d ccm fir", codec.payloadType)));
                 }
@@ -608,14 +592,23 @@ public final class SDPFactory {
                     String proto = matcher.group(3);
                     // handle webrtc datachannel
                     if (proto.contains("SCTP")) {
-                        // next up are the individual codec format / payload ids
-                        field = new MediaField(SDPMediaType.application, 9, proto, new int[] { 5000 });
-                        // older style DC config uses port (5000) instead of webrtc-datachannel string
-                        if (!media.contains("webrtc-datachannel")) {
-                            // add attributes for older type request
-                            field.addAttributeField(new AttributeField(AttributeKey.sctpport, "5000"));
-                            field.addAttributeField(new AttributeField(AttributeKey.maxmessagesize, "262144"));
+                        // probe for "port" number or use the local counter from 5k
+                        int dataChannelPort = 5000;
+                        if (dataChannelPortCounter.get() == null) {
+                            dataChannelPortCounter.set(dataChannelPort);
+                        } else {
+                            dataChannelPort = dataChannelPortCounter.get();
                         }
+                        // next up are the individual codec format / payload ids
+                        field = new MediaField(SDPMediaType.application, dataChannelPort, proto, new int[] { dataChannelPort });
+                        // older style DC config uses port (5000) instead of webrtc-datachannel string
+                        //if (!media.contains("webrtc-datachannel")) {
+                        // add attributes for older type request
+                        field.addAttributeField(new AttributeField(AttributeKey.sctpport, dataChannelPort + ""));
+                        field.addAttributeField(new AttributeField(AttributeKey.maxmessagesize, "262144"));
+                        //}
+                        // update for the next hit
+                        dataChannelPortCounter.set(dataChannelPort + 2);
                     } else {
                         // handle non-datachannel
                         field = new MediaField(SDPMediaType.application, Integer.valueOf(matcher.group(2)), proto, new int[] { Integer.valueOf(matcher.group(4).trim()) });
@@ -818,6 +811,8 @@ public final class SDPFactory {
                     }
             }
         }
+        // clear our thread local entry
+        dataChannelPortCounter.remove();
     }
 
 }
