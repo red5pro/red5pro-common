@@ -65,6 +65,9 @@ public class NetworkManager {
 
     private static Logger log = LoggerFactory.getLogger(NetworkManager.class);
 
+    // static Amazon IP service
+    private static final String AWS_IP_CHECK_URI = "http://checkip.amazonaws.com";
+
     // represents an un-set IP address
     private static final String NO_IP_ADDRESS = "no-ip";
 
@@ -112,10 +115,8 @@ public class NetworkManager {
         DEFAULT // uses aws service to find network properties
         {
 
-            String IP_CHECK_URI = "http://checkip.amazonaws.com";
-
             String getPublicIP() {
-                return resolveIPOverHTTP(IP_CHECK_URI);
+                return resolveIPOverHTTP(AWS_IP_CHECK_URI);
             }
 
             String getLocalAddress() {
@@ -178,7 +179,12 @@ public class NetworkManager {
         {
 
             String getPublicIP() {
-                return resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/public-ipv4");
+                String ipAddress = resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/public-ipv4");
+                // handle the wavelength case where public-ipv4 returns nothing
+                if (ipAddress == null) {
+                    resolveIPOverHTTP(AWS_IP_CHECK_URI);
+                }
+                return ipAddress;
             }
 
             String getLocalAddress() {
