@@ -343,7 +343,6 @@ public class MediaField {
     }
 
     // order of sections m, i, c, b, k, a
-    @SuppressWarnings("incomplete-switch")
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("m=");
