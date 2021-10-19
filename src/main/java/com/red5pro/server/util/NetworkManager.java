@@ -182,7 +182,7 @@ public class NetworkManager {
                 String ipAddress = resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/public-ipv4");
                 // handle the wavelength case where public-ipv4 returns nothing
                 if (ipAddress == null) {
-                    resolveIPOverHTTP(AWS_IP_CHECK_URI);
+                    ipAddress = resolveIPOverHTTP(AWS_IP_CHECK_URI);
                 }
                 return ipAddress;
             }
