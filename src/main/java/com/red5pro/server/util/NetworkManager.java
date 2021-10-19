@@ -66,7 +66,7 @@ public class NetworkManager {
     private static Logger log = LoggerFactory.getLogger(NetworkManager.class);
 
     // static Amazon IP service
-    private static final String AWS_IP_CHECK_URI = "http://checkip.amazonaws.com";
+    private static final String AWS_IP_CHECK_URI = "https://checkip.amazonaws.com";
 
     // represents an un-set IP address
     private static final String NO_IP_ADDRESS = "no-ip";
