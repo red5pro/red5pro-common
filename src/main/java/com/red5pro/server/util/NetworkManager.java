@@ -3,6 +3,7 @@ package com.red5pro.server.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -257,7 +258,7 @@ public class NetworkManager {
         log.debug("Public address (stored): {}", ipAddress);
         // one last check to ensure we send null for our no-ip placeholder
         ipAddress = NO_IP_ADDRESS.equals(ipAddress) ? null : ipAddress;
-        log.info("Public address: {}", ipAddress);
+        log.debug("Public address: {}", ipAddress);
         return ipAddress;
     }
 
@@ -310,7 +311,7 @@ public class NetworkManager {
         log.debug("Local address (stored): {}", ipAddress);
         // one last check to ensure we send null for our no-ip placeholder
         ipAddress = NO_IP_ADDRESS.equals(ipAddress) ? null : ipAddress;
-        log.info("Local address: {}", ipAddress);
+        log.debug("Local address: {}", ipAddress);
         return ipAddress;
     }
 
@@ -486,6 +487,11 @@ public class NetworkManager {
             } else {
                 log.warn("Service returned unusable results: {}", line);
             }
+        } catch (FileNotFoundException fnfe) {
+            // this will occur in a wavelength zone where carrier IP is enabled
+            if (log.isDebugEnabled()) {
+                log.warn("Host could not be reached, probably carrier IP enabled zone", fnfe);
+            }
         } catch (Throwable t) {
             log.warn("Host could not be reached or timed-out", t);
         } finally {
@@ -621,7 +627,7 @@ public class NetworkManager {
             iceSocket.close();
         }
         stunStack.shutDown();
-        log.info("Public IP: {}", publicIP);
+        log.debug("Public IP: {}", publicIP);
         return publicIP;
     }
 
