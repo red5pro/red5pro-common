@@ -818,6 +818,32 @@ public final class SDPFactory {
                     }
             }
         }
+        // handle firefox not including rtpmap for opus
+        if (sdp.isFirefox()) {
+            // look for audio media line
+            MediaField audio = sdp.getMediaDescription(SDPMediaType.audio);
+            if (audio != null) {
+                // get default audio codec, it comes first 109, 111, etc; will not be 0, 8, 9
+                int audioCodecId = audio.getFormats()[0];
+                AttributeField opusAttr = new AttributeField(AttributeKey.rtpmap, String.format("%d opus/48000/2", audioCodecId));
+                // no rtpmap attributes at all
+                if (!audio.hasAttribute(AttributeKey.rtpmap)) {
+                    audio.addAttributeField(opusAttr);
+                } else {
+                    boolean hasOpus = false;
+                    AttributeField[] audioAttrs = audio.getAttributes(AttributeKey.rtpmap);
+                    for (AttributeField audioAttr : audioAttrs) {
+                        if (audioAttr.getValue().contains("opus")) {
+                            hasOpus = true;
+                            break;
+                        }
+                    }
+                    if (!hasOpus) {
+                        audio.addAttributeField(opusAttr);
+                    }
+                }
+            }
+        }
     }
 
 }
