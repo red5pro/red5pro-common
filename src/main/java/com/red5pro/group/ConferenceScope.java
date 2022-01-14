@@ -18,7 +18,7 @@ import com.red5pro.media.MediaTrack;
  * participants in a conference scenario. To use this class as the
  * Implementation, add parameter 'core' to the provision with value
  * 'com.red5pro.group.ConferenceScope'
- * 
+ *
  * @author Paul Gregoire
  */
 public class ConferenceScope extends Scope implements IGroupCore {
@@ -32,6 +32,8 @@ public class ConferenceScope extends Scope implements IGroupCore {
      * Conference participants are NOT in the Scope.clients collection
      */
     protected CopyOnWriteArraySet<IParticipant> participants = new CopyOnWriteArraySet<>();
+
+    private Long emptyTime;
 
     /**
      * Expression compositor.
@@ -52,7 +54,7 @@ public class ConferenceScope extends Scope implements IGroupCore {
 
     /**
      * Creates scope via parameters.
-     * 
+     *
      * @param parent
      * @param type
      * @param name
@@ -98,6 +100,7 @@ public class ConferenceScope extends Scope implements IGroupCore {
     }
 
     /** {@inheritDoc} */
+    @Override
     public int getActiveClients() {
         log.debug("Active clients {}", participants.size());
         return participants.size();// plus mixer program + anecdotal shared objects/etc
@@ -109,6 +112,7 @@ public class ConferenceScope extends Scope implements IGroupCore {
         return k;// plus mixer program + anecdotal shared objects/etc
     }
 
+    @Override
     public void setProvision(Provision provision) {
         this.provision = provision;
     }
@@ -130,14 +134,20 @@ public class ConferenceScope extends Scope implements IGroupCore {
 
     @Override
     public boolean addParticipant(IParticipant participant) {
-        return participants.add(participant);
+        boolean result = participants.add(participant);
+        emptyTime = null;
+        return result;
     }
 
     @Override
     public boolean removeParticipant(String id) {
         IParticipant participant = getParticipant(id);
         if (participant != null) {
-            return participants.remove(participant);
+            boolean result = participants.remove(participant);
+            if (participants.size() == 0 && emptyTime == null) {
+                emptyTime = System.currentTimeMillis();
+            }
+            return result;
         }
         return false;
     }
@@ -182,5 +192,15 @@ public class ConferenceScope extends Scope implements IGroupCore {
     @Override
     public MediaTrack getTrackById(String id) {
         return compositor != null ? compositor.getTrackById(id) : null;
+    }
+
+    @Override
+    public void onClose() {
+        // no-op
+    }
+
+    @Override
+    public Long getEmptyTime() {
+        return emptyTime;
     }
 }
