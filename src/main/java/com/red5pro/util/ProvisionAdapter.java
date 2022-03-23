@@ -172,7 +172,7 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
             Set<String> aliases = new HashSet<>();
             JsonArray aliasArr = provObj.get("aliases").getAsJsonArray();
             for (JsonElement alias : aliasArr) {
-                aliases.add(alias.getAsJsonObject().getAsString());
+                aliases.add(alias.getAsString());
             }
             provision.setAliases(aliases);
         }

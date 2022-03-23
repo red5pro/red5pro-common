@@ -22,12 +22,24 @@ public class ProvisionTest {
     static String floatProv = "{\"guid\": \"live/conference1\"," + "      \"context\": \"live/conference1\"," + "      \"name\": \"conference1\"," + "      \"level\": 1.0," + "      \"isRestricted\": false," + "      \"restrictions\": []," + "      \"primaries\": []," + "      \"secondaries\": []," + "      \"parameters\": {" + "        \"width\": 320.0," + "        \"audiotracks\": 3," + "        \"videotracks\": 1"
             + "      }" + "    }";
 
-    @Before
-    public void setUp() throws Exception {
-    }
+    static String aliasProv = "{\"guid\":\"live/stream1\",\"context\":\"live\",\"name\":\"stream1\",\"nameAlias\":\"streamA\",\"level\":0,\"isRestricted\":false,\"parameters\":{},\"restrictions\":[],\"primaries\":[],\"secondaries\":[],\"aliases\":[\"streamB\",\"streamC\",\"streamD\"]}";
 
-    @After
-    public void tearDown() throws Exception {
+    @Test
+    public void testAlias() {
+        Provision prov = Provision.buildFromJson(aliasProv);
+        System.out.printf("Deserialized: %s%n", prov);
+        assertNotNull(prov.getStreamName());
+        assertNotNull(prov.getStreamNameAlias());
+        assertNotNull(prov.getAliases());
+        // turn it back into json
+        ProvisionAdapter ad = new ProvisionAdapter();
+        JsonObject json = ad.serialize(prov, null, null).getAsJsonObject();
+        System.out.printf("Reserialized: %s%n", json);
+        Provision newprov = Provision.getGson().fromJson(json, Provision.class);
+        System.out.printf("Deserialized #2: %s%n", newprov);
+        assertNotNull(newprov.getStreamName());
+        assertNotNull(newprov.getStreamNameAlias());
+        assertNotNull(newprov.getAliases());
     }
 
     @Test
