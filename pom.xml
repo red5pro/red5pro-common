@@ -6,13 +6,13 @@
     <artifactId>red5pro-common</artifactId>
     <packaging>jar</packaging>
     <name>red5pro-common</name>
-    <version>10.3.2</version>
+    <version>10.3.3</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
     <organization>
         <name>Red5Pro</name>
-        <url>http://infrared5.com/</url>
+        <url>http://red5pro.com/</url>
     </organization>
     <licenses>
         <license>
