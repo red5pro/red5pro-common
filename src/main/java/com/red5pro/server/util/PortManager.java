@@ -32,7 +32,7 @@ public class PortManager {
 
     // base socket timeout in milliseconds
     private static int soTimeoutMs = 5;
-    
+
     // allow system port allocations (may be outside configured port range)
     private static boolean allowSystemPorts;
 
@@ -281,7 +281,7 @@ public class PortManager {
     public static void setAllowSystemPorts(boolean allowSystemPorts) {
         PortManager.allowSystemPorts = allowSystemPorts;
     }
-    
+
     /**
      * Returns allocated UDP ports; this can include ports allocated outside this application in the specified range.
      * 
