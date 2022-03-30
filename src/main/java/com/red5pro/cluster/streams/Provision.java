@@ -94,6 +94,11 @@ public class Provision {
     public final static String Param_Video_Key = "videoKey";
 
     /**
+     * Video Framerate.
+     */
+    public final static String Param_Video_FPS = "videoFPS";
+
+    /**
      * Gson for serialize and deserialize ops.
      */
     private static Gson gson;

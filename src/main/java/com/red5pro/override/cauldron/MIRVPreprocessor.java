@@ -31,6 +31,7 @@ public interface MIRVPreprocessor {
      * @param path directory of modules.
      */
     public void init(String path);
+
     /**
      * Create an instance. <br >
      * Must call close to free the memory.
