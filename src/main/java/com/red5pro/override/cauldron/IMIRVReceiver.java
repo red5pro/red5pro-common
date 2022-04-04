@@ -37,5 +37,21 @@ import java.nio.ByteBuffer;
  *
  */
 public interface IMIRVReceiver {
+
+    public static final int MIRV_CONTRACT_BROKEN = 1;
+
+    /**
+     * 
+     * @param index of ABR level.
+     * @param timestamp milliseconds.
+     * @param buffer annex-b bytestream.
+     */
     void receiveVideo(int index, int timestamp, ByteBuffer buffer);
+
+    /**
+     * MIVR Contract broken or unfulfilled.
+     * @param code
+     * @param message info or null.
+     */
+    void nativeError(int code, String message);
 }
