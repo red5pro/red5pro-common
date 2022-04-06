@@ -104,12 +104,12 @@ public class Provision {
     /**
      * 
      */
-    public static String Param_HardwareKey = "hardware";
+    public final static String Param_HardwareKey = "hardware";
 
     /**
      * 
      */
-    public static String Param_strict = "strict";
+    public final static String Param_Strict = "strict";
 
     /**
      * Gson for serialize and deserialize ops.
