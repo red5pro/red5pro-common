@@ -3,6 +3,7 @@ package com.red5pro.server.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -65,6 +66,9 @@ public class NetworkManager {
 
     private static Logger log = LoggerFactory.getLogger(NetworkManager.class);
 
+    // static Amazon IP service
+    private static final String AWS_IP_CHECK_URI = "https://checkip.amazonaws.com";
+
     // represents an un-set IP address
     private static final String NO_IP_ADDRESS = "no-ip";
 
@@ -112,10 +116,8 @@ public class NetworkManager {
         DEFAULT // uses aws service to find network properties
         {
 
-            String IP_CHECK_URI = "http://checkip.amazonaws.com";
-
             String getPublicIP() {
-                return resolveIPOverHTTP(IP_CHECK_URI);
+                return resolveIPOverHTTP(AWS_IP_CHECK_URI);
             }
 
             String getLocalAddress() {
@@ -178,7 +180,12 @@ public class NetworkManager {
         {
 
             String getPublicIP() {
-                return resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/public-ipv4");
+                String ipAddress = resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/public-ipv4");
+                // handle the wavelength case where public-ipv4 returns nothing
+                if (ipAddress == null) {
+                    ipAddress = resolveIPOverHTTP(AWS_IP_CHECK_URI);
+                }
+                return ipAddress;
             }
 
             String getLocalAddress() {
@@ -251,7 +258,7 @@ public class NetworkManager {
         log.debug("Public address (stored): {}", ipAddress);
         // one last check to ensure we send null for our no-ip placeholder
         ipAddress = NO_IP_ADDRESS.equals(ipAddress) ? null : ipAddress;
-        log.info("Public address: {}", ipAddress);
+        log.debug("Public address: {}", ipAddress);
         return ipAddress;
     }
 
@@ -304,7 +311,7 @@ public class NetworkManager {
         log.debug("Local address (stored): {}", ipAddress);
         // one last check to ensure we send null for our no-ip placeholder
         ipAddress = NO_IP_ADDRESS.equals(ipAddress) ? null : ipAddress;
-        log.info("Local address: {}", ipAddress);
+        log.debug("Local address: {}", ipAddress);
         return ipAddress;
     }
 
@@ -480,6 +487,11 @@ public class NetworkManager {
             } else {
                 log.warn("Service returned unusable results: {}", line);
             }
+        } catch (FileNotFoundException fnfe) {
+            // this will occur in a wavelength zone where carrier IP is enabled
+            if (log.isDebugEnabled()) {
+                log.warn("Host could not be reached, probably carrier IP enabled zone", fnfe);
+            }
         } catch (Throwable t) {
             log.warn("Host could not be reached or timed-out", t);
         } finally {
@@ -615,7 +627,7 @@ public class NetworkManager {
             iceSocket.close();
         }
         stunStack.shutDown();
-        log.info("Public IP: {}", publicIP);
+        log.debug("Public IP: {}", publicIP);
         return publicIP;
     }
 

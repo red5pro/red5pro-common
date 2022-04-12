@@ -27,6 +27,12 @@ package com.red5pro.override.cauldron;
 
 public interface MIRVPreprocessor {
     /**
+     * 
+     * @param path directory of modules.
+     */
+    public void init(String path);
+
+    /**
      * Create an instance. <br >
      * Must call close to free the memory.
      * 
@@ -34,7 +40,7 @@ public interface MIRVPreprocessor {
      *            number of outputs.
      * @return unique pointer value or zero if error.
      */
-    public long open(int outputs);
+    public long open(int outputs, int type);
 
     /**
      * 
