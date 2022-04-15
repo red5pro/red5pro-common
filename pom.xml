@@ -6,7 +6,7 @@
     <artifactId>red5pro-common</artifactId>
     <packaging>jar</packaging>
     <name>red5pro-common</name>
-    <version>10.3.3</version>
+    <version>10.3.4</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -52,7 +52,7 @@
         <java.release.level>11</java.release.level>
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
-        <red5.version>1.2.15</red5.version>
+        <red5.version>1.2.20</red5.version>
         <tomcatplugin.version>2.2.11</tomcatplugin.version>
         <mina.version>2.0.21</mina.version>
         <spring.version>5.3.5</spring.version>
@@ -62,7 +62,7 @@
         <json.version>[2.4.1,)</json.version>
         <bc.version>1.62</bc.version>
         <junit.version>[4.13.1,)</junit.version>
-        <ice4j.version>[3.2.62,)</ice4j.version>
+        <ice4j.version>[3.2.64,)</ice4j.version>
         <slf4j.version>1.7.36</slf4j.version>
     </properties>
     <distributionManagement>
