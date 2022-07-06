@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
 import org.red5.server.api.scope.IScope;
+
+import com.red5pro.media.MuteState;
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.media.sdp.SessionDescription;
 import com.red5pro.override.IProStream;
@@ -147,5 +149,56 @@ public interface IRTCStream {
      * @return media id
      */
     String getMediaId(int index);
+
+    /**
+     * Returns an identifier for this instance.
+     * 
+     * @return identifier which may or may not be the associated stream name
+     */
+    String getId();
+
+    /**
+     * Returns the muted state of the audio stream if it exists.
+     * 
+     * @return true if muted, false if not muted, and undefined if there is no stream
+     */
+    MuteState isAudioMuted();
+
+    /**
+     * Mute audio.
+     */
+    void muteAudio();
+
+    /**
+     * Un-mute audio.
+     */
+    void unmuteAudio();
+
+    /**
+     * Returns the muted state of the video stream if it exists.
+     * 
+     * @return true if muted, false if not muted, and undefined if there is no stream
+     */
+    MuteState isVideoMuted();
+
+    /**
+     * Mute video.
+     */
+    void muteVideo();
+
+    /**
+     * Un-mute video.
+     */
+    void unmuteVideo();
+
+    /**
+     * Returns the data channel with the given label. If a data channel is not found
+     * for the label, but the existing one has no label, it will be set to the given
+     * label until overridden by incoming labeled content.
+     * 
+     * @param label
+     * @return IDataMediaStream
+     */
+    IDataMediaStream getDataMediaStream(String label);
 
 }

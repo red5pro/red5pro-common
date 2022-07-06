@@ -212,6 +212,7 @@ public class NetworkManager {
             // configure port range
             PortManager.setRtpPortBase(Integer.valueOf(props.getProperty("port.min", "49152")));
             PortManager.setRtpPortCeiling(Integer.valueOf(props.getProperty("port.max", "65535")));
+            PortManager.setAllowSystemPorts(Boolean.valueOf(props.getProperty("allow.sys.ports", "false")));
             log.info("Port range: {}", PortManager.getRange());
             // set local properties
             defaultTransport = props.getProperty("ice.default.transport", "udp");

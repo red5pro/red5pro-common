@@ -28,9 +28,11 @@ package com.red5pro.util;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -46,8 +48,7 @@ import com.red5pro.cluster.streams.Provision;
 import com.red5pro.cluster.streams.Restrictions;
 
 /**
- * Provides serialize and deserialization for Provision model objects using
- * Gson.
+ * Provides serialize and deserialization for Provision model objects using Gson.
  * 
  * @author Paul Gregoire
  */
@@ -82,26 +83,39 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
             result.add("restrictions", restrictions);
             result.addProperty("isRestricted", provision.getRestrictions().isRestricted());
         }
-        JsonArray primaries = new JsonArray();
         if (provision.getPrimaries() != null) {
+            JsonArray primaries = new JsonArray();
             provision.getPrimaries().forEach(primary -> {
                 JsonObject iasJ = new JsonObject();
                 iasJ.addProperty("host", primary.getHost());
                 iasJ.addProperty("port", primary.getPort());
                 primaries.add(iasJ);
             });
+            result.add("primaries", primaries);
         }
-        result.add("primaries", primaries);
-        JsonArray secondaries = new JsonArray();
         if (provision.getSecondaries() != null) {
+            JsonArray secondaries = new JsonArray();
             provision.getSecondaries().forEach(secondary -> {
                 JsonObject iasJ = new JsonObject();
                 iasJ.addProperty("host", secondary.getHost());
                 iasJ.addProperty("port", secondary.getPort());
                 secondaries.add(iasJ);
             });
+            result.add("secondaries", secondaries);
         }
-        result.add("secondaries", secondaries);
+        // handle aliases
+        if (provision.getStreamNameAlias() != null) {
+            // publisher alias
+            result.addProperty("nameAlias", provision.getStreamNameAlias());
+        }
+        if (provision.getAliases() != null) {
+            // subscribe aliases
+            JsonArray aliases = new JsonArray();
+            provision.getAliases().forEach(alias -> {
+                aliases.add(alias);
+            });
+            result.add("aliases", aliases);
+        }
         return result;
     }
 
@@ -129,25 +143,39 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
                 parameters.put(param.getKey(), interpret(param.getValue()));
             }
         }
-        List<Ingest> primaries = new ArrayList<>();
+        Provision provision = Provision.build(guid, contextPath, streamName, qualityLevel, rObj, parameters);
         if (provObj.has("primaries")) {
+            List<Ingest> primaries = new ArrayList<>();
             JsonArray params = provObj.get("primaries").getAsJsonArray();
             for (JsonElement param : params) {
                 Ingest pi = Ingest.build(param.getAsJsonObject().get("host").getAsString(), param.getAsJsonObject().get("port").getAsInt());
                 primaries.add(pi);
             }
+            provision.setPrimaries(primaries);
         }
-        List<Ingest> secondaries = new ArrayList<>();
         if (provObj.has("secondaries")) {
+            List<Ingest> secondaries = new ArrayList<>();
             JsonArray params = provObj.get("secondaries").getAsJsonArray();
             for (JsonElement param : params) {
                 Ingest pi = Ingest.build(param.getAsJsonObject().get("host").getAsString(), param.getAsJsonObject().get("port").getAsInt());
                 secondaries.add(pi);
             }
+            provision.setSecondaries(secondaries);
         }
-        Provision provision = Provision.build(guid, contextPath, streamName, qualityLevel, rObj, parameters);
-        provision.setPrimaries(primaries);
-        provision.setSecondaries(secondaries);
+        // publisher alias
+        if (provObj.has("nameAlias")) {
+            String streamNameAlias = provObj.get("nameAlias").getAsString();
+            provision.setStreamNameAlias(streamNameAlias);
+        }
+        // subscribing aliases
+        if (provObj.has("aliases")) {
+            Set<String> aliases = new HashSet<>();
+            JsonArray aliasArr = provObj.get("aliases").getAsJsonArray();
+            for (JsonElement alias : aliasArr) {
+                aliases.add(alias.getAsString());
+            }
+            provision.setAliases(aliases);
+        }
         return provision;
     }
 

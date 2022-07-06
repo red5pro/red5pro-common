@@ -33,6 +33,9 @@ public class PortManager {
     // base socket timeout in milliseconds
     private static int soTimeoutMs = 5;
 
+    // allow system port allocations (may be outside configured port range)
+    private static boolean allowSystemPorts;
+
     // holds ports that have been allocated and only those that are allocated
     private static CopyOnWriteArraySet<Integer> allocatedPorts = new CopyOnWriteArraySet<>();
 
@@ -87,10 +90,14 @@ public class PortManager {
         int serverPort = 0;
         // check exhaustion first
         if (isRangeExhausted()) {
-            // XXX this would need to be a config as the behavior would be expected to return a port outside known range
-            log.warn("Configured port range has been exhausted, the next system available port will be searched");
-            // give them a port available on the system which exists outside the range
-            serverPort = findFreeUdpPort();
+            if (allowSystemPorts) {
+                // this will allow the return a port outside configured range
+                log.info("Configured port range has been exhausted, the next system available port will be searched");
+                // give them a port available on the system which exists outside the range
+                serverPort = findFreeUdpPort();
+            } else {
+                log.warn("Configured port range has been exhausted, no ports available");
+            }
         } else {
             serverPort = portUpdater.incrementAndGet(instance);
             for (; serverPort < rtpPortCeiling; serverPort = portUpdater.incrementAndGet(instance)) {
@@ -264,6 +271,15 @@ public class PortManager {
     public static void setCheckPortAvailability(boolean checkPortAvailability) {
         //log.info("ignoring request for port checks {}",checkPortAvailability);
         //PortManager.checkPortAvailability = checkPortAvailability;
+    }
+
+    /**
+     * Allows for using system ports, which may exceed the port range specified.
+     * 
+     * @param allowSystemPorts
+     */
+    public static void setAllowSystemPorts(boolean allowSystemPorts) {
+        PortManager.allowSystemPorts = allowSystemPorts;
     }
 
     /**
