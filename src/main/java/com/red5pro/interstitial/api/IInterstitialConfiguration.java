@@ -11,7 +11,7 @@ package com.red5pro.interstitial.api;
 public interface IInterstitialConfiguration {
     /**
      * Close session and return null to cancel insertion.
-     * 
+     *
      * @param stream
      *            ClientBroadcastStream instance.
      * @param session
@@ -24,7 +24,7 @@ public interface IInterstitialConfiguration {
      * Called prior to activation when session is next in schedule. Make any needed
      * adjustments and invoke session-queue(). Session will be configured with
      * current audio and video parameters.
-     * 
+     *
      * @param session
      *            session to acquire and prepare.
      */

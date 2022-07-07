@@ -3,7 +3,7 @@ package com.red5pro.canvas;
 public interface CanvasFactory {
     /**
      * Create a canvas.
-     * 
+     *
      * @param width
      *            width of video canvas
      * @param height

@@ -29,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Used to be notified of cluster link states.
- * 
+ *
  * @author Andy Shaules
  *
  */

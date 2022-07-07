@@ -33,7 +33,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * This class signals which native module is loaded and provides a concurrent
  * queue to pass key/value pairs during processing.
- * 
+ *
  * @author Andy Shaules
  */
 public class Potion extends LinkedBlockingQueue<Ingredient> {
@@ -51,7 +51,7 @@ public class Potion extends LinkedBlockingQueue<Ingredient> {
      * 	stream.setPotion(p);
      * }
      * </pre>
-     * 
+     *
      * @param guid
      *            globally unique id
      */
@@ -61,7 +61,7 @@ public class Potion extends LinkedBlockingQueue<Ingredient> {
 
     /**
      * Returns the guid corresponding to the native module that should be loaded.
-     * 
+     *
      * @return guid
      */
     public String getGuid() {

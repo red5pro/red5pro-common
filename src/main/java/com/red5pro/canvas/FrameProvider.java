@@ -3,14 +3,14 @@ package com.red5pro.canvas;
 public interface FrameProvider {
     /**
      * Engine is starting.
-     * 
+     *
      * @param startTime
      *            utc milliseconds.
      */
     void startCanvas(long startTime);
 
     /**
-     * 
+     *
      * @param video
      *            yu12 buffer. packed.
      * @param time
@@ -19,7 +19,7 @@ public interface FrameProvider {
     void drawVideo(byte[] video, long time);
 
     /**
-     * 
+     *
      * @param audio
      *            sample buffer, 1024 samples per frame for AAC.
      * @param time

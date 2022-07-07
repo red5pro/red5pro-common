@@ -39,7 +39,7 @@ public interface ProfileLevelResolver {
 
     /**
      * looks at the parsers and returns the first non zero returned.
-     * 
+     *
      * @param context
      *            path of stream
      * @param name
@@ -62,7 +62,7 @@ public interface ProfileLevelResolver {
      * Use this class to translate the name to an integer priority level. Return
      * higher numbers for lower bitrates. (1 is the highest, 2 is less than 1, 3 is
      * less than 2.)
-     * 
+     *
      * @param context
      *            stream path
      * @param name
@@ -75,7 +75,7 @@ public interface ProfileLevelResolver {
     /**
      * Designates pattern added to stream names to separate the index number from
      * the original name.
-     * 
+     *
      * @param pattern
      *            String pattern used prior to quality index.
      */

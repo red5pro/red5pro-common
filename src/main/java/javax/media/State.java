@@ -2,7 +2,7 @@ package javax.media;
 
 /**
  * Controller and Processor state enums.
- * 
+ *
  * @author Paul Gregoire
  */
 public enum State {

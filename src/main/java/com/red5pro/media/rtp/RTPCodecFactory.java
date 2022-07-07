@@ -11,7 +11,7 @@ import com.red5pro.media.sdp.model.AttributeKey;
 
 /**
  * Codec factory.
- * 
+ *
  * http://en.wikipedia.org/wiki/RTP_audio_video_profile
  */
 public class RTPCodecFactory {
@@ -29,12 +29,12 @@ public class RTPCodecFactory {
     private Map<RTPCodecEnum, AttributeField> videoAttributes = new HashMap<>();
 
     // h264 packetization mode
-    // Modes: 
+    // Modes:
     // 0 - Single NAL Unit Mode
     // 1 - Non-Interleaved Mode << default for WebRTC
     // 2 - Interleaved Mode
     // All browsers *must support* mode 0 per https://tools.ietf.org/html/rfc6184#section-6.2
-    // 
+    //
     // Bugs in chromium for ref:
     // https://bugs.chromium.org/p/chromium/issues/detail?id=500605
     // https://bugs.chromium.org/p/chromium/issues/detail?id=600254
@@ -65,7 +65,7 @@ public class RTPCodecFactory {
 
     /**
      * Create a new instance of RTPCodec by codec name.
-     * 
+     *
      * @return codec associated with codecName
      */
     public RTPCodec getAudioCodec(String codecName) {
@@ -92,7 +92,7 @@ public class RTPCodecFactory {
 
     /**
      * Create a new instance of RTPCodec by codec name.
-     * 
+     *
      * @return codec associated with codecName
      */
     public RTPCodec getVideoCodec(String codecName) {
@@ -119,7 +119,7 @@ public class RTPCodecFactory {
 
     /**
      * Get all available audio codecs.
-     * 
+     *
      * @return RTPCodecEnum array containing all audio codecs
      */
     public RTPCodecEnum[] getAvailableAudioCodecs() {
@@ -128,7 +128,7 @@ public class RTPCodecFactory {
 
     /**
      * Get all available video codecs.
-     * 
+     *
      * @return RTPCodecEnum array containing all video codecs
      */
     public RTPCodecEnum[] getAvailableVideoCodecs() {
@@ -137,7 +137,7 @@ public class RTPCodecFactory {
 
     /**
      * Get all available codecs in precedence order.
-     * 
+     *
      * @param codecsPrecedence
      *            semicolon separated payload type ids from the codecs
      * @return RTPCodecEnum array containing all codecs

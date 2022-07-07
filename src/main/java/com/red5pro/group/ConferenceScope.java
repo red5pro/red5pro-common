@@ -18,7 +18,7 @@ import com.red5pro.media.MediaTrack;
  * participants in a conference scenario. To use this class as the
  * Implementation, add parameter 'core' to the provision with value
  * 'com.red5pro.group.ConferenceScope'
- * 
+ *
  * @author Paul Gregoire
  */
 public class ConferenceScope extends Scope implements IGroupCore {
@@ -52,7 +52,7 @@ public class ConferenceScope extends Scope implements IGroupCore {
 
     /**
      * Creates scope via parameters.
-     * 
+     *
      * @param parent
      * @param type
      * @param name
