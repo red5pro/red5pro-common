@@ -13,13 +13,13 @@ import com.red5pro.media.rtp.RTPCodecEnum;
  * of media descriptions. Each media description starts with an "m=" field and
  * is terminated by either the next "m=" field or by the end of the session
  * description.
- * 
+ *
  * <pre>
       m=<media> <port> <proto> <fmt> ...
-      
+
       m=audio 49152 UDP/TLS/RTP/SAVPF 109
  * </pre>
- * 
+ *
  * @author Paul Gregoire
  */
 public class MediaField {
@@ -94,7 +94,7 @@ public class MediaField {
 
     /**
      * Returns true if a given attribute exists.
-     * 
+     *
      * @param key
      * @return true if found and false otherwise
      */
@@ -111,7 +111,7 @@ public class MediaField {
 
     /**
      * Returns true if a given attribute exists containing the given value.
-     * 
+     *
      * @param key
      * @param value
      * @return true if found and false otherwise
@@ -129,7 +129,7 @@ public class MediaField {
 
     /**
      * Lookup attribute by its key.
-     * 
+     *
      * @param key
      * @return attribute if found and null otherwise
      */
@@ -146,7 +146,7 @@ public class MediaField {
 
     /**
      * Lookup attribute by a given key and with a matching identifier.
-     * 
+     *
      * @param key
      * @param withId
      * @return attribute if found and null otherwise
@@ -165,7 +165,7 @@ public class MediaField {
     /**
      * Lookup attribute by a given key and with a matching codec encoding from a set
      * of codecs.
-     * 
+     *
      * @param key
      * @param codecs
      *            set of codecs in-order of preference
@@ -310,7 +310,7 @@ public class MediaField {
 
     /**
      * Returns the media identifier or mid.
-     * 
+     *
      * @return mediaId
      */
     public String getMediaId() {

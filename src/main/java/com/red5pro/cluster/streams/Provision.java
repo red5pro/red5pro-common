@@ -36,7 +36,7 @@ import com.red5pro.util.ProvisionAdapter;
 
 /**
  * Provision model object.
- * 
+ *
  * @author Andy Shaules
  * @author Paul Gregoire
  */
@@ -182,7 +182,7 @@ public class Provision {
 
     /**
      * Returns JSON string representing this object instance.
-     * 
+     *
      * @return JSON string
      */
     public String toJson() {
@@ -214,7 +214,7 @@ public class Provision {
 
     /**
      * Returns concatenated context path without leading slashes. Normalizes guid.
-     * 
+     *
      * @param context
      *            app scope
      * @param name
@@ -237,7 +237,7 @@ public class Provision {
 
     /**
      * Returns a Gson instance based on the Provision enabled GsonBuilder.
-     * 
+     *
      * @return Gson instance
      */
     public static Gson getGson() {

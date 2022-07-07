@@ -23,7 +23,7 @@ import com.red5pro.media.SourceType;
 
 /**
  * Provides network functions.
- * 
+ *
  * @author Paul Gregoire
  */
 public class NetworkManager {
@@ -62,7 +62,7 @@ public class NetworkManager {
     /**
      * Returns a publicly accessible IP address for this originator using a free
      * service on Amazon AWS.
-     * 
+     *
      * @return IP address
      */
     public static String getPublicAddress() {
@@ -112,7 +112,7 @@ public class NetworkManager {
 
     /**
      * Returns the private / local IP address for the active network interface(s).
-     * 
+     *
      * @return IP address
      */
     public static String getLocalAddress() {
@@ -196,7 +196,7 @@ public class NetworkManager {
 
     /**
      * Validates a given IP address and port (optional) for binding.
-     * 
+     *
      * @param ipAddress
      * @param port
      * @return true if bindable and false otherwise
@@ -255,7 +255,7 @@ public class NetworkManager {
 
     /**
      * Validates a given IP address and port (optional) for binding.
-     * 
+     *
      * @param ipAddress
      * @param port
      * @return true if bindable and false otherwise
@@ -281,7 +281,7 @@ public class NetworkManager {
 
     /**
      * Returns the ingest end-point map.
-     * 
+     *
      * @return ingestEndPoints
      */
     public static ConcurrentMap<String, IngestEndpoint<?>> getIngestEndPoints() {
@@ -291,7 +291,7 @@ public class NetworkManager {
     /**
      * Returns an unmodifiable copy of the ingest end-points matching the source
      * type.
-     * 
+     *
      * @return ingestEndPoints
      */
     public static Map<String, IngestEndpoint<?>> getIngestEndPointsByType(SourceType type) {
@@ -303,7 +303,7 @@ public class NetworkManager {
 
     /**
      * Removes an end-point by its id.
-     * 
+     *
      * @param endPointId
      * @return ingest end-point matching the id or null if no match exists
      */

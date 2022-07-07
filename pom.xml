@@ -11,7 +11,7 @@
     <inceptionYear>2015</inceptionYear>
     <organization>
         <name>Red5Pro</name>
-        <url>http://infrared5.com/</url>
+        <url>http://red5pro.com/</url>
     </organization>
     <licenses>
         <license>
@@ -215,7 +215,7 @@
             <plugin>
                 <groupId>net.revelc.code.formatter</groupId>
                 <artifactId>formatter-maven-plugin</artifactId>
-                <version>2.7.0</version>
+                <version>2.19.0</version>
                 <executions>
                     <execution>
                         <goals>

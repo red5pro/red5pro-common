@@ -8,7 +8,7 @@ import org.bouncycastle.crypto.prng.DigestRandomGenerator;
 
 /**
  * Id generator.
- * 
+ *
  * @author Paul Gregoire
  */
 public class IdGenerator {
@@ -20,7 +20,7 @@ public class IdGenerator {
 
     /**
      * Returns a cryptographically generated id of 128 bits.
-     * 
+     *
      * @return id
      */
     public static final long generateId() {
@@ -40,7 +40,7 @@ public class IdGenerator {
 
     /**
      * Returns a cryptographically generated id.
-     * 
+     *
      * @param bits
      *            maximum number of bits to use
      * @return id
@@ -66,7 +66,7 @@ public class IdGenerator {
 
     /**
      * Generates a random numeric string with a given length.
-     * 
+     *
      * @param length
      * @return String
      */

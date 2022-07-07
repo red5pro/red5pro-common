@@ -83,7 +83,7 @@ public class WaveWriter implements AuxOut {
     /**
      * Construct a wave writer and specify the desired sample rate, channel count,
      * and bit depth. Use zeros to bypass resampling.
-     * 
+     *
      * @param name
      *            full file path.
      * @param chan
@@ -231,7 +231,7 @@ public class WaveWriter implements AuxOut {
 
     /**
      * Set the file write frequency in seconds. Default is 1 second.
-     * 
+     *
      * @param duration
      *            between file writes.
      */

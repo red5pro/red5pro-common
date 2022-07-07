@@ -343,7 +343,7 @@ public class SDPFactoryTest {
 
     /**
      * Tests Safari sending the audio after the video in the SDP.
-     * 
+     *
      * @throws Exception
      */
     @Test

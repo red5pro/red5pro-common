@@ -52,7 +52,7 @@ public class MediaSample implements IMediaSample {
 
     /**
      * Creation with start time, buffer size, and media type.
-     * 
+     *
      * @param startTime
      * @param bufferSize
      * @param type
@@ -67,7 +67,7 @@ public class MediaSample implements IMediaSample {
 
     /**
      * Creation with start time, buffer, and media type.
-     * 
+     *
      * @param startTime
      * @param buffer
      * @param type
@@ -81,7 +81,7 @@ public class MediaSample implements IMediaSample {
 
     /**
      * Creation with start time, buffer, media type, and critical data flag.
-     * 
+     *
      * @param startTime
      * @param buffer
      * @param type
@@ -97,7 +97,7 @@ public class MediaSample implements IMediaSample {
     /**
      * Creation with start time, buffer, media type, critical data flag, and pro
      * sequence number.
-     * 
+     *
      * @param startTime
      * @param buffer
      * @param type
@@ -115,7 +115,7 @@ public class MediaSample implements IMediaSample {
     /**
      * Creation with start time, buffer, media type, critical data flag, and pro
      * sequence number.
-     * 
+     *
      * @param startTime
      * @param buffer
      * @param type
@@ -309,7 +309,7 @@ public class MediaSample implements IMediaSample {
 
     /**
      * Returns an FMJ/JMF Buffer based on this MediaSample.
-     * 
+     *
      * @return Buffer
      */
     @SuppressWarnings("incomplete-switch")
@@ -388,7 +388,7 @@ public class MediaSample implements IMediaSample {
 
     /**
      * Returns an FMJ/JMF Buffer based on this MediaSample.
-     * 
+     *
      * @deprecated
      * @param stripRtmp
      * @return Buffer
@@ -431,7 +431,7 @@ public class MediaSample implements IMediaSample {
 
     /**
      * Returns a deep-copy of this MediaSample.
-     * 
+     *
      * @return copy
      */
     public MediaSample deepCopy() {

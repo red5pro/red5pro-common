@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
  * The bandwidth "b=" field. This OPTIONAL field denotes the proposed bandwidth
  * to be used by the session or media. The <bwtype> is an alphanumeric modifier
  * giving the meaning of the <bandwidth> figure.
- * 
+ *
  * <pre>
       b=<bwtype>:<bandwidth>
  * </pre>

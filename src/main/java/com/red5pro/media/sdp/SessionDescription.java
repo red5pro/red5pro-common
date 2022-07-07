@@ -21,7 +21,7 @@ import com.red5pro.util.IdGenerator;
 
 /**
  * A session description, based on RFC4566 {@link https://tools.ietf.org/html/rfc4566}.
- * 
+ *
  * @author Paul Gregoire
  */
 public class SessionDescription {
@@ -115,7 +115,7 @@ public class SessionDescription {
 
     /**
      * Adds an SDPTrack.
-     * 
+     *
      * @param track
      */
     public boolean addTrack(SDPTrack track) {
@@ -127,7 +127,7 @@ public class SessionDescription {
 
     /**
      * Returns the SDPTracks if any exist.
-     * 
+     *
      * @return collection of SDPTrack
      */
     public Set<SDPTrack> getTracks() {
@@ -136,7 +136,7 @@ public class SessionDescription {
 
     /**
      * Returns a media description for a given type.
-     * 
+     *
      * @param type
      *            MediaType
      * @return media description matching type or null if not found
@@ -154,7 +154,7 @@ public class SessionDescription {
 
     /**
      * Returns all the media descriptions for a given type.
-     * 
+     *
      * @param type
      *            MediaType
      * @return list of media descriptions matching type or empty list if none match
@@ -212,7 +212,7 @@ public class SessionDescription {
 
     /**
      * Lookup attribute by its key.
-     * 
+     *
      * @param key
      * @return attribute if found and null otherwise
      */
@@ -282,7 +282,7 @@ public class SessionDescription {
 
     /**
      * Add a media field (description).
-     * 
+     *
      * @param mediaField
      */
     @SuppressWarnings("incomplete-switch")
@@ -309,7 +309,7 @@ public class SessionDescription {
 
     /**
      * Remove a media field (description).
-     * 
+     *
      * @param mediaField
      */
     public void remove(MediaField mediaField) {
@@ -344,7 +344,7 @@ public class SessionDescription {
 
     /**
      * Set metadata and create attributes for each entry.
-     * 
+     *
      * @param metadata
      */
     public void setMetadata(Map<Object, Object> metadata) {
@@ -359,7 +359,7 @@ public class SessionDescription {
 
     /**
      * Returns metadata if it exists.
-     * 
+     *
      * @return metadata
      */
     public Map<Object, Object> getMetadata() {
@@ -372,7 +372,7 @@ public class SessionDescription {
 
     /**
      * Returns a audio track if it exists.
-     * 
+     *
      * @return audio track or null if none exist
      */
     public SDPTrack getAudioTrack() {
@@ -387,7 +387,7 @@ public class SessionDescription {
 
     /**
      * Returns a video track if it exists.
-     * 
+     *
      * @return video track or null if none exist
      */
     public SDPTrack getVideoTrack() {
@@ -402,7 +402,7 @@ public class SessionDescription {
 
     /**
      * Returns an application track if it exists.
-     * 
+     *
      * @return application track or null if none exist
      */
     public SDPTrack getApplicationTrack() {

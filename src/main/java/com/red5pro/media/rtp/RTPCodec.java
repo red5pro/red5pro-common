@@ -55,7 +55,7 @@ public interface RTPCodec {
 
     /**
      * Get codec media attributes used for SDP negotiation.
-     * 
+     *
      * @return String array containing codec attribute
      */
     public String[] getCodecMediaAttributes();

@@ -4,7 +4,7 @@ import javax.media.Buffer;
 
 /**
  * Adapter for MediaSample implementations.
- * 
+ *
  * @author Paul Gregoire
  *
  */

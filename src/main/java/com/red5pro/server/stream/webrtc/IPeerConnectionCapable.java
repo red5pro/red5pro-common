@@ -12,7 +12,7 @@ import net.minidev.json.JSONObject;
 
 /**
  * Interface to support connections representing PeerConnection features.
- * 
+ *
  * @author Paul Gregoire
  *
  */
