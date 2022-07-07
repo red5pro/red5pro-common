@@ -8,20 +8,20 @@ import org.red5.server.api.scope.IScope;
 public interface Red5ProCanvas {
     /**
      * Set object that will fill buffers.
-     * 
+     *
      * @param provider
      *            FrameProvider
      */
     void setFrameProvider(FrameProvider provider);
 
     /**
-     * 
+     *
      * @return frame provider
      */
     FrameProvider getFrameProvider();
 
     /**
-     * 
+     *
      * @param bitrate
      *            video bitrate.
      */
@@ -29,14 +29,14 @@ public interface Red5ProCanvas {
 
     /**
      * Sets the encoding to use for video to h264.
-     * 
+     *
      * @param useH264
      */
     void setUseH264(boolean useH264);
 
     /**
      * Sets the encoding to use for video to VP8.
-     * 
+     *
      * @param useVP8
      */
     void setUseVP8(boolean useVP8);
@@ -49,7 +49,7 @@ public interface Red5ProCanvas {
     /**
      * Start output engine, option 1 local publish. Call after starting encoding
      * engine.
-     * 
+     *
      * @param scope
      *            to broadcast in
      * @param name
@@ -66,7 +66,7 @@ public interface Red5ProCanvas {
     /**
      * Start output engine option 2 rtmp publish to network. Call after calling
      * start.
-     * 
+     *
      * @param host
      *            host of rtmp server.
      * @param port

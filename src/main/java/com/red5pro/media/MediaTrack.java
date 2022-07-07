@@ -13,7 +13,7 @@ import com.red5pro.util.IdGenerator;
 
 /**
  * A source or sink for media. Designed to be similar to a JMF Track.
- * 
+ *
  * @author Paul Gregoire
  *
  */
@@ -58,7 +58,7 @@ public class MediaTrack {
 
     /**
      * Pushes an event to the tail of the track.
-     * 
+     *
      * @param event
      * @return true if successfully pushed and false otherwise
      */
@@ -68,7 +68,7 @@ public class MediaTrack {
 
     /**
      * Pops an event off the track.
-     * 
+     *
      * @return event at the head of the track or null if empty
      */
     public IEvent pop() {
@@ -77,7 +77,7 @@ public class MediaTrack {
 
     /**
      * Pops an event off the track matching the given fourcc code.
-     * 
+     *
      * @param fourCC
      *            to match
      * @return IEvent or null if no match is found
@@ -96,7 +96,7 @@ public class MediaTrack {
 
     /**
      * Adds a track listener.
-     * 
+     *
      * @param listener
      * @return true if added and false otherwise
      */
@@ -106,7 +106,7 @@ public class MediaTrack {
 
     /**
      * Removes an existing track listener.
-     * 
+     *
      * @param listener
      * @return true if removed and false otherwise
      */

@@ -7,7 +7,7 @@ package com.red5pro.media;
  * <li>NOT_MUTED - is not muted</li>
  * <li>MUTED - is muted</li>
  * </ul>
- * 
+ *
  * @author Paul Gregoire
  *
  */

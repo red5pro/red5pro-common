@@ -4,13 +4,13 @@ import com.red5pro.server.util.NetworkManager;
 
 /**
  * The connection data "c=" field contains connection data.
- * 
+ *
  * A session description MUST contain either at least one "c=" field in each
  * media description or a single "c=" field at the session level. It MAY contain
  * a single session-level "c=" field and additional "c=" field(s) per media
  * description, in which case the per-media values override the session-level
  * settings for the respective media.
- * 
+ *
  * <pre>
       c=<nettype> <addrtype> <connection-address>
  * </pre>

@@ -32,11 +32,11 @@ import java.util.Map.Entry;
 
 /**
  * This class is used to pass parameters to the native modules. <br>
- * 
+ *
  * <pre>
  * iProStream.getPotion().add(new Ingredient("maskShape", "round"));
  * </pre>
- * 
+ *
  * @author Andy Shaules
  */
 public class Ingredient implements Entry<String, Object> {
@@ -47,7 +47,7 @@ public class Ingredient implements Entry<String, Object> {
 
     /**
      * Collectible key/value pair for setting properties to native modules.
-     * 
+     *
      * @param propertyName
      *            key
      * @param propertyValue
@@ -60,7 +60,7 @@ public class Ingredient implements Entry<String, Object> {
 
     /**
      * Returns the property name
-     * 
+     *
      * @return key
      */
     @Override
@@ -70,7 +70,7 @@ public class Ingredient implements Entry<String, Object> {
 
     /**
      * Returns the property value.
-     * 
+     *
      * @return value
      */
     @Override
@@ -80,7 +80,7 @@ public class Ingredient implements Entry<String, Object> {
 
     /**
      * Sets new value and returns old value.
-     * 
+     *
      * @param value
      *            new value to replace existing value
      * @return previous value

@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Provide logical handlers for Composition objects.
- * 
+ *
  * @author Andy
  *
  */
@@ -17,7 +17,7 @@ public interface ICoreProvider {
 
     /**
      * Return the IGroupCore impl or null.
-     * 
+     *
      * @param clazz
      * @return
      */

@@ -27,11 +27,11 @@ package com.red5pro.media.rtp;
 
 /**
  * Enum for RTP codecs.
- * 
+ *
  * http://www.iana.org/assignments/rtp-parameters/rtp-parameters.xhtml
- * 
+ *
  * FEC: http://tools.ietf.org/html/rfc5109
- * 
+ *
  * @author Paul Gregoire
  */
 public enum RTPCodecEnum {
@@ -77,7 +77,7 @@ public enum RTPCodecEnum {
 
     /**
      * Returns a formatted rtpmap string for the given codec.
-     * 
+     *
      * @param codec
      *            the codec
      * @return rtpmap string
@@ -104,7 +104,7 @@ public enum RTPCodecEnum {
 
     /**
      * Returns a codec enum based on the given encoding name.
-     * 
+     *
      * @param encodingName
      *            the encoding name or identifier
      * @return RTPCodecEnum
@@ -131,7 +131,7 @@ public enum RTPCodecEnum {
 
     /**
      * Returns audio payload types in precedence order.
-     * 
+     *
      * @return array of payload type ids
      */
     public static int[] getAudioPayloadTypesAsArray() {
@@ -141,7 +141,7 @@ public enum RTPCodecEnum {
 
     /**
      * Returns video payload types in precedence order.
-     * 
+     *
      * @return array of payload type ids
      */
     public static int[] getVideoPayloadTypesAsArray() {
@@ -151,7 +151,7 @@ public enum RTPCodecEnum {
 
     /**
      * Returns audio encoding names in precedence order.
-     * 
+     *
      * @return array of encoding names
      */
     public static String[] getAudioEncodingNamesAsArray() {
@@ -161,7 +161,7 @@ public enum RTPCodecEnum {
 
     /**
      * Returns video encoding names in precedence order.
-     * 
+     *
      * @return array of encoding names
      */
     public static String[] getVideoEncodingNamesAsArray() {

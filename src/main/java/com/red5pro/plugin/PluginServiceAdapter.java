@@ -35,7 +35,7 @@ import org.springframework.core.io.Resource;
 
 /**
  * Plugin service adapter to make implementation easier.
- * 
+ *
  * @author Paul Gregoire (paul@infrared5.com)
  */
 public class PluginServiceAdapter implements IPluginService {

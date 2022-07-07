@@ -27,7 +27,7 @@ package com.red5pro.restreamer;
 
 /**
  * Enum constants for use in the restreamer API.
- * 
+ *
  * @author Paul Gregoire
  */
 public enum APIParameter {

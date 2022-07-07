@@ -32,7 +32,7 @@ public interface IClientReportReceiver {
     static final CopyOnWriteArraySet<IClientReportReceiver> receivers = new CopyOnWriteArraySet<>();
 
     /**
-     * 
+     *
      * @param fourCC
      *            IoSessionAware foucCC
      * @param timestamp

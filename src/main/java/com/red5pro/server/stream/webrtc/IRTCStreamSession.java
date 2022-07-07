@@ -7,7 +7,7 @@ import com.red5pro.override.IProStream;
 
 /**
  * Interface for RTCStreamSession to allow interoperability.
- * 
+ *
  * @author Paul Gregoire
  *
  */

@@ -32,7 +32,7 @@ import org.red5.server.api.IConnection;
 /**
  * This class is used to allow or disallow playback based on permissive string
  * value.
- * 
+ *
  * @author Andy Shaules
  *
  */
@@ -44,7 +44,7 @@ public interface RestrictorEval {
     static final CopyOnWriteArraySet<RestrictorEval> restrictions = new CopyOnWriteArraySet<RestrictorEval>();
 
     /**
-     * 
+     *
      * @param provision
      *            stream provision
      * @param conn
@@ -77,7 +77,7 @@ public interface RestrictorEval {
 
     /**
      * Called on play attempt. Use with geo location or similar restrictions.
-     * 
+     *
      * @param conn
      *            IConnection calling play.
      * @return null if permission will use default.

@@ -19,7 +19,7 @@ import com.red5pro.override.IProStream;
 
 /**
  * Group focused base implementation of ExpressionCompositor.
- * 
+ *
  * @author Paul Gregoire
  *
  */

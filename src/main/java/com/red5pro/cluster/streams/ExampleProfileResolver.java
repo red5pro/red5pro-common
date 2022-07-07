@@ -32,7 +32,7 @@ package com.red5pro.cluster.streams;
  * Wirecast would enter specific names with '_1', '_2' added where '_1' is
  * number one quality. When providing quality variant names, Red5Pro requires
  * lower indexes to be higher quality.
- * 
+ *
  * @author Andy Shaules
  *
  */

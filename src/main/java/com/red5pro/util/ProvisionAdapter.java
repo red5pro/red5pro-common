@@ -49,7 +49,7 @@ import com.red5pro.cluster.streams.Restrictions;
 
 /**
  * Provides serialize and deserialization for Provision model objects using Gson.
- * 
+ *
  * @author Paul Gregoire
  */
 public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserializer<Provision> {

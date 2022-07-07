@@ -31,7 +31,7 @@ import com.red5pro.server.stream.IoSessionAware;
 
 /**
  * Base interface for RTSP connection.
- * 
+ *
  * @author Andy Shaules
  * @author Paul Gregoire (paul@infrared5.com)
  */
@@ -46,7 +46,7 @@ public interface IRTSPConnection extends IoSessionAware {
 
     /**
      * Use IoSessionAware.getIoSession().
-     * 
+     *
      * @return session
      */
     @Deprecated
@@ -56,7 +56,7 @@ public interface IRTSPConnection extends IoSessionAware {
 
     /**
      * Apply a QoS value to the connection.
-     * 
+     *
      * @param qos
      *            quality of service.
      */

@@ -6,7 +6,7 @@ import com.red5pro.server.datachannel.IDataChannelConnection;
 
 /**
  * Container class for signaling channel implementations.
- * 
+ *
  * @author Paul Gregoire
  *
  */
@@ -87,7 +87,7 @@ public class SignalingChannel {
     /**
      * Returns the signal channel as a WebSocket if it is of WebSocket type and null
      * if not.
-     * 
+     *
      * @return WebSocketConnection or null if incorrect type
      */
     public WebSocketConnection getWebSocketSignalingChannel() {
@@ -97,7 +97,7 @@ public class SignalingChannel {
     /**
      * Returns the signal channel as a DataChannel if it is of DataChannel type and
      * null if not.
-     * 
+     *
      * @return IDataChannelConnection or null if incorrect type
      */
     public IDataChannelConnection getDataChannelSignalingChannel() {
@@ -106,7 +106,7 @@ public class SignalingChannel {
 
     /**
      * Builder for ease of use.
-     * 
+     *
      * @param signalChannel
      * @return SignalingChannel
      */
