@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.red5pro.cluster.streams.Provision;
 import com.red5pro.group.GroupEvent;
@@ -19,13 +20,12 @@ import com.red5pro.override.IProStream;
 
 /**
  * Group focused base implementation of ExpressionCompositor.
- * 
+ *
  * @author Paul Gregoire
  *
  */
 public class GroupCompositorAdapter implements ExpressionCompositor {
-
-    protected Logger log = null;// LoggerFactory.getLogger(GroupCompositorAdapter.class);
+    private static final Logger log = LoggerFactory.getLogger(GroupCompositorAdapter.class);
 
     /**
      * true if logging stream packets.
@@ -202,11 +202,13 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
         this.owner = owner;
     }
 
+    @Override
     public void mainProgramStart(IProStream stream) {
         log.info("main start");
         hasMain = true;
     }
 
+    @Override
     public void mainProgramStop() {
         log.info("main stop");
         hasMain = false;

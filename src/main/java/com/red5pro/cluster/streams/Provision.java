@@ -36,13 +36,15 @@ import com.red5pro.util.ProvisionAdapter;
 
 /**
  * Provision model object.
- * 
+ *
  * @author Andy Shaules
  * @author Paul Gregoire
  */
 public class Provision {
 
     public final static String Param_Video_Bitrate = "videoBR";
+
+    public final static String Param_Video_Framerate = "videoFR";
 
     public final static String Param_Audio_Bitrate = "audioBR";
 
@@ -64,6 +66,14 @@ public class Provision {
     public final static String Param_Password = "password";
 
     public final static String Param_QOS = "qos";
+
+    public final static String Param_Digest = "digest";
+
+    public final static String Param_Origin_IP = "originIP";
+
+    public final static String Param_Group = "group";
+
+    public final static String Param_Core = "core";
 
     /**
      * H264 param for MBR/Preprocessor.<br>
@@ -223,7 +233,7 @@ public class Provision {
 
     /**
      * Returns concatenated context path without leading slashes. Normalizes guid.
-     * 
+     *
      * @param context
      *            app scope
      * @param name
@@ -246,7 +256,7 @@ public class Provision {
 
     /**
      * Returns a Gson instance based on the Provision enabled GsonBuilder.
-     * 
+     *
      * @return Gson instance
      */
     public static Gson getGson() {
@@ -272,7 +282,7 @@ public class Provision {
 
     /**
      * Returns JSON string representing this object instance.
-     * 
+     *
      * @return JSON string
      */
     public String toJson() {
