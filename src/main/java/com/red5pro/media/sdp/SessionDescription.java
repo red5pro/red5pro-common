@@ -580,6 +580,10 @@ public class SessionDescription {
             if (mediaDescriptions != null) {
                 sb.append("a=group:BUNDLE ");
                 for (MediaField media : mediaDescriptions) {
+                    // if its video and the format is 0 skip it
+                    if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
+                        continue;
+                    }
                     sb.append(media.getMediaId());
                     sb.append(' ');
                 }
@@ -603,6 +607,10 @@ public class SessionDescription {
         }
         if (mediaDescriptions != null) {
             for (MediaField media : mediaDescriptions) {
+                // if its video and the format is 0 skip it
+                if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
+                    continue;
+                }
                 sb.append(media);
             }
         }

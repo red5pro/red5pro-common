@@ -47,7 +47,8 @@ public enum AttributeKey {
     imageattr, // image attributes / dimensions
     width, height, Width, Height, // capitalized versions are for legacy support
     sctpmap, sctpport("sctp-port"), maxmessagesize("max-message-size"), // sctp / datachannel / application
-    etag, charset, xgoogleflag("x-google-flag");
+    etag, charset, xgoogleflag("x-google-flag"), extmapallowmixed, // Determines allowance of mix one- and two-byte header extensions within the same stream
+    filter; // pro custom feature
 
     // used when the "name" has a dash char in it, since a dash isnt valid for an enum
     private String nameOverride;

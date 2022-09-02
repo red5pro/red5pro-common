@@ -6,8 +6,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 import org.apache.commons.lang3.RandomUtils;
-import org.red5.logging.Red5LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides ports and more.
@@ -17,7 +17,9 @@ import org.slf4j.Logger;
  */
 public class PortManager {
 
-    private static Logger log = Red5LoggerFactory.getLogger(PortManager.class);
+    private static Logger log = LoggerFactory.getLogger(PortManager.class);
+
+    private static boolean isDebug = log.isDebugEnabled();
 
     // maximum ephemeral port inclusive
     private static final int MAX_PORT = 65535;
@@ -30,6 +32,9 @@ public class PortManager {
 
     // base socket timeout in milliseconds
     private static int soTimeoutMs = 5;
+
+    // allow system port allocations (may be outside configured port range)
+    private static boolean allowSystemPorts;
 
     // holds ports that have been allocated and only those that are allocated
     private static CopyOnWriteArraySet<Integer> allocatedPorts = new CopyOnWriteArraySet<>();
@@ -54,9 +59,13 @@ public class PortManager {
      */
     public static void clearRTPServerPort(int rtpPort) {
         if (allocatedPorts.remove(rtpPort)) {
-            log.debug("Removing server port {}", rtpPort);
+            if (isDebug) {
+                log.debug("Removing server port {}", rtpPort);
+            }
         } else {
-            log.debug("Port {} was not allocated or has already been cleared", rtpPort);
+            if (isDebug) {
+                log.debug("Port {} was not allocated or has already been cleared", rtpPort);
+            }
         }
     }
 
@@ -66,9 +75,9 @@ public class PortManager {
      * @param allocatedPorts ports to clear
      */
     public static void clearRTPServerPorts(Collection<Integer> allocatedPorts) {
-        for (Integer port : allocatedPorts) {
+        allocatedPorts.forEach(port -> {
             PortManager.clearRTPServerPort(port);
-        }
+        });
     }
 
     /**
@@ -77,21 +86,25 @@ public class PortManager {
      * @return port for use with a socket
      */
     public static int getRTPServerPort() {
-        //log.debug("Get port");
+        log.debug("Get port");
         int serverPort = 0;
         // check exhaustion first
         if (isRangeExhausted()) {
-            // XXX this would need to be a config as the behavior would be expected to return a port outside known range
-            log.warn("Configured port range has been exhausted, the next system available port will be searched");
-            // give them a port available on the system which exists outside the range
-            serverPort = findFreeUdpPort();
+            if (allowSystemPorts) {
+                // this will allow the return a port outside configured range
+                log.info("Configured port range has been exhausted, the next system available port will be searched");
+                // give them a port available on the system which exists outside the range
+                serverPort = findFreeUdpPort();
+            } else {
+                log.warn("Configured port range has been exhausted, no ports available");
+            }
         } else {
             serverPort = portUpdater.incrementAndGet(instance);
             for (; serverPort < rtpPortCeiling; serverPort = portUpdater.incrementAndGet(instance)) {
                 // check the other list first
                 if (otherAllocatedPorts.contains(serverPort)) {
                     // port is not available
-                    log.debug("Port is bound elsewhere {}", serverPort);
+                    log.info("Port is bound elsewhere {}", serverPort);
                     continue;
                 }
                 // add only works if its not already allocated
@@ -122,7 +135,9 @@ public class PortManager {
                 serverPort = getRTPServerPort();
             }
         }
-        log.debug("Port allocated {}", serverPort);
+        if (isDebug) {
+            log.debug("Port allocated {}", serverPort);
+        }
         return serverPort;
     }
 
@@ -148,7 +163,9 @@ public class PortManager {
                 break;
             }
         }
-        log.debug("Port allocated {}", serverPort);
+        if (isDebug) {
+            log.debug("Port allocated {}", serverPort);
+        }
         return serverPort;
     }
 
@@ -166,15 +183,17 @@ public class PortManager {
             socket.setSoTimeout(soTimeoutMs);
             int retPort = socket.getLocalPort();
             if (port == retPort) {
-                log.debug("Port: {} is available", port);
+                if (isDebug) {
+                    log.debug("Port: {} is available", port);
+                }
             } else {
-                log.debug("Port didnt match: {}", retPort);
+                if (isDebug) {
+                    log.debug("Port didnt match: {}", retPort);
+                }
             }
             return true;
         } catch (Throwable t) {
-            //if (log.isTraceEnabled()) {
             log.warn("Exception checking port: {}", port, t);
-            //}
         } finally {
             if (socket != null) {
                 socket.close();
@@ -199,7 +218,7 @@ public class PortManager {
                 port = socket.getLocalPort();
                 return port;
             } catch (Throwable t) {
-                if (log.isTraceEnabled()) {
+                if (isDebug) {
                     log.warn("Exception checking port: {}", port, t);
                 }
             } finally {
@@ -252,6 +271,15 @@ public class PortManager {
     public static void setCheckPortAvailability(boolean checkPortAvailability) {
         //log.info("ignoring request for port checks {}",checkPortAvailability);
         //PortManager.checkPortAvailability = checkPortAvailability;
+    }
+
+    /**
+     * Allows for using system ports, which may exceed the port range specified.
+     * 
+     * @param allowSystemPorts
+     */
+    public static void setAllowSystemPorts(boolean allowSystemPorts) {
+        PortManager.allowSystemPorts = allowSystemPorts;
     }
 
     /**

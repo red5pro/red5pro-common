@@ -28,7 +28,7 @@ package com.red5pro.server.stream;
 import org.apache.mina.core.session.IoSession;
 
 /**
- * Indicates that the implementation supports the <tt>getIoSession()</tt>
+ * Indicates that the implementation supports the <pre>getIoSession()</pre>
  * accessor.
  * 
  * @author Paul Gregoire

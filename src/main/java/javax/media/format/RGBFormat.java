@@ -7,7 +7,7 @@ import javax.media.Format;
 /**
  * Describes uncompressed RGB data. The data is in interleaved form. RGB
  * components can be packed into a short or an int. If the pixel components are
- * packed, then the <tt>redMask</tt>, <tt>greenMask</tt> and <tt>blueMask</tt>
+ * packed, then the <pre>redMask</pre>, <pre>greenMask</pre> and <pre>blueMask</pre>
  * fields specify the bit masks, otherwise they specify the order of arrangement
  * of the components. For example:
  * <UL>
@@ -62,7 +62,7 @@ public class RGBFormat extends VideoFormat {
     private static String ENCODING = VideoFormat.RGB;
 
     /**
-     * Constructs a default <tt>RGBFormat</tt>.
+     * Constructs a default <pre>RGBFormat</pre>.
      */
     public RGBFormat() {
         super(ENCODING);
@@ -70,14 +70,14 @@ public class RGBFormat extends VideoFormat {
     }
 
     /**
-     * Constructs an <tt>RGBFormat</tt> object with the specified properties. The
+     * Constructs an <pre>RGBFormat</pre> object with the specified properties. The
      * pixel stride is initialized to the default for the specified data type and
      * bits per pixel. The line stride is initialized using the default pixel stride
      * and specified frame width. The image is not flipped and the endian is
      * LITTLE_ENDIAN.
      *
      * @param size
-     *            A <tt>Dimension</tt> that specifies the frame size.
+     *            A <pre>Dimension</pre> that specifies the frame size.
      * @param maxDataLength
      *            The maximum length of a data chunk.
      * @param dataType
@@ -118,10 +118,10 @@ public class RGBFormat extends VideoFormat {
     }
 
     /**
-     * Constructs an <tt>RGBFormat</tt> object with the specified properties.
+     * Constructs an <pre>RGBFormat</pre> object with the specified properties.
      *
      * @param size
-     *            A <tt>Dimension</tt> that specifies the frame size.
+     *            A <pre>Dimension</pre> that specifies the frame size.
      * @param maxDataLength
      *            The maximum length of a data chunk.
      * @param dataType
@@ -142,11 +142,11 @@ public class RGBFormat extends VideoFormat {
      *            line length
      * @param flipped
      *            Indicates whether or not the lines in the video frame are flipped
-     *            vertically (upside down). <tt>Format.TRUE</tt> indicates the image
-     *            is flipped, <tt>Format.FALSE</tt> indicates that it is not.
+     *            vertically (upside down). <pre>Format.TRUE</pre> indicates the image
+     *            is flipped, <pre>Format.FALSE</pre> indicates that it is not.
      * @param endian
-     *            The byte ordering used for this <tt>RGBFormat</tt>--
-     *            <tt>BIG_ENDIAN</tt> or <tt>LITTLE_ENDIAN</tt>.
+     *            The byte ordering used for this <pre>RGBFormat</pre>--
+     *            <pre>BIG_ENDIAN</pre> or <pre>LITTLE_ENDIAN</pre>.
      */
     public RGBFormat(Dimension size, int maxDataLength, Class<?> dataType, float frameRate, int bitsPerPixel, int red, int green, int blue, int pixelStride, int lineStride, int flipped, int endian) {
         super(ENCODING, size, maxDataLength, dataType, frameRate);
@@ -161,9 +161,9 @@ public class RGBFormat extends VideoFormat {
     }
 
     /**
-     * Creates a clone of this <tt>RGBFormat</tt>.
+     * Creates a clone of this <pre>RGBFormat</pre>.
      *
-     * @return A clone of this <tt>RGBFormat</tt>.
+     * @return A clone of this <pre>RGBFormat</pre>
      */
     @Override
     public Object clone() {
@@ -173,11 +173,11 @@ public class RGBFormat extends VideoFormat {
     }
 
     /**
-     * Copies the attributes from the specified <tt>Format</tt> into this
-     * <tt>RGBFormat</tt>.
+     * Copies the attributes from the specified <pre>Format</pre> into this
+     * <pre>RGBFormat</pre>.
      *
      * @param f
-     *            The <tt>Format</tt> to copy the attributes from.
+     *            The <pre>Format</pre> to copy the attributes from
      */
     @Override
     protected void copy(Format f) {
@@ -196,14 +196,14 @@ public class RGBFormat extends VideoFormat {
     }
 
     /**
-     * Compares the specified <tt>Format</tt> with this <tt>RGBFormat</tt>. Returns
-     * <tt>true</tt> only if the specified <tt>Format</tt> is a <tt>RGBFormat</tt>
+     * Compares the specified <pre>Format</pre> with this <pre>RGBFormat</pre>. Returns
+     * <pre>true</pre> only if the specified <pre>Format</pre> is a <pre>RGBFormat</pre>
      * object and all of its attributes are identical to the attributes in this
-     * <tt>RGBFormat</tt> .
+     * <pre>RGBFormat</pre> .
      *
      * @param format
-     *            The <tt>Format</tt> to compare.
-     * @return true if the specified <tt>Format</tt> is the same as this one.
+     *            The <pre>Format</pre> to compare
+     * @return true if the specified <pre>Format</pre> is the same as this one
      */
     @Override
     public boolean equals(Object format) {
@@ -246,7 +246,7 @@ public class RGBFormat extends VideoFormat {
     /**
      * Checks whether or not the video image is vertically flipped.
      *
-     * @return <tt>Format.TRUE</tt> if the video is flipped, <tt>Format.FALSE</tt>
+     * @return <pre>Format.TRUE</pre> if the video is flipped, <pre>Format.FALSE</pre>
      *         if it is not.
      */
     public int getFlipped() {
@@ -291,14 +291,14 @@ public class RGBFormat extends VideoFormat {
     }
 
     /**
-     * Finds the attributes shared by two matching <tt>Format</tt> objects. If the
-     * specified <tt>Format</tt> does not match this one, the result is undefined.
+     * Finds the attributes shared by two matching <pre>Format</pre> objects. If the
+     * specified <pre>Format</pre> does not match this one, the result is undefined.
      *
      * @param format
-     *            The matching <tt>Format</tt> to intersect with this
-     *            <tt>RGBFormat</tt>.
-     * @return A <tt>Format</tt> object with its attributes set to those attributes
-     *         common to both <tt>Format</tt> objects.
+     *            The matching <pre>Format</pre> to intersect with this
+     *            <pre>RGBFormat</pre>.
+     * @return A <pre>Format</pre> object with its attributes set to those attributes
+     *         common to both <pre>Format</pre> objects.
      * @see #matches
      */
     @Override
@@ -323,19 +323,19 @@ public class RGBFormat extends VideoFormat {
     }
 
     /**
-     * Checks whether or not the specified <tt>Format</tt> <EM>matches</EM> this
-     * <tt>RGBFormat</tt>. Matches only compares the attributes that are defined in
-     * the specified <tt>Format</tt>, unspecified attributes are ignored.
+     * Checks whether or not the specified <pre>Format</pre> <EM>matches</EM> this
+     * <pre>RGBFormat</pre>. Matches only compares the attributes that are defined in
+     * the specified <pre>Format</pre>, unspecified attributes are ignored.
      * <p>
-     * The two <tt>Format</tt> objects do not have to be of the same class to match.
+     * The two <pre>Format</pre> objects do not have to be of the same class to match.
      * For example, if "A" are "B" are being compared, a match is possible if "A" is
      * derived from "B" or "B" is derived from "A". (The compared attributes must
-     * still match, or <tt>matches</tt> fails.)
+     * still match, or <pre>matches</pre> fails.)
      *
      * @param format
-     *            The <tt>Format</tt> to compare with this one.
-     * @return <tt>true</tt> if the specified <tt>Format</tt> matches this one,
-     *         <tt>false</tt> if it does not.
+     *            The <pre>Format</pre> to compare with this one.
+     * @return <pre>true</pre> if the specified <pre>Format</pre> matches this one,
+     *         <pre>false</pre> if it does not.
      */
     @Override
     public boolean matches(Format format) {
@@ -364,7 +364,7 @@ public class RGBFormat extends VideoFormat {
      * basic attributes that will make this resulting format useful for format
      * matching.
      *
-     * @return A <tt>Format</tt> that's less restrictive than the this format.
+     * @return A <pre>Format</pre> that's less restrictive than the this format
      */
     @Override
     public Format relax() {
@@ -379,10 +379,10 @@ public class RGBFormat extends VideoFormat {
     }
 
     /**
-     * Gets a <tt>String</tt> representation of the attributes of this
-     * <tt>RGBFormat</tt>. For example: "RGB, 352x240, ...".
+     * Gets a <pre>String</pre> representation of the attributes of this
+     * <pre>RGBFormat</pre>. For example: "RGB, 352x240, ...".
      *
-     * @return A <tt>String</tt> that describes the format attributes.
+     * @return A <pre>String</pre> that describes the format attributes
      */
     @Override
     public String toString() {

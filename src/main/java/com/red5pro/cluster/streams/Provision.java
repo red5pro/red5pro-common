@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -122,6 +123,12 @@ public class Provision {
 
     private List<Ingest> secondaries;
 
+    // stream name alias for publishing
+    private String streamNameAlias;
+
+    // stream name aliases for subscription
+    private Set<String> aliases;
+
     private Provision(String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
         this.guid = makeGuid(contextPath, streamName);
         this.contextPath = contextPath;
@@ -180,36 +187,20 @@ public class Provision {
         this.secondaries = secondaries;
     }
 
-    /**
-     * Returns JSON string representing this object instance.
-     * 
-     * @return JSON string
-     */
-    public String toJson() {
-        return gson.toJson(this);
+    public String getStreamNameAlias() {
+        return streamNameAlias;
     }
 
-    @Override
-    public int hashCode() {
-        // can only be one stream instance on this path.
-        return Objects.hashCode(new Object[] { this.contextPath, this.streamName });
+    public void setStreamNameAlias(String streamNameAlias) {
+        this.streamNameAlias = streamNameAlias;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof Provision) {
-            Provision compare = (Provision) other;
-            // can only be one stream instance on this path.
-            if (compare.contextPath.equals(contextPath) && compare.streamName.equals(streamName)) {
-                return true;
-            }
-        }
-        return false;
+    public Set<String> getAliases() {
+        return aliases;
     }
 
-    @Override
-    public String toString() {
-        return "Provision [guid=" + guid + ", contextPath=" + contextPath + ", streamName=" + streamName + ", qualityLevel=" + qualityLevel + ", restrictions=" + restrictions + ", parameters=" + parameters + ", primaries=" + primaries + ", secondaries=" + secondaries + "]";
+    public void setAliases(Set<String> aliases) {
+        this.aliases = aliases;
     }
 
     /**
@@ -259,6 +250,38 @@ public class Provision {
 
     public static Provision build(String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
         return new Provision(makeGuid(contextPath, streamName), contextPath, streamName, qualityLevel, restrictions, parameters);
+    }
+
+    /**
+     * Returns JSON string representing this object instance.
+     * 
+     * @return JSON string
+     */
+    public String toJson() {
+        return gson.toJson(this);
+    }
+
+    @Override
+    public int hashCode() {
+        // can only be one stream instance on this path.
+        return Objects.hashCode(new Object[] { this.contextPath, this.streamName });
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Provision) {
+            Provision compare = (Provision) other;
+            // can only be one stream instance on this path.
+            if (compare.contextPath.equals(contextPath) && compare.streamName.equals(streamName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Provision [guid=" + guid + ", contextPath=" + contextPath + ", streamName=" + streamName + ", qualityLevel=" + qualityLevel + ", restrictions=" + restrictions + ", parameters=" + parameters + ", primaries=" + primaries + ", secondaries=" + secondaries + ", nameAlias=" + streamNameAlias + ", aliases=" + aliases + "]";
     }
 
 }

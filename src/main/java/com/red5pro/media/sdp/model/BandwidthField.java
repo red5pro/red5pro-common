@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class BandwidthField {
 
-    public final static Pattern PATTERN = Pattern.compile("([A-Z]{2}):([0-9]{1,4})");
+    public final static Pattern PATTERN = Pattern.compile("([A-Z]{2}):([0-9]{1,6})"); // allot for hundred-mega-streamers
 
     private String type = "AS";
 

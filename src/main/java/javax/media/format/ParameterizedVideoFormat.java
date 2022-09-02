@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.red5pro.media.VideoConstants;
 
 /**
- * Implements a <tt>VideoFormat</tt> with parameters.
+ * Implements a <pre>VideoFormat</pre> with parameters.
  *
  * @author Lyubomir Marinov
  */
@@ -23,12 +23,12 @@ public class ParameterizedVideoFormat extends VideoFormat {
     private static final long serialVersionUID = 0L;
 
     /**
-     * The format parameters of this <tt>ParameterizedVideoFormat</tt> instance.
+     * The format parameters of this <pre>ParameterizedVideoFormat</pre> instance.
      */
     private Map<String, String> fmtps;
 
     /**
-     * Constructs a new <tt>ParametizedVideoFormat</tt>.
+     * Constructs a new <pre>ParametizedVideoFormat</pre>.
      *
      * @param encoding
      *            encoding
@@ -49,7 +49,7 @@ public class ParameterizedVideoFormat extends VideoFormat {
     }
 
     /**
-     * Initializes a new <tt>ParameterizedVideoFormat</tt> with a specific encoding
+     * Initializes a new <pre>ParameterizedVideoFormat</pre> with a specific encoding
      * and a specific set of format parameters.
      *
      * @param encoding
@@ -63,14 +63,14 @@ public class ParameterizedVideoFormat extends VideoFormat {
     }
 
     /**
-     * Initializes a new <tt>ParameterizedVideoFormat</tt> with a specific encoding
+     * Initializes a new <pre>ParameterizedVideoFormat</pre> with a specific encoding
      * and a specific set of format parameters.
      *
      * @param encoding
      *            the encoding of the new instance
      * @param fmtps
      *            the format parameters of the new instance in the form of an array
-     *            of <tt>String</tt>s in which the key and the value of an
+     *            of <pre>String</pre>s in which the key and the value of an
      *            association are expressed as consecutive elements
      */
     public ParameterizedVideoFormat(String encoding, String... fmtps) {
@@ -78,10 +78,10 @@ public class ParameterizedVideoFormat extends VideoFormat {
     }
 
     /**
-     * Initializes a new <tt>ParameterizedVideoFormat</tt> instance which has the
+     * Initializes a new <pre>ParameterizedVideoFormat</pre> instance which has the
      * same properties as this instance.
      *
-     * @return a new <tt>ParameterizedVideoFormat</tt> instance which has the same
+     * @return a new <pre>ParameterizedVideoFormat</pre> instance which has the same
      *         properties as this instance
      */
     @Override
@@ -92,10 +92,10 @@ public class ParameterizedVideoFormat extends VideoFormat {
     }
 
     /**
-     * Copies the properties of the specified <tt>Format</tt> into this instance.
+     * Copies the properties of the specified <pre>Format</pre> into this instance.
      *
      * @param f
-     *            the <tt>Format</tt> the properties of which are to be copied into
+     *            the <pre>Format</pre> the properties of which are to be copied into
      *            this instance
      */
     @Override
@@ -109,15 +109,15 @@ public class ParameterizedVideoFormat extends VideoFormat {
     }
 
     /**
-     * Determines whether a specific <tt>Object</tt> represents a value that is
+     * Determines whether a specific <pre>Object</pre> represents a value that is
      * equal to the value represented by this instance.
      *
      * @param obj
-     *            the <tt>Object</tt> to be determined whether it represents a value
+     *            the <pre>Object</pre> to be determined whether it represents a value
      *            that is equal to the value represented by this instance
-     * @return <tt>true</tt> if the specified <tt>obj</tt> represents a value that
+     * @return <pre>true</pre> if the specified <pre>obj</pre> represents a value that
      *         is equal to the value represented by this instance; otherwise,
-     *         <tt>false</tt>
+     *         <pre>false</pre>
      */
     @Override
     public boolean equals(Object obj) {
@@ -158,7 +158,7 @@ public class ParameterizedVideoFormat extends VideoFormat {
     }
 
     /**
-     * Returns the format parameters <tt>Map</tt>.
+     * Returns the format parameters <pre>Map</pre>.
      *
      * @return the format parameters map
      */
@@ -167,12 +167,12 @@ public class ParameterizedVideoFormat extends VideoFormat {
     }
 
     /**
-     * Finds the attributes shared by two matching <tt>Format</tt>s. If the
-     * specified <tt>Format</tt> does not match this one, the result is undefined.
+     * Finds the attributes shared by two matching <pre>Format</pre>s. If the
+     * specified <pre>Format</pre> does not match this one, the result is undefined.
      *
      * @param format
-     *            the matching <tt>Format</tt> to intersect with this one
-     * @return a <tt>Format</tt> with its attributes set to the attributes common to
+     *            the matching <pre>Format</pre> to intersect with this one
+     * @return a <pre>Format</pre> with its attributes set to the attributes common to
      *         this instance and the specified format
      */
     @Override
@@ -191,9 +191,9 @@ public class ParameterizedVideoFormat extends VideoFormat {
      * {@link Format#matches(Format)}.
      *
      * @param format
-     *            the <tt>Format</tt> to compare to this instance
-     * @return <tt>true</tt> if the specified <tt>format</tt> matches this one;
-     *         otherwise, <tt>false</tt>
+     *            the <pre>Format</pre> to compare to this instance
+     * @return <pre>true</pre> if the specified <pre>format</pre> matches this one;
+     *         otherwise, <pre>false</pre>
      */
     @Override
     public boolean matches(Format format) {
@@ -205,18 +205,18 @@ public class ParameterizedVideoFormat extends VideoFormat {
     }
 
     /**
-     * Initializes a new <tt>Map</tt> from an array in which the key and the value
+     * Initializes a new <pre>Map</pre> from an array in which the key and the value
      * of an association are expressed as consecutive elements.
      *
      * @param <T>
      *            the very type of the keys and the values to be associated in the
-     *            new <tt>Map</tt>
+     *            new <pre>Map</pre>
      * @param entries
-     *            the associations to be created in the new <tt>Map</tt> where the
+     *            the associations to be created in the new <pre>Map</pre> where the
      *            key and value of an association are expressed as consecutive
      *            elements
-     * @return a new <tt>Map</tt> with the associations specified by
-     *         <tt>entries</tt>
+     * @return a new <pre>Map</pre> with the associations specified by
+     *         <pre>entries</pre>
      */
     @SuppressWarnings("unchecked")
     public static <T> Map<T, T> toMap(T... entries) {

@@ -102,31 +102,26 @@ public class MediaSampleAdapter implements IMediaSample {
 
     @Override
     public void setTimestamp(long startTime) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public long getTimestamp() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public String getSourceName() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public int getTrackNum() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
     public void setTrackNum(int id) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -137,7 +132,6 @@ public class MediaSampleAdapter implements IMediaSample {
 
     @Override
     public FourCC getContainer() {
-        // TODO Auto-generated method stub
         return null;
     }
 

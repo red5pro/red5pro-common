@@ -77,7 +77,7 @@ public class RTPCodecFactory {
                 String deviceClassName = String.format("com.red5pro.webrtc.media.device.%s.%sDevice", encName.toLowerCase(), encName.toUpperCase());
                 log.debug("Trying to instance: {}", deviceClassName);
                 try {
-                    rtpCodec = (RTPCodec) Class.forName(deviceClassName).newInstance();
+                    rtpCodec = (RTPCodec) Class.forName(deviceClassName).getDeclaredConstructor().newInstance();
                     break;
                 } catch (Exception e) {
                     log.warn("getAudioCodec", e);
@@ -104,7 +104,7 @@ public class RTPCodecFactory {
                 String deviceClassName = String.format("com.red5pro.webrtc.media.device.%s.%sDevice", encName.toLowerCase(), encName.toUpperCase());
                 log.debug("Trying to instance: {}", deviceClassName);
                 try {
-                    rtpCodec = (RTPCodec) Class.forName(deviceClassName).newInstance();
+                    rtpCodec = (RTPCodec) Class.forName(deviceClassName).getDeclaredConstructor().newInstance();
                     break;
                 } catch (Exception e) {
                     log.warn("getVideoCodec", e);
