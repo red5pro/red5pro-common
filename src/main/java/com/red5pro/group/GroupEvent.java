@@ -7,7 +7,7 @@ import com.red5pro.media.FourCC;
 
 /**
  * Model for events occurring within a group.
- * 
+ *
  * @author Paul Gregoire
  *
  */

@@ -24,7 +24,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 /*
- * Red5 Professional - http://www.infrared5.com Copyright (c) 2014-2017 by respective authors (see below). 
+ * Red5 Professional - http://www.infrared5.com Copyright (c) 2014-2017 by respective authors (see below).
  * All rights reserved.
  */
 package com.red5pro.override.cauldron;
@@ -34,7 +34,7 @@ import com.red5pro.override.IProStream;
 /**
  * Processor handlers which are configuring the native components implement this
  * interface. <br>
- * 
+ *
  * @author Andy Shaules
  *
  */
@@ -46,22 +46,22 @@ public interface MediaProcessorAware {
      * Although the IProcess instance is not attached to an active stream, use the
      * 'loadLib' method to globally register native plugins for IProStream instances
      * to utilize.
-     * 
+     *
      * <pre>
      *{@code
      * public void cauldronLibStarted(IProcess loader) {
      *     // if the corresponding potion guid was "face"
      *     // Potion p = new Potion("face");
-     *     // guid as number is little-endian chars. 
+     *     // guid as number is little-endian chars.
      *     long expected =  'f' | ('a'<<8) | ('c'<<16) | ('e'<<24);
      *     int guid=loader.loadLibrary("plugins/native/CauldronTest.dll");
      *     if(expected!=guid)
      *         //something is not right
-     *     
+     *
      * }
      * }
      * </pre>
-     * 
+     *
      * @param loader
      *            IProcess
      */
@@ -69,7 +69,7 @@ public interface MediaProcessorAware {
 
     /**
      * Called when a native processor is about to be created.
-     * 
+     *
      * <pre>
      * streamProcessorStart(IProStream stream) {
      * 	Potion p = new Potion("face");
@@ -78,7 +78,7 @@ public interface MediaProcessorAware {
      * 	stream.setPotion(p);
      * }
      * </pre>
-     * 
+     *
      * @param stream
      *            ProStream instance
      */
@@ -86,7 +86,7 @@ public interface MediaProcessorAware {
 
     /**
      * Stream broadcast was closed. Processor was stopped.
-     * 
+     *
      * @param stream
      *            ProStream instance
      */
@@ -94,7 +94,7 @@ public interface MediaProcessorAware {
 
     /**
      * There was an error during the process life cycle.
-     * 
+     *
      * @param stream
      *            ProStream instance
      * @param error

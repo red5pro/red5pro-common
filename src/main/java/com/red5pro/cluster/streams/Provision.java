@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,7 +37,7 @@ import com.red5pro.util.ProvisionAdapter;
 
 /**
  * Provision model object.
- * 
+ *
  * @author Andy Shaules
  * @author Paul Gregoire
  */
@@ -82,7 +83,7 @@ public class Provision {
     public final static String Param_Video_BR_Max = "videoBRMax";
 
     /**
-     * Encoding entropy cabac=1/calcv=0. 
+     * Encoding entropy cabac=1/calcv=0.
      */
     public final static String Param_Video_Entropy_Profile = "videoEntropyProfile";
 
@@ -102,12 +103,12 @@ public class Provision {
     public final static String Param_Video_FPS = "videoFPS";
 
     /**
-     * 
+     *
      */
     public final static String Param_HardwareKey = "hardware";
 
     /**
-     * 
+     *
      */
     public final static String Param_Strict = "strict";
 
@@ -139,6 +140,12 @@ public class Provision {
     private List<Ingest> primaries;
 
     private List<Ingest> secondaries;
+
+    // stream name alias for publishing
+    private String streamNameAlias;
+
+    // stream name aliases for subscription
+    private Set<String> aliases;
 
     private Provision(String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
         this.guid = makeGuid(contextPath, streamName);
@@ -198,32 +205,25 @@ public class Provision {
         this.secondaries = secondaries;
     }
 
-    @Override
-    public int hashCode() {
-        // can only be one stream instance on this path.
-        return Objects.hashCode(new Object[] { this.contextPath, this.streamName });
+    public String getStreamNameAlias() {
+        return streamNameAlias;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof Provision) {
-            Provision compare = (Provision) other;
-            // can only be one stream instance on this path.
-            if (compare.contextPath.equals(contextPath) && compare.streamName.equals(streamName)) {
-                return true;
-            }
-        }
-        return false;
+    public void setStreamNameAlias(String streamNameAlias) {
+        this.streamNameAlias = streamNameAlias;
     }
 
-    @Override
-    public String toString() {
-        return "Provision [guid=" + guid + ", contextPath=" + contextPath + ", streamName=" + streamName + ", qualityLevel=" + qualityLevel + ", restrictions=" + restrictions + ", parameters=" + parameters + ", primaries=" + primaries + ", secondaries=" + secondaries + "]";
+    public Set<String> getAliases() {
+        return aliases;
+    }
+
+    public void setAliases(Set<String> aliases) {
+        this.aliases = aliases;
     }
 
     /**
      * Returns concatenated context path without leading slashes. Normalizes guid.
-     * 
+     *
      * @param context
      *            app scope
      * @param name
@@ -246,7 +246,7 @@ public class Provision {
 
     /**
      * Returns a Gson instance based on the Provision enabled GsonBuilder.
-     * 
+     *
      * @return Gson instance
      */
     public static Gson getGson() {
@@ -272,11 +272,34 @@ public class Provision {
 
     /**
      * Returns JSON string representing this object instance.
-     * 
+     *
      * @return JSON string
      */
     public String toJson() {
         return gson.toJson(this);
+    }
+
+    @Override
+    public int hashCode() {
+        // can only be one stream instance on this path.
+        return Objects.hashCode(new Object[] { this.contextPath, this.streamName });
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Provision) {
+            Provision compare = (Provision) other;
+            // can only be one stream instance on this path.
+            if (compare.contextPath.equals(contextPath) && compare.streamName.equals(streamName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Provision [guid=" + guid + ", contextPath=" + contextPath + ", streamName=" + streamName + ", qualityLevel=" + qualityLevel + ", restrictions=" + restrictions + ", parameters=" + parameters + ", primaries=" + primaries + ", secondaries=" + secondaries + ", nameAlias=" + streamNameAlias + ", aliases=" + aliases + "]";
     }
 
 }

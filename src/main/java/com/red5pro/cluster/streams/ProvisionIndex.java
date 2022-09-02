@@ -30,7 +30,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Provision services and config handlers implement this interface.
- * 
+ *
  * @author Andy Shaules
  */
 public interface ProvisionIndex {
@@ -41,7 +41,7 @@ public interface ProvisionIndex {
 
     /**
      * Returns publisher perspective.
-     * 
+     *
      * @param context
      *            path of stream
      * @param name
@@ -53,7 +53,7 @@ public interface ProvisionIndex {
     /**
      * Returns server node perspective. This interface is used to create the
      * topography of the cluster.
-     * 
+     *
      * @param host
      *            host of server needing the provision.
      * @param port
@@ -69,7 +69,7 @@ public interface ProvisionIndex {
     /**
      * Look up a provision based on a stream name and path. The name may be appended
      * with multi bit rate parameters.
-     * 
+     *
      * @param context
      *            stream path
      * @param name
@@ -80,7 +80,7 @@ public interface ProvisionIndex {
 
     /**
      * Look up all provisions with a given guid.
-     * 
+     *
      * @param guid
      *            Provision guid
      * @return group of MBR streams

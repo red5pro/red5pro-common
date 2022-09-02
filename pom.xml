@@ -6,13 +6,14 @@
     <artifactId>red5pro-common</artifactId>
     <packaging>jar</packaging>
     <name>red5pro-common</name>
-    <version>10.2.402</version>
+    <!-- major, minor, release, build -->    
+    <version>10.2.410</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
     <organization>
         <name>Red5Pro</name>
-        <url>http://infrared5.com/</url>
+        <url>http://red5pro.com/</url>
     </organization>
     <licenses>
         <license>
@@ -52,17 +53,18 @@
         <java.release.level>11</java.release.level>
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
-        <red5.version>1.2.8</red5.version>
-        <tomcatplugin.version>2.2.10</tomcatplugin.version>
-        <mina.version>2.0.21</mina.version>
+        <red5.version>1.2.24</red5.version>
+        <tomcatplugin.version>2.2.11</tomcatplugin.version>
+        <mina.version>2.0.23</mina.version>
         <spring.version>5.3.5</spring.version>
-        <commons-text.version>1.9</commons-text.version>
-        <httpcomponents.version>4.5.13</httpcomponents.version>
+        <commons-text.version>[1.9,)</commons-text.version>
+        <httpcomponents.version>[4.5.13,)</httpcomponents.version>
         <gson.version>2.8.5</gson.version>
         <json.version>[2.4.1,)</json.version>
         <bc.version>1.62</bc.version>
-        <junit.version>4.13.1</junit.version>
-        <ice4j.version>3.2.62</ice4j.version>
+        <junit.version>[4.13.1,)</junit.version>
+        <ice4j.version>[3.2.64,)</ice4j.version>
+        <slf4j.version>1.7.36</slf4j.version>
     </properties>
     <distributionManagement>
         <repository>
@@ -84,41 +86,8 @@
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>org.red5</groupId>
-                    <artifactId>red5-io</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.red5</groupId>
-                    <artifactId>red5-server-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.red5</groupId>
-                    <artifactId>red5-service</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.mina</groupId>
+                    <groupId>*</groupId>
                     <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.quartz-scheduler</groupId>
-                    <artifactId>quartz</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tika</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <!-- Forced HikariCP exclusion -->
-                <exclusion>
-                    <groupId>com.zaxxer</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xerces</groupId>
-                    <artifactId>xercesImpl</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -163,6 +132,12 @@
             <artifactId>tomcatplugin</artifactId>
             <version>${tomcatplugin.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.mina</groupId>
@@ -175,7 +150,19 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>    
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.jitsi</groupId>
             <artifactId>ice4j</artifactId>
@@ -233,7 +220,7 @@
             <plugin>
                 <groupId>net.revelc.code.formatter</groupId>
                 <artifactId>formatter-maven-plugin</artifactId>
-                <version>2.8.1</version>
+                <version>2.19.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -415,6 +402,12 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>5.1.6</version>
+                <extensions>true</extensions>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -449,12 +442,6 @@
                     <configuration>
                         <connectionType>connection</connectionType>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>5.1.1</version>
-                    <extensions>true</extensions>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

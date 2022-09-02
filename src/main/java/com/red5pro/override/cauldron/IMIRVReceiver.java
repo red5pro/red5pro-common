@@ -32,7 +32,7 @@ import java.nio.ByteBuffer;
  * receiveVideo method from native or java. Configure a IPreprocessorFactory
  * bean in webapp red5-web.xml named ipreprocessorFactory defined in
  * IPreprocessorFactory interface.
- * 
+ *
  * @author Andy Shaules
  *
  */
@@ -41,7 +41,7 @@ public interface IMIRVReceiver {
     public static final int MIRV_CONTRACT_BROKEN = 1;
 
     /**
-     * 
+     *
      * @param index of ABR level.
      * @param timestamp milliseconds.
      * @param buffer annex-b bytestream.

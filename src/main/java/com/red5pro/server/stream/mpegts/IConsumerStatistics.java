@@ -29,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * Use to receive HLS player stats.
- * 
+ *
  * @author Andy Shaules
  *
  */
@@ -38,7 +38,7 @@ public interface IConsumerStatistics {
 
     /**
      * Called after client session stops requesting segments and play lists.
-     * 
+     *
      * @param remoteAddress
      *            host and port
      * @param path

@@ -2,7 +2,7 @@ package com.red5pro.media.sdp;
 
 /**
  * All the useful User-Agents making use of SDP structures.
- * 
+ *
  * @author Paul Gregoire
  */
 public enum SDPUserAgent {

@@ -28,7 +28,7 @@ package com.red5pro.cluster.streams;
 /**
  * Defines an RTMP path for publishing clients. Port is assumed to be rtmp for
  * RTC and RTSP clients when resolving instances.
- * 
+ *
  * @author Andy Shaules
  */
 public class Ingest {

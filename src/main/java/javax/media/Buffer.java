@@ -371,7 +371,7 @@ public class Buffer {
     /**
      * Returns whether or not a given codec is compatable with the current format /
      * codec decribing the data.
-     * 
+     *
      * @param checkCodec
      *            codec to check
      * @return true if compatible and false otherwise
@@ -421,7 +421,7 @@ public class Buffer {
      * @see #FLAG_FLUSH
      * @see #FLAG_SYSTEM_MARKER
      * @see #FLAG_RTP_MARKER
-     * 
+     *
      * @return flags
      */
     public int getFlags() {
@@ -430,7 +430,7 @@ public class Buffer {
 
     /**
      * Get the <pre>Format</pre> of the data in this <pre>Buffer</pre>.
-     * 
+     *
      * @return format
      */
     public Format getFormat() {
@@ -517,7 +517,7 @@ public class Buffer {
 
     /**
      * Sets the keyframe bit to signify the keyframe is set.
-     * 
+     *
      * @param keyframe
      *            true if this is a keyframe and false otherwise
      */
@@ -544,7 +544,7 @@ public class Buffer {
     /**
      * Sets the marker bit to signify the last packet is set. This is not to be
      * confused with the end of message bit.
-     * 
+     *
      * @param last
      *            true if this is the last packet and false otherwise
      */
@@ -686,7 +686,7 @@ public class Buffer {
      * @see #FLAG_FLUSH
      * @see #FLAG_SYSTEM_MARKER
      * @see #FLAG_RTP_MARKER
-     * 
+     *
      * @param flags
      *            the flags
      */
@@ -720,7 +720,7 @@ public class Buffer {
 
     /**
      * Returns whether or not this buffer has a format set and contains audio.
-     * 
+     *
      * @return true if format is set and its of type AudioFormat
      */
     public boolean isAudio() {
@@ -729,7 +729,7 @@ public class Buffer {
 
     /**
      * Returns whether or not this buffer has a format set and contains video.
-     * 
+     *
      * @return true if format is set and its of type VideoFormat
      */
     public boolean isVideo() {
@@ -836,7 +836,7 @@ public class Buffer {
 
     /**
      * Gets the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>.
-     * 
+     *
      * @return the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>
      */
     public RTPHeaderExtension getHeaderExtension() {
@@ -845,7 +845,7 @@ public class Buffer {
 
     /**
      * Sets the <pre>RTPHeaderExtension</pre> of this <pre>Buffer</pre>.
-     * 
+     *
      * @param headerExtension
      *            the <pre>RTPHeaderExtension</pre> to set
      */
@@ -926,7 +926,7 @@ public class Buffer {
 
         /**
          * Initializes a new <pre>RTPHeaderExtension</pre> with the given ID and value.
-         * 
+         *
          * @param id
          *            the ID of the extension.
          * @param value

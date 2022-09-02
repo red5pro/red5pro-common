@@ -30,14 +30,14 @@ package com.red5pro.override.cauldron;
 
 /**
  * Core native bindings.
- * 
+ *
  * @author Andy Shaules
  *
  */
 public interface IProcess {
     /**
      * Load a dynamic process library into the cauldron cache.
-     * 
+     *
      * @param path
      *            library path
      * @return guid
@@ -46,7 +46,7 @@ public interface IProcess {
 
     /**
      * Open process.
-     * 
+     *
      * @param framerate
      *            target framerate
      * @param bitrate
@@ -65,7 +65,7 @@ public interface IProcess {
 
     /**
      * Brew.
-     * 
+     *
      * @param guid
      *            globally unique id
      * @param id
@@ -76,7 +76,7 @@ public interface IProcess {
 
     /**
      * Close.
-     * 
+     *
      * @param id
      *            instance id
      * @return code
@@ -85,7 +85,7 @@ public interface IProcess {
 
     /**
      * Process video.
-     * 
+     *
      * @param time
      *            milliseconds
      * @param nals
@@ -100,7 +100,7 @@ public interface IProcess {
 
     /**
      * Retrieve processed video.
-     * 
+     *
      * @param frameReturn
      *            timestamps
      * @param packetData
@@ -113,7 +113,7 @@ public interface IProcess {
 
     /**
      * Apply.
-     * 
+     *
      * @param guid
      *            module guid
      * @param key

@@ -72,6 +72,9 @@ public class SDPFactoryTest {
 
     String chromeConfAnswer = "v=0\no=- 938508758749976 2 IN IP4 127.0.0.1\ns=-\nt=0 0\na=group:BUNDLE audio video data\na=ice-options:trickle\na=msid-semantic:WMS *\nm=audio 9 UDP/TLS/RTP/SAVPF 111\nc=IN IP4 0.0.0.0\na=rtcp:9 IN IP4 0.0.0.0\na=rtcp-mux\na=mid:audio\na=sendrecv\na=x-google-flag:conference\na=ice-ufrag:W8oVBC0TAWS1AC8z\na=ice-pwd:lyp1KvOi+n02woy6q/lUjB+P\na=fingerprint:sha-256 81:9F:2B:E5:3F:DA:85:40:87:73:B4:B2:6F:20:32:7C:2A:7E:DC:CB:D1:F5:0A:95:BF:21:36:67:9E:0F:1D:80\na=setup:active\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\na=rtpmap:111 opus/48000/2\na=fmtp:111 minptime=10; useinbandfec=1\na=ssrc:6666 cname:6666\na=ssrc:6666 msid:6666 6666\na=ssrc:6667 cname:6667\na=ssrc:6667 msid:6667 6667\na=ssrc:6668 cname:6668\na=ssrc:6668 msid:6668 6668\nm=video 9 UDP/TLS/RTP/SAVPF 102\nc=IN IP4 0.0.0.0\na=rtcp:9 IN IP4 0.0.0.0\na=rtcp-mux\na=mid:video\na=sendrecv\na=x-google-flag:conference\na=ice-ufrag:W8oVBC0TAWS1AC8z\na=ice-pwd:lyp1KvOi+n02woy6q/lUjB+P\na=fingerprint:sha-256 81:9F:2B:E5:3F:DA:85:40:87:73:B4:B2:6F:20:32:7C:2A:7E:DC:CB:D1:F5:0A:95:BF:21:36:67:9E:0F:1D:80\na=setup:active\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\na=extmap:13 urn:3gpp:video-orientation\na=rtpmap:102 H264/90000\na=rtcp-fb:102 goog-remb\na=rtcp-fb:102 nack\na=rtcp-fb:102 nack pli\nm=application 9 DTLS/SCTP 5000\nc=IN IP4 0.0.0.0\na=rtcp:9 IN IP4 0.0.0.0\na=rtcp-mux\na=mid:data\na=sendrecv\na=x-google-flag:conference\na=ice-ufrag:W8oVBC0TAWS1AC8z\na=ice-pwd:lyp1KvOi+n02woy6q/lUjB+P\na=fingerprint:sha-256 81:9F:2B:E5:3F:DA:85:40:87:73:B4:B2:6F:20:32:7C:2A:7E:DC:CB:D1:F5:0A:95:BF:21:36:67:9E:0F:1D:80\na=setup:active\na=sctpmap:5000 webrtc-datachannel 256\n";
 
+    // chrome enhanced sdp with lcevc
+    String chromeEnhancedOffer = "v=0\no=- 469656218519424161 2 IN IP4 127.0.0.1\ns=-\nt=0 0\na=msid-semantic:WMS *\na=group:BUNDLE 0 1 2\na=extmapallowmixed\nm=audio 9 UDP/TLS/RTP/SAVPF 111 63 103 104 9 0 8 106 105 13 110 112 113 126\nc=IN IP4 0.0.0.0\nb=AS:56\na=rtcp:9 IN IP4 0.0.0.0\na=ice-ufrag:X6Fg\na=ice-pwd:93KmLVN8mLrbF97Ec1VesUEz\na=ice-options:trickle\na=fingerprint:sha-256 97:4A:95:96:C9:61:D9:CA:A2:64:72:56:25:34:45:58:C0:2B:9E:80:1E:34:F6:40:74:F2:6D:48:B4:9F:FA:59\na=setup:actpass\na=mid:0\na=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\na=extmap:5 urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id\na=extmap:6 urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id\na=sendrecv\na=msid:FeCJBlD4hGKgTb7cU9n8cMNK6JV5wgoxMJJc 772030df-3485-4f83-bef7-69679906ad20\na=rtcp-mux\na=rtpmap:111 opus/48000/2\na=rtcp-fb:111 transport-cc\na=fmtp:111 minptime=10;useinbandfec=1\na=rtpmap:63 red/48000/2\na=rtpmap:103 ISAC/16000\na=rtpmap:104 ISAC/32000\na=rtpmap:9 G722/8000\na=rtpmap:8 PCMA/8000\na=rtpmap:106 CN/32000\na=rtpmap:105 CN/16000\na=rtpmap:13 CN/8000\na=rtpmap:110 telephone-event/48000\na=rtpmap:112 telephone-event/32000\na=rtpmap:113 telephone-event/16000\na=rtpmap:126 telephone-event/8000\na=ssrc:3554725415 cname:ok+GGReoOnQ2Rydt\na=ssrc:3554725415 msid:FeCJBlD4hGKgTb7cU9n8cMNK6JV5wgoxMJJc 772030df-3485-4f83-bef7-69679906ad20\na=ssrc:3554725415 mslabel:FeCJBlD4hGKgTb7cU9n8cMNK6JV5wgoxMJJc\na=ssrc:3554725415 label:772030df-3485-4f83-bef7-69679906ad20\nm=video 9 UDP/TLS/RTP/SAVPF 96 97 98 99 100 101 102 109 127 107 125 62 108 61 124 60 123 59 114 58 116 57 118 56 120 55 122 54 35 36 121 53 119 37 38 39 40\nc=IN IP4 0.0.0.0\nb=AS:750\na=rtcp:9 IN IP4 0.0.0.0\na=ice-ufrag:X6Fg\na=ice-pwd:93KmLVN8mLrbF97Ec1VesUEz\na=ice-options:trickle\na=fingerprint:sha-256 97:4A:95:96:C9:61:D9:CA:A2:64:72:56:25:34:45:58:C0:2B:9E:80:1E:34:F6:40:74:F2:6D:48:B4:9F:FA:59\na=setup:actpass\na=mid:1\na=extmap:14 urn:ietf:params:rtp-hdrext:toffset\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\na=extmap:13 urn:3gpp:video-orientation\na=extmap:3 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\na=extmap:12 http://www.webrtc.org/experiments/rtp-hdrext/playout-delay\na=extmap:11 http://www.webrtc.org/experiments/rtp-hdrext/video-content-type\na=extmap:7 http://www.webrtc.org/experiments/rtp-hdrext/video-timing\na=extmap:8 http://www.webrtc.org/experiments/rtp-hdrext/color-space\na=extmap:4 urn:ietf:params:rtp-hdrext:sdes:mid\na=extmap:5 urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id\na=extmap:6 urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id\na=sendrecv\na=msid:FeCJBlD4hGKgTb7cU9n8cMNK6JV5wgoxMJJc fd1fdb0c-4cc3-419a-9d69-cfe1763ff2b6\na=rtcp-mux\na=rtcp-rsize\na=rtpmap:96 LCEVCVP8/90000\na=rtcp-fb:96 goog-remb\na=rtcp-fb:96 transport-cc\na=rtcp-fb:96 ccm fir\na=rtcp-fb:96 nack\na=rtcp-fb:96 nack pli\na=rtpmap:97 rtx/90000\na=fmtp:97 apt=96\na=rtpmap:98 VP8/90000\na=rtcp-fb:98 goog-remb\na=rtcp-fb:98 transport-cc\na=rtcp-fb:98 ccm fir\na=rtcp-fb:98 nack\na=rtcp-fb:98 nack pli\na=rtpmap:99 rtx/90000\na=fmtp:99 apt=98\na=rtpmap:100 LCEVCVP9/90000\na=rtcp-fb:100 goog-remb\na=rtcp-fb:100 transport-cc\na=rtcp-fb:100 ccm fir\na=rtcp-fb:100 nack\na=rtcp-fb:100 nack pli\na=fmtp:100 profile-id=0\na=rtpmap:101 rtx/90000\na=fmtp:101 apt=100\na=rtpmap:102 LCEVCVP9/90000\na=rtcp-fb:102 goog-remb\na=rtcp-fb:102 transport-cc\na=rtcp-fb:102 ccm fir\na=rtcp-fb:102 nack\na=rtcp-fb:102 nack pli\na=fmtp:102 profile-id=2\na=rtpmap:109 rtx/90000\na=fmtp:109 apt=102\na=rtpmap:127 VP9/90000\na=rtcp-fb:127 goog-remb\na=rtcp-fb:127 transport-cc\na=rtcp-fb:127 ccm fir\na=rtcp-fb:127 nack\na=rtcp-fb:127 nack pli\na=fmtp:127 profile-id=0\na=rtpmap:107 rtx/90000\na=fmtp:107 apt=127\na=rtpmap:125 VP9/90000\na=rtcp-fb:125 goog-remb\na=rtcp-fb:125 transport-cc\na=rtcp-fb:125 ccm fir\na=rtcp-fb:125 nack\na=rtcp-fb:125 nack pli\na=fmtp:125 profile-id=2\na=rtpmap:108 LCEVCH264/90000\na=rtcp-fb:108 goog-remb\na=rtcp-fb:108 transport-cc\na=rtcp-fb:108 ccm fir\na=rtcp-fb:108 nack\na=rtcp-fb:108 nack pli\na=fmtp:108 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42001f\na=rtpmap:124 LCEVCH264/90000\na=rtcp-fb:124 goog-remb\na=rtcp-fb:124 transport-cc\na=rtcp-fb:124 ccm fir\na=rtcp-fb:124 nack\na=rtcp-fb:124 nack pli\na=fmtp:124 level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42001f\na=rtpmap:123 LCEVCH264/90000\na=rtcp-fb:123 goog-remb\na=rtcp-fb:123 transport-cc\na=rtcp-fb:123 ccm fir\na=rtcp-fb:123 nack\na=rtcp-fb:123 nack pli\na=fmtp:123 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f\na=rtpmap:114 LCEVCH264/90000\na=rtcp-fb:114 goog-remb\na=rtcp-fb:114 transport-cc\na=rtcp-fb:114 ccm fir\na=rtcp-fb:114 nack\na=rtcp-fb:114 nack pli\na=fmtp:114 level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42e01f\na=rtpmap:116 H264/90000\na=rtcp-fb:116 goog-remb\na=rtcp-fb:116 transport-cc\na=rtcp-fb:116 ccm fir\na=rtcp-fb:116 nack\na=rtcp-fb:116 nack pli\na=fmtp:116 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42001f\na=rtpmap:118 H264/90000\na=rtcp-fb:118 goog-remb\na=rtcp-fb:118 transport-cc\na=rtcp-fb:118 ccm fir\na=rtcp-fb:118 nack\na=rtcp-fb:118 nack pli\na=fmtp:118 level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42001f\na=rtpmap:120 H264/90000\na=rtcp-fb:120 goog-remb\na=rtcp-fb:120 transport-cc\na=rtcp-fb:120 ccm fir\na=rtcp-fb:120 nack\na=rtcp-fb:120 nack pli\na=fmtp:120 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f\na=rtpmap:122 H264/90000\na=rtcp-fb:122 goog-remb\na=rtcp-fb:122 transport-cc\na=rtcp-fb:122 ccm fir\na=rtcp-fb:122 nack\na=rtcp-fb:122 nack pli\na=fmtp:122 level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42e01f\na=rtpmap:121 H264/90000\na=rtcp-fb:121 goog-remb\na=rtcp-fb:121 transport-cc\na=rtcp-fb:121 ccm fir\na=rtcp-fb:121 nack\na=rtcp-fb:121 nack pli\na=fmtp:121 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=4d001f\na=rtpmap:119 H264/90000\na=rtcp-fb:119 goog-remb\na=rtcp-fb:119 transport-cc\na=rtcp-fb:119 ccm fir\na=rtcp-fb:119 nack\na=rtcp-fb:119 nack pli\na=fmtp:119 level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=64001f\na=ssrc-group:FID 3706460331 629708086\na=ssrc:3706460331 cname:ok+GGReoOnQ2Rydt\na=ssrc:3706460331 msid:FeCJBlD4hGKgTb7cU9n8cMNK6JV5wgoxMJJc fd1fdb0c-4cc3-419a-9d69-cfe1763ff2b6\na=ssrc:3706460331 mslabel:FeCJBlD4hGKgTb7cU9n8cMNK6JV5wgoxMJJc\na=ssrc:3706460331 label:fd1fdb0c-4cc3-419a-9d69-cfe1763ff2b6\na=ssrc:629708086 cname:ok+GGReoOnQ2Rydt\na=ssrc:629708086 msid:FeCJBlD4hGKgTb7cU9n8cMNK6JV5wgoxMJJc fd1fdb0c-4cc3-419a-9d69-cfe1763ff2b6\na=ssrc:629708086 mslabel:FeCJBlD4hGKgTb7cU9n8cMNK6JV5wgoxMJJc\na=ssrc:629708086 label:fd1fdb0c-4cc3-419a-9d69-cfe1763ff2b6\nm=application 5000 UDP/DTLS/SCTP webrtc-datachannel\nc=IN IP4 0.0.0.0\na=sctp-port:5000\na=max-message-size:262144\na=ice-ufrag:X6Fg\na=ice-pwd:93KmLVN8mLrbF97Ec1VesUEz\na=ice-options:trickle\na=fingerprint:sha-256 97:4A:95:96:C9:61:D9:CA:A2:64:72:56:25:34:45:58:C0:2B:9E:80:1E:34:F6:40:74:F2:6D:48:B4:9F:FA:59\na=setup:actpass\na=mid:2\na=sctp-port:5000\na=max-message-size:262144\n";
+
     enum H264Profile {
         None, ConstrainedBaseline, Baseline, Main, High;
 
@@ -194,6 +197,119 @@ public class SDPFactoryTest {
     }
 
     private H264Profile maximumH264Profile = H264Profile.ConstrainedBaseline;
+
+    @Test
+    public void testChromeEnhanced() throws SDPException {
+        log.info("\n testChromeEnhanced");
+        EnumSet<RTPCodecEnum> preferredVideoCodecs = EnumSet.of(RTPCodecEnum.H264_PMODE1, RTPCodecEnum.VP8);
+        RTPCodecEnum selectedVideoCodec = RTPCodecEnum.NONE;
+        int videoPayloadType = -1;
+        // create local sdp
+        SessionDescription localSdp = new SessionDescription();
+
+        SessionDescription sdp = SDPFactory.createSessionDescription(chromeEnhancedOffer);
+        MediaField[] medias = sdp.getMediaDescriptions();
+        log.info("Media length: {}", medias.length);
+        for (MediaField media : medias) {
+            SDPMediaType mediaType = media.getMediaType();
+            if (SDPMediaType.video.equals(mediaType)) {
+                // look over all incoming rtpmap for our server preferred codec(s)
+                // this set includes mode_0 items.
+                List<AttributeField> videoCodecs = media.getAttributeSelections(AttributeKey.rtpmap, preferredVideoCodecs);
+                log.info("videoCodecs: {}", videoCodecs);
+                H264Profile selected = H264Profile.None;
+                String videoCodec = null;
+                for (AttributeField videoAtt : videoCodecs) {
+                    videoCodec = videoAtt.getValue();
+                    String[] videoCodecParts = videoCodec.split("[\\s|\\/]");
+                    int pt = Integer.valueOf(videoCodecParts[0]);
+                    String videoCodecName = videoCodecParts[1];
+                    log.info("CODEC_SELECTION: {} current {}", videoCodecName, selectedVideoCodec.encodingName);
+                    String offeredFmtp = media.getAttribute(AttributeKey.fmtp, pt).getValue();
+                    String[] fmtpParts = offeredFmtp.split("[\\s|\\;]");
+                    int current = getCodecPriority(selectedVideoCodec);
+                    int next = getCodecPriority(RTPCodecEnum.getByEncodingName(videoCodecName));
+                    if (next < current) {
+                        log.warn("skipping codec by priority, current:{} next:{}", current, next);
+                        continue;
+                    } else {
+                        log.warn("eval codec variety, current:{} next:{}", current, next);
+                    }
+                    selectedVideoCodec = RTPCodecEnum.getByEncodingName(videoCodecName);
+                    if (selectedVideoCodec != RTPCodecEnum.VP8) {
+                        if ((offeredFmtp.indexOf("packetization-mode=1")) == -1) {
+                            continue;
+                        }
+                        String profileSent = null;
+                        for (String part : fmtpParts) {
+                            int idx = -1;
+                            if ((idx = part.indexOf("profile-level-id")) != -1) {
+                                profileSent = part.substring(idx + 17);
+                                // used for non-android flow
+                                int results = acceptProfile(selected, profileSent);
+                                if (results > selected.ordinal()) {
+                                    log.info("Overriding profile via sdp offer: {}", profileSent);
+                                    selected = H264Profile.valueOf(results);
+                                    videoPayloadType = pt;
+                                    break;
+                                } else {
+                                    log.info("Skipping profile via sdp offer: {}", profileSent);
+                                }
+                            }
+                        }
+                    }
+                }
+                log.info("Last checked video codec: {}", videoCodec);
+                // add props to the fmtp if h264 and profile is ok
+                AttributeField fmtp = null;
+                if (selectedVideoCodec == RTPCodecEnum.H264_PMODE1) {
+                    // default profile BP 3.1
+                    String profile = "42801f";
+                    // see if one was offered and use it if it was
+                    MediaField offeredVideo = sdp.getMediaDescription(SDPMediaType.video);
+                    String offeredFmtp = offeredVideo.getAttribute(AttributeKey.fmtp, videoPayloadType).getValue();
+                    log.info("Offered fmtp: {}", offeredFmtp);
+                    // parse that sucka
+                    String[] parts = offeredFmtp.split("[\\s|\\;]");
+                    if (log.isTraceEnabled()) {
+                        log.info("Split fmtp: {}", Arrays.toString(parts));
+                    }
+                    // publisher offered h264 profile
+                    String profileSent = null;
+                    for (String part : parts) {
+                        int idx = -1;
+                        if ((idx = part.indexOf("profile-level-id")) != -1) {
+                            // profile was specified in sdp (used for android logic below)
+                            profileSent = part.substring(idx + 17);
+                            // used for non-android flow
+                            if (acceptProfile(selected, profileSent) > 0) {
+                                profile = profileSent;
+                                log.info("Overriding profile via sdp offer: {}", profile);
+                                break;
+                            }
+                        }
+                    }
+                    // pmode-1 only here
+                    fmtp = new AttributeField(AttributeKey.fmtp, String.format("%d profile-level-id=%s;level-asymmetry-allowed=1;packetization-mode=1", videoPayloadType, profile));
+                }
+                // add a media field to our local sdp
+                MediaField video = new MediaField(mediaType, 9, MediaField.PROTOCOL_UDP, 1);
+                localSdp.addMediaDescription(video);
+                // add fmtp if appropriate
+                if (fmtp != null) {
+                    video.addAttributeField(fmtp);
+                }
+                String rtpmap = RTPCodecEnum.getRTPMapString(selectedVideoCodec);
+                if (selectedVideoCodec.payloadType != videoPayloadType) {
+                    rtpmap = rtpmap.replace(String.valueOf(selectedVideoCodec.payloadType), String.valueOf(videoPayloadType));
+                }
+                video.addAttributeField(new AttributeField(AttributeKey.rtpmap, rtpmap));
+                video.setFormats(new int[] { videoPayloadType });
+                log.info("Video in local sdp:\n{}", video);
+            }
+        }
+        assertEquals(120, videoPayloadType);
+    }
 
     @Test
     public void testRPRO6991() {
@@ -343,7 +459,7 @@ public class SDPFactoryTest {
 
     /**
      * Tests Safari sending the audio after the video in the SDP.
-     * 
+     *
      * @throws Exception
      */
     @Test

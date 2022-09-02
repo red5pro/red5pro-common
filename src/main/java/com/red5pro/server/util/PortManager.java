@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Provides ports and more.
- * 
+ *
  * @author Andy Shaules
  * @author Paul Gregoire
  */
@@ -33,6 +33,9 @@ public class PortManager {
     // base socket timeout in milliseconds
     private static int soTimeoutMs = 5;
 
+    // allow system port allocations (may be outside configured port range)
+    private static boolean allowSystemPorts;
+
     // holds ports that have been allocated and only those that are allocated
     private static CopyOnWriteArraySet<Integer> allocatedPorts = new CopyOnWriteArraySet<>();
 
@@ -51,7 +54,7 @@ public class PortManager {
 
     /**
      * Clear an allocated port entry.
-     * 
+     *
      * @param rtpPort the port to clear
      */
     public static void clearRTPServerPort(int rtpPort) {
@@ -68,7 +71,7 @@ public class PortManager {
 
     /**
      * Clear a collection of allocated port entries.
-     * 
+     *
      * @param allocatedPorts ports to clear
      */
     public static void clearRTPServerPorts(Collection<Integer> allocatedPorts) {
@@ -79,7 +82,7 @@ public class PortManager {
 
     /**
      * Get an available port.
-     * 
+     *
      * @return port for use with a socket
      */
     public static int getRTPServerPort() {
@@ -87,10 +90,14 @@ public class PortManager {
         int serverPort = 0;
         // check exhaustion first
         if (isRangeExhausted()) {
-            // XXX this would need to be a config as the behavior would be expected to return a port outside known range
-            log.warn("Configured port range has been exhausted, the next system available port will be searched");
-            // give them a port available on the system which exists outside the range
-            serverPort = findFreeUdpPort();
+            if (allowSystemPorts) {
+                // this will allow the return a port outside configured range
+                log.info("Configured port range has been exhausted, the next system available port will be searched");
+                // give them a port available on the system which exists outside the range
+                serverPort = findFreeUdpPort();
+            } else {
+                log.warn("Configured port range has been exhausted, no ports available");
+            }
         } else {
             serverPort = portUpdater.incrementAndGet(instance);
             for (; serverPort < rtpPortCeiling; serverPort = portUpdater.incrementAndGet(instance)) {
@@ -136,7 +143,7 @@ public class PortManager {
 
     /**
      * Get an available port using randomizer.
-     * 
+     *
      * @return port for use with a socket
      */
     public static int getRTPServerPortRandom() {
@@ -164,7 +171,7 @@ public class PortManager {
 
     /**
      * Checks a port for availability using DatagramSocket; this may or may not be useful for TCP as well.
-     * 
+     *
      * @param port to check
      * @return true if port is available and false otherwise
      */
@@ -197,7 +204,7 @@ public class PortManager {
 
     /**
      * Returns a free UDP port on this machine.
-     * 
+     *
      * @return port
      */
     public static int findFreeUdpPort() {
@@ -225,7 +232,7 @@ public class PortManager {
 
     /**
      * Sets the port base and also reset last port allocated to the newly selected base minus one.
-     * 
+     *
      * @param rtpPortBase base port to start on
      */
     public static void setRtpPortBase(int rtpPortBase) {
@@ -249,7 +256,7 @@ public class PortManager {
 
     /**
      * Set the socket timeout for availability checks.
-     * 
+     *
      * @param soTimeoutMs
      */
     public static void setSoTimeout(int soTimeoutMs) {
@@ -258,7 +265,7 @@ public class PortManager {
 
     /**
      * Sets whether or not to test a port for availability before returning it.
-     * 
+     *
      * @param checkPortAvailability true to check the port with a binding and false to simply return it
      */
     public static void setCheckPortAvailability(boolean checkPortAvailability) {
@@ -267,8 +274,17 @@ public class PortManager {
     }
 
     /**
+     * Allows for using system ports, which may exceed the port range specified.
+     *
+     * @param allowSystemPorts
+     */
+    public static void setAllowSystemPorts(boolean allowSystemPorts) {
+        PortManager.allowSystemPorts = allowSystemPorts;
+    }
+
+    /**
      * Returns allocated UDP ports; this can include ports allocated outside this application in the specified range.
-     * 
+     *
      * @return allocated port count
      */
     public static int getCount() {
@@ -278,7 +294,7 @@ public class PortManager {
 
     /**
      * Returns a "pretty" string of the port base and ceiling.
-     * 
+     *
      * @return port range string
      */
     public static String getRange() {
@@ -287,7 +303,7 @@ public class PortManager {
 
     /**
      * Returns port range exhaustion state.
-     * 
+     *
      * @return true if ports in configured range are exhausted and false if not exhausted
      */
     public static boolean isRangeExhausted() {
