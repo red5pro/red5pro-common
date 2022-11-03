@@ -94,6 +94,8 @@ public class SDPSingleLineDecoder {
                                                 String[] param = fmtParam.split("=");
                                                 if (param.length > 1) {
                                                     track.addParameter(param[0], param[1]);
+                                                } else {
+                                                    log.warn("{} is missing its value", param[0]);
                                                 }
                                             }
                                         } else {
