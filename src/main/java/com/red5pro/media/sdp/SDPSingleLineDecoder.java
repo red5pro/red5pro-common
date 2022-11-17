@@ -16,7 +16,7 @@ import com.red5pro.media.sdp.model.SDPMediaType;
 
 /**
  * Decoder for handling an SDP one line at a time. Call doFinal() when all the lines have be added.
- * 
+ *
  * @author Paul Gregoire
  */
 public class SDPSingleLineDecoder {

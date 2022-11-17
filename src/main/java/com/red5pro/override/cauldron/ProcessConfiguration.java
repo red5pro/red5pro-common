@@ -32,7 +32,7 @@ package com.red5pro.override.cauldron;
  * This is the native processor core configuration model. <br>
  * This configuration affects what type of video packets are passed to the
  * process module, and what kind of data it will return, if any. <br>
- * 
+ *
  * @author Andy Shaules
  */
 public class ProcessConfiguration {

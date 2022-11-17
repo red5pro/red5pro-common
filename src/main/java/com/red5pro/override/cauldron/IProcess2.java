@@ -2,13 +2,13 @@ package com.red5pro.override.cauldron;
 
 /**
  * Adds audio processing capabilities to user native api.
- * 
+ *
  * @author Andy
  *
  */
 public interface IProcess2 extends IProcess {
     /**
-     * 
+     *
      * @param fourCC
      *            media type, 'PCM ' 'I420', 'RGB '.
      * @param time

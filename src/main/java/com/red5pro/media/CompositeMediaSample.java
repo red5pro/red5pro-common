@@ -5,7 +5,7 @@ import com.red5pro.group.IParticipant;
 /**
  * Container for multiple MediaSample instances. This is meant to contain one or
  * more MediaSamples of the same instant, segment, frame, slice...
- * 
+ *
  * @author Paul Gregoire
  *
  */
@@ -32,7 +32,7 @@ public class CompositeMediaSample extends MediaSampleAdapter {
     /**
      * Returns a MediaSample matching the FourCC given or null if not found; this
      * does not remove the sample.
-     * 
+     *
      * @param fourCC
      * @return MediaSample or null if not found
      */

@@ -82,7 +82,7 @@ public class FormatUtils {
 
     /**
      * Is a a subclass of b? Strict.
-     * 
+     *
      * @param a
      *            class a
      * @param b
@@ -175,7 +175,7 @@ public class FormatUtils {
      * specific value, an association of the format parameter to the value in
      * question may be added to or removed from the respective <pre>Map</pre> instance
      * for the purposes of determining equality. <br>
-     * 
+     *
      * @param encoding
      *            the encoding (name) related to the two sets of format parameters
      *            to be tested for equality

@@ -7,7 +7,7 @@ import org.red5.server.api.ICastingAttributeStore;
 
 /**
  * Base interface for a DataChannel connection.
- * 
+ *
  * @author Paul Gregoire
  *
  */
@@ -54,28 +54,28 @@ public interface IDataChannelConnection extends ICastingAttributeStore {
 
     /**
      * Returns bytes read.
-     * 
+     *
      * @return bytes read
      */
     long getReadBytes();
 
     /**
      * Updates the bytes read counter.
-     * 
+     *
      * @param read
      */
     void updateReadBytes(long read);
 
     /**
      * Returns bytes written.
-     * 
+     *
      * @return bytes written
      */
     long getWrittenBytes();
 
     /**
      * Returns whether or not the connection is connected.
-     * 
+     *
      * @return connected state
      */
     boolean isConnected();

@@ -4,7 +4,7 @@ import java.util.EnumSet;
 
 /**
  * FourCC representation for media, protocol, or transport.
- * 
+ *
  * @author Andy Shaules
  * @author Paul Gregoire
  *
@@ -42,12 +42,12 @@ public enum FourCC {
     OPUS('O', 'P', 'U', 'S'),
 
     /**
-     * 
+     *
      */
     SPX('S', 'P', 'X', ' '),
 
     /**
-     * 
+     *
      */
     MP3('M', 'P', '3', ' '),
 
@@ -155,7 +155,7 @@ public enum FourCC {
 
     /**
      * Returns the integer value of the FourCC code.
-     * 
+     *
      * @return fourCC code
      */
     public int getCode() {
@@ -164,7 +164,7 @@ public enum FourCC {
 
     /**
      * Returns a FourCC enum based on the supplied characters.
-     * 
+     *
      * @param a
      * @param b
      * @param c
@@ -198,7 +198,7 @@ public enum FourCC {
 
     /**
      * Returns true if the target FourCC identifier is of audio type.
-     * 
+     *
      * @param target
      * @return true if audio and false otherwise
      */
@@ -208,7 +208,7 @@ public enum FourCC {
 
     /**
      * Returns true if the target FourCC identifier is of video type.
-     * 
+     *
      * @param target
      * @return true if video and false otherwise
      */

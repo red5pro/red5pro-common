@@ -7,7 +7,7 @@ import com.red5pro.server.util.NetworkManager;
 /**
  * The origin "o=" field gives the originator of the session (her username and
  * the address of the user's host) plus a session identifier and version.
- * 
+ *
  * <pre>
     o=<username> <sess-id> <sess-version> <nettype> <addrtype> <unicast-address>
  * </pre>

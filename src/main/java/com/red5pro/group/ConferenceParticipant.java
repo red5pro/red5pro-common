@@ -12,7 +12,7 @@ import com.red5pro.util.IdGenerator;
 /**
  * Model representation for a conference participant which may or may not
  * provide data, and may or may not consume data.
- * 
+ *
  * @author Paul Gregoire
  *
  */
@@ -58,7 +58,7 @@ public abstract class ConferenceParticipant implements IParticipant {
 
     /**
      * Add an id for exclusion.
-     * 
+     *
      * @param exclude
      */
     public void addExclude(String exclude) {
@@ -67,7 +67,7 @@ public abstract class ConferenceParticipant implements IParticipant {
 
     /**
      * Remove an id exclusion.
-     * 
+     *
      * @param exclude
      */
     public void removeExclude(String exclude) {

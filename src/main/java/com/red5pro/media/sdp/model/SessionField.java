@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 /**
  * The session name "s=" field is the textual session name. There MUST be one
  * and only one "s=" field per session description.
- * 
+ *
  * <pre>
       s=<session name>
  * </pre>

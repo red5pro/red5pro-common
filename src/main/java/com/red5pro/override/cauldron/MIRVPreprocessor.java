@@ -27,17 +27,23 @@ package com.red5pro.override.cauldron;
 
 public interface MIRVPreprocessor {
     /**
+     *
+     * @param path directory of modules.
+     */
+    public void init(String path);
+
+    /**
      * Create an instance. <br >
      * Must call close to free the memory.
-     * 
+     *
      * @param outputs
      *            number of outputs.
      * @return unique pointer value or zero if error.
      */
-    public long open(int outputs);
+    public long open(int outputs, int type);
 
     /**
-     * 
+     *
      * @param id
      *            pointer
      * @return 1 no error
@@ -45,7 +51,7 @@ public interface MIRVPreprocessor {
     public long start(long id);
 
     /**
-     * 
+     *
      * @param id
      *            pointer
      * @return no error
@@ -56,7 +62,7 @@ public interface MIRVPreprocessor {
      * Pass nals to processor. Callers provide IMIRVReceiver to get returning
      * frames. Preprocessor Implementors must call output handler with index,
      * milliseconds, and annex-b nalus.
-     * 
+     *
      * @param outputHandler
      *            implements IMIRVReceiver.
      * @param time
@@ -70,7 +76,7 @@ public interface MIRVPreprocessor {
     public int write(Object outputHandler, long time, byte[] nals, long id);
 
     /**
-     * 
+     *
      * @param index
      *            index of process.
      * @param key

@@ -37,7 +37,7 @@ import com.red5pro.util.ProvisionAdapter;
 
 /**
  * Provision model object.
- * 
+ *
  * @author Andy Shaules
  * @author Paul Gregoire
  */
@@ -51,6 +51,9 @@ public class Provision {
 
     public final static String Param_Video_Width = "videoWidth";
 
+    /**
+     * Codec dependent support for 'baseline', 'main', 'high'.
+     */
     public final static String Param_Video_Profile = "videoProfile";
 
     public final static String Param_Audio_Sample_Rate = "audioSR";
@@ -80,9 +83,9 @@ public class Provision {
     public final static String Param_Video_BR_Max = "videoBRMax";
 
     /**
-     * Re-encoded entropy cabac/calcv output Constrained baseline=0
+     * Encoding entropy cabac=1/calcv=0.
      */
-    public final static String Param_Video_Enc_Profile = "videoEncProfile";
+    public final static String Param_Video_Entropy_Profile = "videoEntropyProfile";
 
     /**
      * 0 bitrate, 1 quality
@@ -93,6 +96,21 @@ public class Provision {
      * Key frame interval, by frame count.
      */
     public final static String Param_Video_Key = "videoKey";
+
+    /**
+     * Video Framerate.
+     */
+    public final static String Param_Video_FPS = "videoFPS";
+
+    /**
+     *
+     */
+    public final static String Param_HardwareKey = "hardware";
+
+    /**
+     *
+     */
+    public final static String Param_Strict = "strict";
 
     /**
      * Gson for serialize and deserialize ops.
@@ -205,7 +223,7 @@ public class Provision {
 
     /**
      * Returns concatenated context path without leading slashes. Normalizes guid.
-     * 
+     *
      * @param context
      *            app scope
      * @param name
@@ -228,7 +246,7 @@ public class Provision {
 
     /**
      * Returns a Gson instance based on the Provision enabled GsonBuilder.
-     * 
+     *
      * @return Gson instance
      */
     public static Gson getGson() {
@@ -254,7 +272,7 @@ public class Provision {
 
     /**
      * Returns JSON string representing this object instance.
-     * 
+     *
      * @return JSON string
      */
     public String toJson() {
