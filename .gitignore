@@ -18,6 +18,8 @@ gen
 .settings
 .externalToolBuilders
 .recommenders
+.vscode/
+*.code-workspace
 
 # file created by maven shade plugin
 dependency-reduced-pom.xml

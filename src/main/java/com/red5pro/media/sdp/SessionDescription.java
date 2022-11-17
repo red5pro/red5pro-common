@@ -57,6 +57,9 @@ public class SessionDescription {
     // video media description counter
     private int video;
 
+    // counters for audio and video encoder entries; no rtx, ulpfec etc...
+    private int audioEncoderCount, videoEncoderCount;
+
     // whether or not to mux rtcp
     private boolean rtcpMux = true;
 
@@ -473,6 +476,14 @@ public class SessionDescription {
         return audio > 0;
     }
 
+    public void incrementAudioEncoderCount() {
+        audioEncoderCount += 1;
+    }
+
+    public int getAudioEncoderCount() {
+        return audioEncoderCount;
+    }
+
     public int getVideo() {
         return video;
     }
@@ -487,6 +498,14 @@ public class SessionDescription {
 
     public boolean hasVideo() {
         return video > 0;
+    }
+
+    public void incrementVideoEncoderCount() {
+        videoEncoderCount += 1;
+    }
+
+    public int getVideoEncoderCount() {
+        return videoEncoderCount;
     }
 
     public boolean isRtcpMux() {

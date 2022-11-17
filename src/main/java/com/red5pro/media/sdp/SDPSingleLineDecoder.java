@@ -92,7 +92,11 @@ public class SDPSingleLineDecoder {
                                                 track.addParameter(VideoConstants.H264_SPROP_PARAMETER_SETS_FMTP, fmtParam.substring(fmtParam.indexOf('=') + 1));
                                             } else {
                                                 String[] param = fmtParam.split("=");
-                                                track.addParameter(param[0], param[1]);
+                                                if (param.length > 1) {
+                                                    track.addParameter(param[0], param[1]);
+                                                } else {
+                                                    log.warn("{} is missing its value", param[0]);
+                                                }
                                             }
                                         } else {
                                             track.setPayloadId(Integer.valueOf(fmtParam));

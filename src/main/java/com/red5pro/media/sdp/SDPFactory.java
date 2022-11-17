@@ -765,6 +765,28 @@ public final class SDPFactory {
                                         track = new SDPTrack(sdp, mediaField.getMediaType(), mediaField.getFormats()[0]);
                                     }
                                 }
+                            } else {
+                                // for webrtc, we only care about the rtpmap line so we can count encoders
+                                if (AttributeKey.rtpmap.equals(key)) {
+                                    /* our interest for the count are these:
+                                        a=rtpmap:96 VP8/90000
+                                        a=rtpmap:102 H264/90000
+
+                                    not these:
+                                        a=rtpmap:97 rtx/90000
+                                    */
+                                    String[] mapParams = attr.getValue().split("\\s|/");
+                                    if (mapParams.length > 1) {
+                                        String codec = mapParams[1];
+                                        if (codec.startsWith(RTPCodecEnum.H264_PMODE1.encodingName) || codec.startsWith(RTPCodecEnum.VP8.encodingName)) {
+                                            // we have a video codec
+                                            sdp.incrementVideoEncoderCount();
+                                        } else if (codec.startsWith(RTPCodecEnum.OPUS.encodingName)) {
+                                            // we have an audio codec
+                                            sdp.incrementAudioEncoderCount();
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
