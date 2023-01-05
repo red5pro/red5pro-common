@@ -191,14 +191,4 @@ public interface IRTCStream {
      */
     void unmuteVideo();
 
-    /**
-     * Returns the data channel with the given label. If a data channel is not found
-     * for the label, but the existing one has no label, it will be set to the given
-     * label until overridden by incoming labeled content.
-     *
-     * @param label
-     * @return IDataMediaStream
-     */
-    IDataMediaStream getDataMediaStream(String label);
-
 }

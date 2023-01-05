@@ -24,7 +24,7 @@ Including in your maven pom is as easy as adding this xml to your dependencies
 <dependency>
     <groupId>com.red5pro</groupId>
     <artifactId>red5pro-common</artifactId>
-    <version>9.2.14</version>
+    <version>10.9.0.1</version>
     <scope>provided</scope>
 </dependency>
 ```
