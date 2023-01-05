@@ -6,14 +6,14 @@ import java.util.regex.Pattern;
  * The attributes "a=" are the primary means for extending SDP. Attributes may
  * be defined to be used as "session-level" attributes, "media-level"
  * attributes, or both.
- * 
+ *
  * A media description may have any number of attributes ("a=" fields) that are
  * media specific. These are referred to as "media-level" attributes and add
  * information about the media stream. Attribute fields can also be added before
  * the first media field; these "session-level" attributes convey additional
  * information that applies to the conference as a whole rather than to
  * individual media.
- * 
+ *
  * <pre>
       a=<attribute>
       a=<attribute>:<value>

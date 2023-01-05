@@ -30,7 +30,7 @@ import com.red5pro.server.stream.IoSessionAware;
 
 /**
  * Base interface for WebRTC connection.
- * 
+ *
  * @author Paul Gregoire (paul@infrared5.com)
  */
 public interface IWebRTCConnection extends IoSessionAware {
@@ -39,14 +39,14 @@ public interface IWebRTCConnection extends IoSessionAware {
 
     /**
      * Returns the signal channel for the connection.
-     * 
+     *
      * @return signal channel or null if its not set
      */
     SignalingChannel getSignalChannel();
 
     /**
      * Returns whether or not this connection instance has a signal channel.
-     * 
+     *
      * @return true if signal channel exists and false otherwise
      */
     boolean hasSignalChannel();
@@ -58,21 +58,21 @@ public interface IWebRTCConnection extends IoSessionAware {
 
     /**
      * Returns whether or not the connection is considered idle.
-     * 
+     *
      * @return true if idle and false otherwise
      */
     boolean isIdle();
 
     /**
      * Return session identifier.
-     * 
+     *
      * @return connection session id
      */
     String getSessionId();
 
     /**
      * Check whether connection is alive
-     * 
+     *
      * @return true if not idle nor in a state of disconnected / disconnecting,
      *         false otherwise
      */
@@ -80,7 +80,7 @@ public interface IWebRTCConnection extends IoSessionAware {
 
     /**
      * Apply a QoS value to the connection.
-     * 
+     *
      * @param qos
      *            quality of service.
      */

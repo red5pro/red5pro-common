@@ -2,7 +2,7 @@ package com.red5pro.service;
 
 /**
  * Base interface for message dispatching services.
- * 
+ *
  * @author Paul Gregoire
  *
  */
@@ -12,7 +12,7 @@ public interface IMessageDispatchService {
 
     /**
      * Send a message with the given identifier to the destination path.
-     * 
+     *
      * @param sender
      * @param destination where we're sending to
      * @param message
@@ -21,7 +21,7 @@ public interface IMessageDispatchService {
 
     /**
      * Send a message with the given identifier to the destination path.
-     * 
+     *
      * @param sender
      * @param destination where we're sending to
      * @param expirationTime time at which this expires
@@ -31,7 +31,7 @@ public interface IMessageDispatchService {
 
     /**
      * Send a binary message with the given identifier to the destination path.
-     * 
+     *
      * @param sender
      * @param destination where we're sending to
      * @param message
@@ -40,7 +40,7 @@ public interface IMessageDispatchService {
 
     /**
      * Send a binary message with the given identifier to the destination path.
-     * 
+     *
      * @param sender
      * @param destination where we're sending to
      * @param expirationTime time at which this expires
@@ -50,7 +50,7 @@ public interface IMessageDispatchService {
 
     /**
      * Returns the configured expiration time for a message in milliseconds.
-     * 
+     *
      * @return messageExpirationMs
      */
     long getMessageExpirationMs();

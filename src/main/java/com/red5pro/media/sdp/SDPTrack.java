@@ -14,7 +14,7 @@ import com.red5pro.media.sdp.model.SDPMediaType;
 
 /**
  * Represents an audio or video track derived from an SDP.
- * 
+ *
  * @author Andy Shaules
  * @author Paul Gregoire
  */
@@ -50,7 +50,7 @@ public class SDPTrack {
 
     /**
      * Returns the source SDP.
-     * 
+     *
      * @return SessionDescription
      */
     public SessionDescription getSession() {
@@ -59,7 +59,7 @@ public class SDPTrack {
 
     /**
      * Sets the payload id.
-     * 
+     *
      * @param payloadId
      */
     public void setPayloadId(Integer payloadId) {
@@ -68,7 +68,7 @@ public class SDPTrack {
 
     /**
      * Returns the associated payload id for this track.
-     * 
+     *
      * @return payload id
      */
     public int getPayloadId() {
@@ -77,7 +77,7 @@ public class SDPTrack {
 
     /**
      * Returns whether or not this an audio track.
-     * 
+     *
      * @return true if audio and false if not
      */
     public boolean isAudio() {
@@ -86,7 +86,7 @@ public class SDPTrack {
 
     /**
      * Returns whether or not this a video track.
-     * 
+     *
      * @return true if video and false if not
      */
     public boolean isVideo() {
@@ -95,7 +95,7 @@ public class SDPTrack {
 
     /**
      * Returns whether or not this an application track.
-     * 
+     *
      * @return true if application and false if not
      */
     public boolean isApplication() {
@@ -104,7 +104,7 @@ public class SDPTrack {
 
     /**
      * Sets the control uri (session level) or channel id (media level).
-     * 
+     *
      * @param control
      */
     public void setControl(String control) {
@@ -143,7 +143,7 @@ public class SDPTrack {
 
     /**
      * Returns the control uri for this track if it exists.
-     * 
+     *
      * @return control uri
      */
     public String getControl() {
@@ -153,7 +153,7 @@ public class SDPTrack {
     /**
      * Returns the control channel id for this track if it exists. Existence means
      * that aggregate control is supported.
-     * 
+     *
      * @return control channel id
      */
     public int getControlChannelId() {
@@ -170,7 +170,7 @@ public class SDPTrack {
 
     /**
      * Sets the media channel id.
-     * 
+     *
      * @param mediaChannel
      */
     public void setMediaChannelId(String mediaChannel) {
@@ -180,7 +180,7 @@ public class SDPTrack {
 
     /**
      * Sets the media channel id.
-     * 
+     *
      * @param mediaChannel
      */
     public void setMediaChannelId(int mediaChannel) {
@@ -190,7 +190,7 @@ public class SDPTrack {
 
     /**
      * Returns the media channel id.
-     * 
+     *
      * @return media channel id
      */
     public int getMediaChannelId() {
@@ -199,12 +199,12 @@ public class SDPTrack {
 
     /**
      * Return clock rate as a string from the rtpmap attribute.
-     * 
+     *
      * <pre>
      * a=rtpmap:97 MPEG4-GENERIC/44100/1
      * a=rtpmap:96 H264/90000
      * </pre>
-     * 
+     *
      * @return clock rate
      */
     public String getClockRate() {
@@ -221,11 +221,11 @@ public class SDPTrack {
 
     /**
      * Return channel count as a string from the rtpmap attribute.
-     * 
+     *
      * <pre>
      * a=rtpmap:97 MPEG4-GENERIC/44100/1
      * </pre>
-     * 
+     *
      * @return channels
      */
     public String getChannels() {
@@ -242,7 +242,7 @@ public class SDPTrack {
 
     /**
      * Returns the codec / encoding for this track from the rtpmap attribute.
-     * 
+     *
      * @return encoding
      */
     public String getEncoding() {
@@ -264,7 +264,7 @@ public class SDPTrack {
 
     /**
      * Sets the rtpmap attribute.
-     * 
+     *
      * @param encoding
      * @param clockRate
      */
@@ -274,7 +274,7 @@ public class SDPTrack {
 
     /**
      * Sets the rtpmap attribute.
-     * 
+     *
      * @param encoding
      * @param clockRate
      * @param channels
@@ -295,7 +295,7 @@ public class SDPTrack {
 
     /**
      * Adds a fmtp attribute.
-     * 
+     *
      * @param key
      * @param value
      */
@@ -309,7 +309,7 @@ public class SDPTrack {
 
     /**
      * Returns the current parameters map.
-     * 
+     *
      * @return parameters
      */
     public Map<String, String> getParameters() {
@@ -341,7 +341,7 @@ public class SDPTrack {
 
     /**
      * Set interleaved value.
-     * 
+     *
      * @param interleavedVal
      */
     public void setInterleavedVal(String interleavedVal) {

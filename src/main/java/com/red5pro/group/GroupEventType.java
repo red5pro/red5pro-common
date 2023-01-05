@@ -2,7 +2,7 @@ package com.red5pro.group;
 
 /**
  * Identifier for events occurring within a group.
- * 
+ *
  * @author Paul Gregoire
  *
  */

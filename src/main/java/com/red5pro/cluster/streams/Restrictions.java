@@ -27,7 +27,7 @@ package com.red5pro.cluster.streams;
 
 /**
  * List of conditions for restricted access.
- * 
+ *
  * @author Andy Shaules
  */
 public class Restrictions {

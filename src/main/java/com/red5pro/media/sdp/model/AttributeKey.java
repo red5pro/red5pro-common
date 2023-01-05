@@ -2,7 +2,7 @@ package com.red5pro.media.sdp.model;
 
 /**
  * Session description attribute field keys and flags.
- * 
+ *
  * @author Paul Gregoire
  */
 public enum AttributeKey {

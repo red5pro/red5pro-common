@@ -8,7 +8,7 @@ package com.red5pro.media.sdp.model;
  * at regular times, an "r=" line (see below) should be used in addition to, and
  * following, a "t=" line -- in which case the "t=" line specifies the start and
  * stop times of the repeat sequence.
- * 
+ *
  * <pre>
       t=<start-time> <stop-time>
  * </pre>

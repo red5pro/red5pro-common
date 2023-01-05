@@ -28,7 +28,7 @@ import net.minidev.json.JSONObject;
 /**
  * Session description protocol factory which provides encoders, decoders, and
  * utility functions for working with SDP content.
- * 
+ *
  * @author Paul Gregoire
  */
 public final class SDPFactory {
@@ -55,7 +55,7 @@ public final class SDPFactory {
 
     /**
      * Creates an SDP decoder that handles one line at a time.
-     * 
+     *
      * @return SDPSingleLineDecoder
      */
     public static SDPSingleLineDecoder createSessionDescriptionDecoder() {
@@ -64,7 +64,7 @@ public final class SDPFactory {
 
     /**
      * Instance an empty SessionDescription.
-     * 
+     *
      * @return SessionDescription
      */
     public static SessionDescription createSessionDescription() {
@@ -73,7 +73,7 @@ public final class SDPFactory {
 
     /**
      * Instance an empty SessionDescription with a given User-Agent.
-     * 
+     *
      * @return SessionDescription
      */
     public static SessionDescription createSessionDescription(SDPUserAgent userAgent) {
@@ -82,7 +82,7 @@ public final class SDPFactory {
 
     /**
      * Instance an empty SessionDescription with a given User-Agent.
-     * 
+     *
      * @param userAgent
      * @param rawSdp
      * @return SessionDescription
@@ -98,7 +98,7 @@ public final class SDPFactory {
 
     /**
      * Instance a SessionDescription from raw SDP content.
-     * 
+     *
      * @param rawSdp
      * @return SessionDescription
      */
@@ -113,7 +113,7 @@ public final class SDPFactory {
 
     /**
      * Create a SessionDescription given provided information.
-     * 
+     *
      * @param userName
      * @param address
      * @return SessionDescription
@@ -134,7 +134,7 @@ public final class SDPFactory {
     /**
      * Create a SessionDescription given provided information. To exclude audio or
      * video media, pass -1 for the respective port.
-     * 
+     *
      * @param userName
      * @param address
      * @param audioPort
@@ -268,7 +268,7 @@ public final class SDPFactory {
 
     /**
      * Create offer sdp from ORTC sender capabilities parameters.
-     * 
+     *
      * @param senderCaps
      * @return sdp
      */
@@ -383,7 +383,7 @@ public final class SDPFactory {
 
     /**
      * Create ORTC receiver capabilities parameters from an answer sdp.
-     * 
+     *
      * @param sdp
      * @return receiver capabilities
      */
@@ -430,7 +430,7 @@ public final class SDPFactory {
 
     /**
      * Creates and returns an origin field given a raw session string from an sdp.
-     * 
+     *
      * @param origin
      * @return OriginField
      */
@@ -451,7 +451,7 @@ public final class SDPFactory {
 
     /**
      * Creates and returns a session field given a raw session string from an sdp.
-     * 
+     *
      * @param session
      * @return SessionField
      */
@@ -469,7 +469,7 @@ public final class SDPFactory {
     /**
      * Creates and returns a connection field given a raw bandwidth string from an
      * sdp.
-     * 
+     *
      * @param connection
      * @return ConnectionField
      */
@@ -486,7 +486,7 @@ public final class SDPFactory {
     /**
      * Creates and returns a bandwidth field given a raw bandwidth string from an
      * sdp.
-     * 
+     *
      * @param bandwidth
      * @return BandwidthField
      */
@@ -505,7 +505,7 @@ public final class SDPFactory {
     /**
      * Creates and returns a attribute field given a raw attribute string from an
      * sdp.
-     * 
+     *
      * @param attribute
      * @return AttributeField
      */
@@ -533,7 +533,7 @@ public final class SDPFactory {
 
     /**
      * Creates and returns a attribute field.
-     * 
+     *
      * @param key
      * @param value
      * @return AttributeField
@@ -544,7 +544,7 @@ public final class SDPFactory {
 
     /**
      * Creates and returns a attribute field.
-     * 
+     *
      * @param key
      * @param payloadId
      * @param value
@@ -556,7 +556,7 @@ public final class SDPFactory {
 
     /**
      * Creates and returns a attribute field.
-     * 
+     *
      * @param key
      * @param payloadId
      * @param encoding
@@ -569,7 +569,7 @@ public final class SDPFactory {
 
     /**
      * Creates and returns a attribute field.
-     * 
+     *
      * @param key
      * @param payloadId
      * @param encoding
@@ -583,7 +583,7 @@ public final class SDPFactory {
 
     /**
      * Creates and returns a media field given a raw media string from an sdp.
-     * 
+     *
      * @param media
      * @return MediaField
      */
@@ -648,7 +648,7 @@ public final class SDPFactory {
 
     /**
      * Creates and adds an SDP track with associated fields.
-     * 
+     *
      * @param sdp
      * @param type
      * @param port
@@ -670,7 +670,7 @@ public final class SDPFactory {
 
     /**
      * Parse raw sdp content into the supplied SessionDescription instance.
-     * 
+     *
      * @param sdp
      * @param rawSdp
      */

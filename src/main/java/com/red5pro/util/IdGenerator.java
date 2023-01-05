@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Id generator.
- * 
+ *
  * @author Paul Gregoire
  */
 public class IdGenerator {
@@ -48,7 +48,7 @@ public class IdGenerator {
 
     /**
      * Returns a cryptographically generated id of 128 bits.
-     * 
+     *
      * @return id
      */
     public static final long generateId() {
@@ -68,7 +68,7 @@ public class IdGenerator {
 
     /**
      * Returns a cryptographically generated id.
-     * 
+     *
      * @param bits
      *            maximum number of bits to use
      * @return id
@@ -94,7 +94,7 @@ public class IdGenerator {
 
     /**
      * Generates a random numeric string with a given length.
-     * 
+     *
      * @param length
      * @return String
      */
@@ -104,7 +104,7 @@ public class IdGenerator {
 
     /**
      * Generate a UUID with source bytes from UUID.randomUUID().
-     * 
+     *
      * @return hashed localized UUID
      */
     public static String generateSha256UUID() {
@@ -122,7 +122,7 @@ public class IdGenerator {
 
     /**
      * Generate a UUID with source bytes from a local MAC address and system time.
-     * 
+     *
      * @return hashed localized UUID
      */
     public static String generateLocalizedUUID() {

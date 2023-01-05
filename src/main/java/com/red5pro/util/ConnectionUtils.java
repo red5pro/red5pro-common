@@ -29,7 +29,7 @@ import org.red5.server.api.IConnection;
 
 /**
  * Utility methods to assist with various connection types.
- * 
+ *
  * @author Rajdeep Rath
  * @author Paul Gregoire
  */
@@ -81,7 +81,7 @@ public class ConnectionUtils {
     /**
      * Returns human readable string for a given instance implementing IConnection
      * type.
-     * 
+     *
      * @param connection
      *            instance of IConnection
      * @return connection type as a string in lower case
@@ -93,7 +93,7 @@ public class ConnectionUtils {
     /**
      * Returns human readable string for a given instance implementing IConnection
      * type.
-     * 
+     *
      * @param connection
      *            instance of IConnection
      * @return connection type enum
@@ -105,7 +105,7 @@ public class ConnectionUtils {
     /**
      * Returns boolean true if connection is a RTMPMinaConnection object, false
      * otherwise
-     * 
+     *
      * @param connection
      *            IConnection
      * @return true if RTMP and false otherwise
@@ -117,7 +117,7 @@ public class ConnectionUtils {
     /**
      * Returns boolean true if connection is a RTSPMinaConnection object, false
      * otherwise
-     * 
+     *
      * @param connection
      *            IConnection
      * @return true if RTSP and false otherwise
@@ -128,7 +128,7 @@ public class ConnectionUtils {
 
     /**
      * Returns boolean true if connection is a RTCConnection object, false otherwise
-     * 
+     *
      * @param connection
      *            IConnection
      * @return true if RTC and false otherwise
@@ -140,7 +140,7 @@ public class ConnectionUtils {
     /**
      * Returns boolean true if connection is a MPEGTSConnection object, false
      * otherwise
-     * 
+     *
      * @param connection
      *            IConnection
      * @return true if MPEGTS and false otherwise
