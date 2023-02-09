@@ -568,6 +568,8 @@ public class SessionDescription {
                         sb.append(' ');
                     }
                     sb.append("WMS *\n");
+                } else if ("-".equals(msid)) {
+                    sb.append("a=msid-semantic: WMS\n");
                 } else {
                     sb.append("a=msid-semantic:WMS ");
                     sb.append(msid);
