@@ -3,7 +3,6 @@ package com.red5pro.media.sdp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -81,9 +80,6 @@ public class SessionDescription {
     private int nextDynamicId = 96;
 
     public CryptographyParam srtpInfo;
-
-    // regular browsers and webrtc have the audio media description first, ahead of video
-    private boolean audioFirst = true;
 
     public SessionDescription() {
     }
@@ -544,15 +540,6 @@ public class SessionDescription {
 
     public boolean isRed5ProSDK() {
         return userAgent == SDPUserAgent.red5pro;
-    }
-
-    /**
-     * When generating our sdp, we need to know the media line ordering; if audio is first or not.
-     *
-     * @param audioFirst
-     */
-    public void setAudioMediaFirst(boolean audioFirst) {
-        this.audioFirst = audioFirst;
     }
 
     @Override

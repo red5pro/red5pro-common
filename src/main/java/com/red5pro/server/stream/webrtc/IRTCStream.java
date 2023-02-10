@@ -3,8 +3,10 @@ package com.red5pro.server.stream.webrtc;
 import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
+import org.ice4j.TransportAddress;
 import org.red5.server.api.scope.IScope;
 
+import com.red5pro.io.NIOStreamConnector;
 import com.red5pro.media.MuteState;
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.media.sdp.SessionDescription;
@@ -59,19 +61,11 @@ public interface IRTCStream {
     String getLocalSdp();
 
     /**
-     * Returns the local candidates.
-     *
-     * @return candidates
-     */
-    List<String> getLocalCandidates();
-
-    /**
      * Sets remote candidates.
      *
-     * @param mlineIndex
      * @param remoteCandidates
      */
-    void setRemoteCandidates(int mlineIndex, String remoteCandidates);
+    void setRemoteCandidates(List<String> remoteCandidates);
 
     /**
      * Sets remote ICE and DTLS properties. DTLS properties will arrive in the
@@ -190,5 +184,15 @@ public interface IRTCStream {
      * Un-mute video.
      */
     void unmuteVideo();
+
+    void setStreamConnector(NIOStreamConnector streamConnector, TransportAddress remoteAddress);
+
+    int getAllocatedUdpPort();
+
+    void setAllocatedUdpPort(int port);
+
+    int getAllocatedTcpPort();
+
+    void setAllocatedTcpPort(int port);
 
 }
