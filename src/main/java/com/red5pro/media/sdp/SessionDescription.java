@@ -3,10 +3,12 @@ package com.red5pro.media.sdp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.red5pro.media.sdp.model.AttributeField;
@@ -79,6 +81,9 @@ public class SessionDescription {
     private int nextDynamicId = 96;
 
     public CryptographyParam srtpInfo;
+
+    // regular browsers and webrtc have the audio media description first, ahead of video
+    private boolean audioFirst = true;
 
     public SessionDescription() {
     }
@@ -541,6 +546,15 @@ public class SessionDescription {
         return userAgent == SDPUserAgent.red5pro;
     }
 
+    /**
+     * When generating our sdp, we need to know the media line ordering; if audio is first or not.
+     *
+     * @param audioFirst
+     */
+    public void setAudioMediaFirst(boolean audioFirst) {
+        this.audioFirst = audioFirst;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(version);
@@ -577,18 +591,23 @@ public class SessionDescription {
                 }
             }
         }
+        // create a list ordered by mid if it uses digits
+        final TreeSet<MediaField> ordered = new TreeSet<>();
+        for (MediaField media : mediaDescriptions) {
+            // if its video and the format is 0 skip it
+            if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
+                continue;
+            }
+            ordered.add(media);
+        }
         // bundle is a group attribute, but we don't store it in the attr collection
         if (bundle) {
             if (mediaDescriptions != null) {
                 sb.append("a=group:BUNDLE ");
-                for (MediaField media : mediaDescriptions) {
-                    // if its video and the format is 0 skip it
-                    if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
-                        continue;
-                    }
+                ordered.forEach(media -> {
                     sb.append(media.getMediaId());
                     sb.append(' ');
-                }
+                });
                 // trim-off trailing space
                 sb.deleteCharAt(sb.lastIndexOf(" "));
                 sb.append('\n');
@@ -607,18 +626,12 @@ public class SessionDescription {
         if (bandwidth != null) {
             sb.append(bandwidth);
         }
-        if (mediaDescriptions != null) {
-            for (MediaField media : mediaDescriptions) {
-                // if its video and the format is 0 skip it
-                if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
-                    continue;
-                }
-                sb.append(media);
-            }
-        }
+        ordered.forEach(media -> {
+            sb.append(media);
+        });
         // finalize the sdp content
         String sdp = sb.toString();
-        // if the UA is red5pro sdk, swap lf for crlf (XXX not sure if this is required
+        // if the UA is red5pro sdk, swap lf for crlf (XXX not sure if this is required)
         // by our mobile sdk or not, doing for safety)
         if (userAgent.equals(SDPUserAgent.red5pro)) {
             return sdp.replaceAll("\n", "\r\n");

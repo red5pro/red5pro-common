@@ -6,6 +6,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.red5pro.media.rtp.RTPCodecEnum;
 
 /**
@@ -22,7 +24,7 @@ import com.red5pro.media.rtp.RTPCodecEnum;
  *
  * @author Paul Gregoire
  */
-public class MediaField {
+public class MediaField implements Comparable<MediaField> {
 
     // Java regex tester https://www.regexplanet.com/advanced/java/index.html
     public final static Pattern PATTERN = Pattern.compile("([\\w]{4,11}) ([0-9]{1,5}) ([\\w|\\/]*)(((\\s[0-9]{1,4})+)|(\\swebrtc-datachannel))");
@@ -34,9 +36,6 @@ public class MediaField {
     public final static String PROTOCOL_TCP = "TCP/TLS/RTP/SAVPF";
 
     public final static String PROTOCOL_AVP = "RTP/AVP";
-
-    // public final static String PROTOCOL_AVP_R5SDK_TCP = "RTP/AVP/TCP"; //
-    // non-standard ordering
 
     public final static String PROTOCOL_SCTP = "DTLS/SCTP";
 
@@ -317,11 +316,21 @@ public class MediaField {
         return mediaId;
     }
 
+    /**
+     * Sets the media identifier or mid.
+     *
+     * @param mediaId
+     */
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((mediaType == null) ? 0 : mediaType.hashCode());
+        result = prime * result + ((mediaId == null) ? 0 : mediaId.hashCode());
         result = prime * result + port;
         return result;
     }
@@ -336,6 +345,8 @@ public class MediaField {
             return false;
         MediaField other = (MediaField) obj;
         if (mediaType != other.mediaType)
+            return false;
+        if (mediaId != other.mediaId)
             return false;
         if (port != other.port)
             return false;
@@ -396,6 +407,21 @@ public class MediaField {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(MediaField that) {
+        int thisIndex = StringUtils.isNumeric(getMediaId()) ? Integer.valueOf(getMediaId()) : -1;
+        if (thisIndex == -1) {
+            return getMediaType().compareTo(that.getMediaType());
+        } else {
+            int thatIndex = StringUtils.isNumeric(that.getMediaId()) ? Integer.valueOf(that.getMediaId()) : -1;
+            if (thatIndex == -1) {
+                return getMediaType().compareTo(that.getMediaType());
+            } else {
+                return Integer.compare(thisIndex, thatIndex);
+            }
+        }
     }
 
 }
