@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
 import org.ice4j.TransportAddress;
+import org.ice4j.ice.Agent;
 import org.red5.server.api.scope.IScope;
 
 import com.red5pro.io.NIOStreamConnector;
@@ -185,14 +186,47 @@ public interface IRTCStream {
      */
     void unmuteVideo();
 
+    /**
+     * Returns the Agent if it exists.
+     *
+     * @return agent
+     */
+    Agent getAgent();
+
+    /**
+     * Sets the stream connector for the stream with a given remote address.
+     *
+     * @param streamConnector
+     * @param remoteAddress
+     */
     void setStreamConnector(NIOStreamConnector streamConnector, TransportAddress remoteAddress);
 
+    /**
+     * Returns the allocated UDP port for the stream.
+     *
+     * @return port
+     */
     int getAllocatedUdpPort();
 
+    /**
+     * Sets the allocated UDP port for the stream. If the port is 0, the port is cleared.
+     *
+     * @param port
+     */
     void setAllocatedUdpPort(int port);
 
+    /**
+     * Returns the allocated TCP port for the stream.
+     *
+     * @return port
+     */
     int getAllocatedTcpPort();
 
+    /**
+     * Sets the allocated TCP port for the stream. If the port is 0, the port is cleared.
+     *
+     * @param port
+     */
     void setAllocatedTcpPort(int port);
 
 }
