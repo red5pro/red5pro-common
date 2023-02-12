@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     <name>red5pro-common</name>
     <!-- major, minor, release, build -->    
-    <version>10.9.0.7</version>
+    <version>10.9.0.8</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -62,7 +62,7 @@
         <json.version>[2.4.1,)</json.version>
         <bc.version>1.62</bc.version>
         <junit.version>[4.13.1,)</junit.version>
-        <ice4j.version>[3.2.77,)</ice4j.version>
+        <ice4j.version>[3.2.80,)</ice4j.version>
         <slf4j.version>1.7.36</slf4j.version>
         <logback.version>1.2.11</logback.version>
     </properties>

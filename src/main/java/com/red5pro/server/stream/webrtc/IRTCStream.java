@@ -69,15 +69,6 @@ public interface IRTCStream {
     void setRemoteCandidates(List<String> remoteCandidates);
 
     /**
-     * Sets remote ICE and DTLS properties. DTLS properties will arrive in the
-     * "offer" or "answer" depending upon our direction; the streaming cannot start
-     * until we have these.
-     *
-     * @param sdp
-     */
-    void setRemoteProperties(SessionDescription sdp);
-
-    /**
      * Initialize the streams and all the configuration steps.
      *
      * @param userAgent
