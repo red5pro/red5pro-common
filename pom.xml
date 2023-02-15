@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     <name>red5pro-common</name>
     <!-- major, minor, release, build -->    
-    <version>10.9.0.8</version>
+    <version>10.9.0.11</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -38,7 +38,7 @@
         </developer>
         <developer>
             <id>Paul Gregoire</id>
-            <email>paul@infrared5.com</email>
+            <email>paul@red5pro.com</email>
         </developer>
         <developer>
             <id>Andy Shaules</id>

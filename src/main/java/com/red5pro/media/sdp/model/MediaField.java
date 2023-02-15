@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,9 @@ public class MediaField implements Comparable<MediaField> {
 
     // Java regex tester https://www.regexplanet.com/advanced/java/index.html
     public final static Pattern PATTERN = Pattern.compile("([\\w]{4,11}) ([0-9]{1,5}) ([\\w|\\/]*)(((\\s[0-9]{1,4})+)|(\\swebrtc-datachannel))");
+
+    // get first number at the start of a string
+    public final static Pattern PATTERN_GET_FIRST_NUMBER = Pattern.compile("^(\\d+)");
 
     public final static String PROTOCOL_ANY = "RTP/SAVPF";
 
@@ -162,6 +166,24 @@ public class MediaField implements Comparable<MediaField> {
     }
 
     /**
+     * Lookup attribute by a given key containing a given string.
+     *
+     * @param key
+     * @param withString
+     * @return attribute if found and null otherwise
+     */
+    public AttributeField getAttribute(AttributeKey key, String withString) {
+        if (attributes != null && attributes.length > 0) {
+            for (AttributeField attr : attributes) {
+                if (attr != null && attr.getAttribute().equals(key) && attr.getValue().indexOf(withString) > -1) {
+                    return attr;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Lookup attribute by a given key and with a matching codec encoding from a set
      * of codecs.
      *
@@ -188,6 +210,45 @@ public class MediaField implements Comparable<MediaField> {
             }
         }
         return null;
+    }
+
+    /**
+    * Returns an attributes payload id (the first number in the value).
+    *
+    * @param attr
+    * @return number if found and -1 otherwise
+    */
+    public int getAttributePayloadType(AttributeField attr) {
+        int ret = -1;
+        if (attr != null) {
+            Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
+            if (matcher.find()) {
+                ret = Integer.valueOf(matcher.group());
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Returns an attributes payload id (the first number in the value).
+     *
+     * @param key
+     * @return number if found and -1 otherwise
+     */
+    public int getAttributePayloadType(AttributeKey key) {
+        int ret = -1;
+        if (attributes != null && attributes.length > 0) {
+            for (AttributeField attr : attributes) {
+                if (attr != null && attr.getAttribute().equals(key)) {
+                    Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
+                    if (matcher.find()) {
+                        ret = Integer.valueOf(matcher.group());
+                        break;
+                    }
+                }
+            }
+        }
+        return ret;
     }
 
     public List<AttributeField> getAttributeSelections(AttributeKey key, EnumSet<RTPCodecEnum> codecs) {
