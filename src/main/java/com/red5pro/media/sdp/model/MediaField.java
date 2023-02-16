@@ -213,12 +213,12 @@ public class MediaField implements Comparable<MediaField> {
     }
 
     /**
-    * Returns an attributes payload id (the first number in the value).
-    *
-    * @param attr
-    * @return number if found and -1 otherwise
-    */
-    public int getAttributePayloadType(AttributeField attr) {
+     * Returns an attributes first integer in the value.
+     *
+     * @param attr
+     * @return number if found and -1 otherwise
+     */
+    public int getAttributeInt(AttributeField attr) {
         int ret = -1;
         if (attr != null) {
             Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
@@ -230,12 +230,12 @@ public class MediaField implements Comparable<MediaField> {
     }
 
     /**
-     * Returns an attributes payload id (the first number in the value).
+     * Returns an attributes first integer in the value.
      *
      * @param key
      * @return number if found and -1 otherwise
      */
-    public int getAttributePayloadType(AttributeKey key) {
+    public int getAttributeInt(AttributeKey key) {
         int ret = -1;
         if (attributes != null && attributes.length > 0) {
             for (AttributeField attr : attributes) {
@@ -243,6 +243,45 @@ public class MediaField implements Comparable<MediaField> {
                     Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
                     if (matcher.find()) {
                         ret = Integer.valueOf(matcher.group());
+                        break;
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Returns an attributes first long in the value.
+     *
+     * @param attr
+     * @return number if found and -1 otherwise
+     */
+    public long getAttributeLong(AttributeField attr) {
+        long ret = -1;
+        if (attr != null) {
+            Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
+            if (matcher.find()) {
+                ret = Long.valueOf(matcher.group());
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Returns an attributes first long in the value.
+     *
+     * @param key
+     * @return number if found and -1 otherwise
+     */
+    public long getAttributeLong(AttributeKey key) {
+        long ret = -1;
+        if (attributes != null && attributes.length > 0) {
+            for (AttributeField attr : attributes) {
+                if (attr != null && attr.getAttribute().equals(key)) {
+                    Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
+                    if (matcher.find()) {
+                        ret = Long.valueOf(matcher.group());
                         break;
                     }
                 }
