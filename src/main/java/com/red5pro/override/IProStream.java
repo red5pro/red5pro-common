@@ -149,13 +149,13 @@ public interface IProStream extends IStream, IClientStream, IBroadcastStream, IC
      * @param specialContext
      */
     void setSpecialContext(IStreamListener specialContext);
-    
+
     /**
      * Gets end user processor or null if one doesnt exist.
      * @return end user processor.
      */
     IStreamListener getSpecialContext();
-    
+
     /**
      * Sets the output parameters for the processor.
      *
