@@ -86,4 +86,10 @@ public interface IWebRTCConnection extends IoSessionAware {
      */
     void applyQoS(int qos);
 
+    String getLocalSDP();
+
+    void setLocalSDP(String sdp);
+
+    String getUserAgent();
+
 }

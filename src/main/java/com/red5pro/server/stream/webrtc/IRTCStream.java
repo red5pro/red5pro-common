@@ -201,4 +201,6 @@ public interface IRTCStream {
      */
     IDataMediaStream getDataMediaStream(String label);
 
+    void setLocalSDP(String sdp);
+
 }
