@@ -225,6 +225,14 @@ public class NetworkManager {
     }
 
     /**
+     * Resets the network IP addresses.
+     */
+    public static void resetIPAddresses() {
+        serverIp.set(NO_IP_ADDRESS);
+        serverLocalIp.set(NO_IP_ADDRESS);
+    }
+
+    /**
      * Returns a publicly accessible IP address for this originator using a free
      * service on Amazon AWS.
      *
