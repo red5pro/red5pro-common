@@ -299,8 +299,10 @@ public class MediaField implements Comparable<MediaField> {
                     if (attr != null && attr.getAttribute().equals(key) && !attr.isBinary()) {
                         String[] vals = attr.getValue().split("[\\s|/]");
                         if (vals.length >= 2) {
-                            String codecName = vals[1];
-                            if (codecName.equals(codec.encodingName)) {
+                            // ensure its trimmed
+                            String codecName = vals[1].trim();
+                            // allow any casing
+                            if (codec.encodingName.equalsIgnoreCase(codecName)) {
                                 ret.add(attr);
                             }
                         }
