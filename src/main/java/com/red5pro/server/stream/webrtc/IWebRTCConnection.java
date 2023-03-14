@@ -86,10 +86,33 @@ public interface IWebRTCConnection extends IoSessionAware {
      */
     void applyQoS(int qos);
 
+    /**
+     * REturns the local SDP.
+     *
+     * @return local SDP
+     */
     String getLocalSDP();
 
+    /**
+     * Sets the local SDP.
+     *
+     * @param sdp
+     */
     void setLocalSDP(String sdp);
 
+    /**
+     * Returns the user agent.
+     *
+     * @return user agent
+     */
     String getUserAgent();
+
+    /**
+     * Processes a request to send an REMB message.
+     *
+     * @param ssrc
+     * @param bitrate
+     */
+    void sendRemb(int ssrc, int bitrate);
 
 }
