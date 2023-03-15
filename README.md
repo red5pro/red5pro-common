@@ -12,7 +12,8 @@ Classes to support networking are as follows:
 * PortManager - maintains a given port range and supplies available ports to callers
 
 The NetworkManager uses topology modes to determine the logic to utilize when locating IP addresses. Topology modes currently consist of
-* DEFAULT - uses the checkip service from Amazon for the public IP and Google dns for the local IP 
+
+* DEFAULT - uses the checkip service from Amazon for the public IP and Google dns for the local IP
 * PROPERTIES - uses environment property of `PUBLIC_IP` first, system property of `public.ip`, and the `network.properties` file the public IP. For local IP the environment property is `LOCAL_IP`, system property is `local.ip`, and the same goes for the file.
 * AWS - uses the instance local calls for meta-data
 
@@ -24,7 +25,7 @@ Including in your maven pom is as easy as adding this xml to your dependencies
 <dependency>
     <groupId>com.red5pro</groupId>
     <artifactId>red5pro-common</artifactId>
-    <version>9.2.14</version>
+    <version>10.10.2</version>
     <scope>provided</scope>
 </dependency>
 ```
@@ -79,6 +80,7 @@ For *public* access to the artifacts, you'll need to modify your Maven `.m2/sett
   </activeProfiles>
 </settings>
 ```
+
 The `.m2` directory is located within your home directory, unless otherwise configured.
 
 [Directory Listing](https://red5pro.jfrog.io/ui/native/ext-release-local/com/red5pro/red5pro-common)
@@ -87,9 +89,9 @@ The `.m2` directory is located within your home directory, unless otherwise conf
 
 A simple example of using common in your projects is available [here](https://github.com/red5pro/red5pro-server-examples/tree/develop/common-demo).
 
-#### Deploy to Artifactory
+### Deploy to Artifactory
 
-**For Internal Use Only**
+_For Internal Use Only_
 
 `mvn clean deploy`
 
