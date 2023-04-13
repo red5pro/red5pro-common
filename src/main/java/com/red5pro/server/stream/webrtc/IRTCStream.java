@@ -220,4 +220,11 @@ public interface IRTCStream {
      */
     void setAllocatedTcpPort(int port);
 
+    /**
+     * Whether or not the connection for this instance originates from a remote network.
+     *
+     * @return true if remote and false if on the same machine or network.
+     */
+    boolean isRemoteEndpoint();
+
 }
