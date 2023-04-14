@@ -513,16 +513,13 @@ public class MediaField implements Comparable<MediaField> {
 
     @Override
     public int compareTo(MediaField that) {
-        int thisIndex = StringUtils.isNumeric(getMediaId()) ? Integer.valueOf(getMediaId()) : -1;
-        if (thisIndex == -1) {
-            return getMediaType().compareTo(that.getMediaType());
+        int thisIndex = StringUtils.isNumeric(mediaId) ? Integer.valueOf(mediaId) : -1;
+        int thatIndex = StringUtils.isNumeric(that.getMediaId()) ? Integer.valueOf(that.getMediaId()) : -1;
+        if (thisIndex != -1 && thatIndex != -1) {
+            return Integer.compare(thisIndex, thatIndex);
         } else {
-            int thatIndex = StringUtils.isNumeric(that.getMediaId()) ? Integer.valueOf(that.getMediaId()) : -1;
-            if (thatIndex == -1) {
-                return getMediaType().compareTo(that.getMediaType());
-            } else {
-                return Integer.compare(thisIndex, thatIndex);
-            }
+            // both are non-numeric
+            return mediaId.compareTo(that.getMediaId());
         }
     }
 

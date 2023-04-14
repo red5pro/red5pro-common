@@ -579,7 +579,7 @@ public class SessionDescription {
             }
         }
         // create a list ordered by mid if it uses digits
-        final TreeSet<MediaField> ordered = new TreeSet<>();
+        final List<MediaField> ordered = new ArrayList<>(3);
         for (MediaField media : mediaDescriptions) {
             // if its video and the format is 0 skip it
             if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
@@ -587,6 +587,8 @@ public class SessionDescription {
             }
             ordered.add(media);
         }
+        // sort by mid
+        Collections.sort(ordered);
         // bundle is a group attribute, but we don't store it in the attr collection
         if (bundle) {
             if (mediaDescriptions != null) {
