@@ -28,10 +28,11 @@ package com.red5pro.server.stream.webrtc;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.scope.IScope;
 
+import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.server.ConnectionAttributeKey;
 import com.red5pro.server.SignalingChannel;
-import com.red5pro.server.stream.webrtc.IRTCStreamSession;
-import com.red5pro.server.stream.webrtc.ISessionSourceTable;
+
+import net.minidev.json.JSONObject;
 
 /**
  * Interface for connections that are WebRTC capable; meaning those that can interact with
@@ -49,6 +50,8 @@ public interface IRTCCapableConnection extends IConnection {
      * @param close perform close immediately if true and later if false
      */
     void close(String closeMessage, boolean close);
+
+    IScope getScope();
 
     IRTCStreamSession getSession();
 
@@ -87,6 +90,18 @@ public interface IRTCCapableConnection extends IConnection {
     void setAttribute(ConnectionAttributeKey key, Object value);
 
     /**
+     * Returns an attribute from the connection as a string.
+     *
+     * @param key
+     * @return attribute value
+     */
+    String getStringAttribute(ConnectionAttributeKey key);
+
+    boolean isRecord();
+
+    void mute(JSONObject jsonObject);
+
+    /**
      * Update the last time at which a packet was received.
      *
      * @param packetTimeMs
@@ -102,7 +117,19 @@ public interface IRTCCapableConnection extends IConnection {
 
     int getId();
 
-    IScope getScope();
+    /**
+     * Returns the user-agent string.
+     *
+     * @return userAgent
+     */
+    String getUserAgent();
+
+    /**
+     * Returns the user-agent enum.
+     *
+     * @return userAgentEnum
+     */
+    SDPUserAgent getUserAgentEnum();
 
     /**
      * Returns the user-agents version string.
