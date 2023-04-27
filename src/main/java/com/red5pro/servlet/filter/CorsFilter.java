@@ -29,6 +29,7 @@ public class CorsFilter implements Filter {
      * The parameter names for <init-param> parameter names.
      */
     private static enum ParameterNames {
+        exposeAllHeaders, // expose all headers
         allowedOrigins, // allowed origins
         allowedMethods, // allowed methods
         allowedHeaders, // allowed headers
@@ -44,7 +45,10 @@ public class CorsFilter implements Filter {
     private String allowedMethods = "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS";
 
     // default to all headers
-    private String allowedHeaders = "Authorization, Accept, Access-Control-Request-Method, Access-Control-Request-Headers, Content-Type, Link, Origin, X-Requested-With";
+    private String allowedHeaders = "Authorization, Accept, Access-Control-Request-Method, Access-Control-Request-Headers, Content-Type, Link, Location, Origin, X-Requested-With";
+
+    // expose all headers
+    private boolean exposeAllHeaders = true;
 
     // default to 3600 seconds
     private String maxAge = "3600";
@@ -92,8 +96,15 @@ public class CorsFilter implements Filter {
             return;
         }
         response.setHeader("Access-Control-Allow-Methods", allowedMethods);
-        // enforce header checks?
-        response.setHeader("Access-Control-Allow-Headers", allowedHeaders);
+        // expose headers (via config)
+        if (exposeAllHeaders) {
+            response.setHeader("Access-Control-Expose-Headers", "*");
+        } else {
+            // enforce header checks
+            if (request.getHeaders("Access-Control-Request-Headers") != null) {
+                response.setHeader("Access-Control-Allow-Headers", allowedHeaders);
+            }
+        }
         response.setHeader("Access-Control-Max-Age", maxAge);
         // hand off to the next filter if we've made it this far
         chain.doFilter(req, res);
@@ -106,6 +117,9 @@ public class CorsFilter implements Filter {
             log.debug("param: {}", paramName);
             ParameterNames param = ParameterNames.valueOf(paramName);
             switch (param) {
+                case exposeAllHeaders:
+                    exposeAllHeaders = Boolean.valueOf(filterConfig.getInitParameter(paramName));
+                    break;
                 case allowedOrigins:
                     allowedOrigins = filterConfig.getInitParameter(paramName);
                     isAllowCredentials = true;
