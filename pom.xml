@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     <name>red5pro-common</name>
     <!-- major, minor, release, build -->    
-    <version>10.9.5.0</version>
+    <version>10.9.6.0</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -44,6 +44,10 @@
             <id>Andy Shaules</id>
             <email>ashaules@infrared5.com</email>
         </developer>
+        <developer>
+            <id>Nate Roe</id>
+            <email>nate@red5pro.com</email>
+        </developer>
     </developers>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -53,7 +57,8 @@
         <java.release.level>11</java.release.level>
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
-        <red5.version>1.3.16</red5.version>
+        <red5.version>1.3.17</red5.version>
+        <tomcat.version>8.5.87</tomcat.version>
         <mina.version>2.0.23</mina.version>
         <spring.version>5.3.23</spring.version>
         <commons-text.version>[1.9,)</commons-text.version>
@@ -119,6 +124,18 @@
             <groupId>org.red5</groupId>
             <artifactId>red5-server-common</artifactId>
             <version>${red5.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>${tomcat.version}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
