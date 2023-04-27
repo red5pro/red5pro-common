@@ -7,6 +7,23 @@
         <param-name>webAppRootKey</param-name>
         <param-value>/live</param-value>
     </context-param>
+    <!-- CORS filter with wideopen origin by default -->
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>com.red5pro.servlet.filter.CorsFilter</filter-class>
+        <init-param>
+            <param-name>allowedOrigins</param-name>
+            <param-value>*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowedMethods</param-name>
+            <param-value>OPTIONS, HEAD, GET, POST, PUT, PATCH, DELETE</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <!-- WebSocket filter -->
     <filter>
         <filter-name>WebSocketFilter</filter-name>
@@ -17,31 +34,5 @@
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>
-    <!-- CorsFilter -->
-    <filter>
-        <filter-name>CorsFilter</filter-name>
-        <filter-class>com.red5pro.servlet.filter.CorsFilter</filter-class>
-        <init-param>
-            <param-name>allowedOrigins</param-name>
-            <param-value>https://allowedhost.red5pro.net</param-value>
-        </init-param>
-        <init-param>
-            <param-name>allowedMethods</param-name>
-            <param-value>OPTIONS, HEAD, GET, POST, PUT, PATCH, DELETE</param-value>
-        </init-param>
-        <init-param>
-            <param-name>allowedHeaders</param-name>
-            <param-value>Authorization, Accept, Access-Control-Request-Method,
-                Access-Control-Request-Headers, Content-Type, Link, Origin, X-Requested-With</param-value>
-        </init-param>
-        <init-param>
-            <param-name>maxAge</param-name>
-            <param-value>3600</param-value>
-        </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>CorsFilter</filter-name>
-        <url-pattern>/*</url-pattern>
     </filter-mapping>
 </web-app>
