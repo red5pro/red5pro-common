@@ -25,6 +25,8 @@ public class CorsFilter implements Filter {
 
     private static Logger log = LoggerFactory.getLogger(CorsFilter.class);
 
+    private static boolean isDebug = log.isDebugEnabled();
+
     /**
      * The parameter names for <init-param> parameter names.
      */
@@ -55,27 +57,40 @@ public class CorsFilter implements Filter {
 
     boolean isAllowCredentials = false;
 
+    /*
+    https://fetch.spec.whatwg.org/#http-cors-protocol
+
+        Access-Control-Request-Method    = method
+        Access-Control-Request-Headers   = 1#field-name
+
+        wildcard                         = "*"
+        Access-Control-Allow-Origin      = origin-or-null / wildcard
+        Access-Control-Allow-Credentials = %s"true" ; case-sensitive
+        Access-Control-Expose-Headers    = #field-name
+        Access-Control-Max-Age           = delta-seconds
+        Access-Control-Allow-Methods     = #method
+        Access-Control-Allow-Headers     = #field-name
+
+        For `Access-Control-Expose-Headers`, `Access-Control-Allow-Methods`, and `Access-Control-Allow-Headers`
+        response headers, the value `*` counts as a wildcard for requests without credentials. For such requests there
+        is no way to solely match a header name or method that is `*`.
+    */
+
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) res;
+        if (isDebug) {
+            log.debug("Method in-filter: {}", request.getMethod());
+            debugDump(request, response);
+        }
         // For security you reply to allow the origin that they specify.
         // Here we enumerate the headers to collect the origin header if any
-        String origin = null;
-        if (log.isTraceEnabled()) {
-            Enumeration<String> headerNames = request.getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                String header = headerNames.nextElement();
-                log.trace("header: {} -- {}", header, request.getHeader(header));
-                if (header.equalsIgnoreCase(ORIGIN_KEY)) {
-                    origin = request.getHeader(header);
-                }
-            }
-        }
-        HttpServletResponse response = (HttpServletResponse) res;
+        String origin = request.getHeader(ORIGIN_KEY);
         // It they have configured to allow credentials (which makes "*" invalid),
         // then configure the allowed origin based on the origin header and the configuration.
         if (isAllowCredentials && origin != null) {
-            if (allowedOrigins.contains(origin)) {
+            if ("*".equals(allowedOrigins) || allowedOrigins.contains(origin)) {
                 response.setHeader("Access-Control-Allow-Origin", origin);
                 response.setHeader("Access-Control-Allow-Credentials", "true");
             } else {
@@ -99,11 +114,10 @@ public class CorsFilter implements Filter {
         // expose headers (via config)
         if (exposeAllHeaders) {
             response.setHeader("Access-Control-Expose-Headers", "*");
-        } else {
-            // enforce header checks
-            if (request.getHeaders("Access-Control-Request-Headers") != null) {
-                response.setHeader("Access-Control-Allow-Headers", allowedHeaders);
-            }
+        }
+        // enforce header checks
+        if (request.getHeaders("Access-Control-Request-Headers") != null) {
+            response.setHeader("Access-Control-Allow-Headers", allowedHeaders);
         }
         response.setHeader("Access-Control-Max-Age", maxAge);
         // hand off to the next filter if we've made it this far
@@ -139,6 +153,27 @@ public class CorsFilter implements Filter {
 
     @Override
     public void destroy() {
+    }
+
+    /**
+     * Debugging info for request/response.
+     *
+     * @param request
+     * @param response
+     */
+    protected void debugDump(HttpServletRequest request, HttpServletResponse response) {
+        if (isDebug) {
+            // dump the headers
+            request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
+                log.debug("Header {}: {}", headerName, request.getHeader(headerName));
+            });
+            request.getParameterNames().asIterator().forEachRemaining(paramName -> {
+                log.debug("Parameter {}: {}", paramName, request.getParameter(paramName));
+            });
+            request.getAttributeNames().asIterator().forEachRemaining(attrName -> {
+                log.debug("Attribute {}: {}", attrName, request.getAttribute(attrName));
+            });
+        }
     }
 
 }
