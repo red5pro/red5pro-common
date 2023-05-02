@@ -38,6 +38,25 @@ public class CorsFilter implements Filter {
         maxAge; // max age for the request
     }
 
+    private static enum CorsResponseHeaderNames {
+        allowOrigin("Access-Control-Allow-Origin"), allowCredentials("Access-Control-Allow-Credentials"), allowMethods("Access-Control-Allow-Methods"), allowHeaders("Access-Control-Allow-Headers"), exposeHeaders("Access-Control-Expose-Headers"), maxAge("Access-Control-Max-Age");
+
+        private String headerName;
+
+        private CorsResponseHeaderNames(String headerName) {
+            this.headerName = headerName;
+        }
+
+        public String getHeaderName() {
+            return headerName;
+        }
+
+        public String getHeaderNameLC() {
+            return headerName.toLowerCase();
+        }
+
+    }
+
     private static final String ORIGIN_KEY = "origin";
 
     // default to any / all origins
@@ -47,7 +66,8 @@ public class CorsFilter implements Filter {
     private String allowedMethods = "HEAD, GET, POST, PUT, PATCH, DELETE, OPTIONS";
 
     // default to all headers
-    private String allowedHeaders = "Authorization, Accept, Access-Control-Request-Method, Access-Control-Request-Headers, Content-Type, Link, Location, Origin, X-Requested-With";
+    // XXX(paul) removed Access-Control-Request-Method, Access-Control-Request-Headers, as they are from the requesting browser
+    private String allowedHeaders = "Authorization, Accept, Content-Type, Link, Location, Origin, X-Requested-With";
 
     // expose all headers
     private boolean exposeAllHeaders = true;
@@ -56,6 +76,9 @@ public class CorsFilter implements Filter {
     private String maxAge = "3600";
 
     boolean isAllowCredentials = false;
+
+    // whether to use lowercase headers or not; determined by what arrives in the request
+    private boolean useLowerCaseHeaders = false;
 
     /*
     https://fetch.spec.whatwg.org/#http-cors-protocol
@@ -87,12 +110,21 @@ public class CorsFilter implements Filter {
         // For security you reply to allow the origin that they specify.
         // Here we enumerate the headers to collect the origin header if any
         String origin = request.getHeader(ORIGIN_KEY);
+        // determine case by origin header; if lowercase, response headers will be lowercase
+        if (origin != null) {
+            useLowerCaseHeaders = true;
+        } else {
+            origin = request.getHeader("Origin");
+        }
+        if (isDebug) {
+            log.debug("Origin: {}", origin);
+        }
         // It they have configured to allow credentials (which makes "*" invalid),
         // then configure the allowed origin based on the origin header and the configuration.
         if (isAllowCredentials && origin != null) {
             if ("*".equals(allowedOrigins) || allowedOrigins.contains(origin)) {
-                response.setHeader("Access-Control-Allow-Origin", origin);
-                response.setHeader("Access-Control-Allow-Credentials", "true");
+                response.setHeader((useLowerCaseHeaders ? CorsResponseHeaderNames.allowOrigin.getHeaderNameLC() : CorsResponseHeaderNames.allowOrigin.getHeaderName()), origin);
+                response.setHeader((useLowerCaseHeaders ? CorsResponseHeaderNames.allowCredentials.getHeaderNameLC() : CorsResponseHeaderNames.allowCredentials.getHeaderName()), "true");
             } else {
                 // the header doesn't match any configured origin: no header (which should cause CORS to fail)
                 log.debug("Origin {} not among allowedOrigins: {}", origin, allowedOrigins);
@@ -100,7 +132,7 @@ public class CorsFilter implements Filter {
                 return;
             }
         } else {
-            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader((useLowerCaseHeaders ? CorsResponseHeaderNames.allowOrigin.getHeaderNameLC() : CorsResponseHeaderNames.allowOrigin.getHeaderName()), "*");
         }
         // check methods
         if (allowedMethods.contains(request.getMethod())) {
@@ -110,16 +142,19 @@ public class CorsFilter implements Filter {
             response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED); // 405
             return;
         }
-        response.setHeader("Access-Control-Allow-Methods", allowedMethods);
+        // allowed methods
+        response.setHeader((useLowerCaseHeaders ? CorsResponseHeaderNames.allowMethods.getHeaderNameLC() : CorsResponseHeaderNames.allowMethods.getHeaderName()), allowedMethods);
         // expose headers (via config)
         if (exposeAllHeaders) {
-            response.setHeader("Access-Control-Expose-Headers", "*");
+            // authorization is a special case
+            response.setHeader((useLowerCaseHeaders ? CorsResponseHeaderNames.exposeHeaders.getHeaderNameLC() : CorsResponseHeaderNames.exposeHeaders.getHeaderName()), "*, Authorization");
         }
         // enforce header checks
-        if (request.getHeaders("Access-Control-Request-Headers") != null) {
-            response.setHeader("Access-Control-Allow-Headers", allowedHeaders);
+        if (request.getHeaders("access-control-request-headers") != null || request.getHeaders("Access-Control-Request-Headers") != null) {
+            response.setHeader((useLowerCaseHeaders ? CorsResponseHeaderNames.allowHeaders.getHeaderNameLC() : CorsResponseHeaderNames.allowHeaders.getHeaderName()), allowedHeaders);
         }
-        response.setHeader("Access-Control-Max-Age", maxAge);
+        // max age
+        response.setHeader((useLowerCaseHeaders ? CorsResponseHeaderNames.maxAge.getHeaderNameLC() : CorsResponseHeaderNames.maxAge.getHeaderName()), maxAge);
         // hand off to the next filter if we've made it this far
         chain.doFilter(req, res);
     }
