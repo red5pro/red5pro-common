@@ -33,6 +33,9 @@ import java.util.Map;
 
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.stream.IClientBroadcastStream;
+import org.red5.server.api.stream.IClientStream;
+import org.red5.server.api.stream.IStream;
+import org.red5.server.api.stream.IStreamListener;
 import org.red5.server.api.stream.StreamState;
 import org.red5.server.net.rtmp.event.Notify;
 
@@ -138,6 +141,19 @@ public interface IProStream extends IClientBroadcastStream {
      *
      */
     void setProcessorClass(String clazz);
+
+    /**
+     * Sets end-user processor in packet flow chain. Allows end user to examine or alter packets prior to distribution.
+     * This is downstream of ABR transcoder so each variant will require its own discrete processor.
+     * @param specialContext
+     */
+    void setSpecialContext(IStreamListener specialContext);
+
+    /**
+     * Gets end user processor or null if one doesnt exist.
+     * @return end user processor.
+     */
+    IStreamListener getSpecialContext();
 
     /**
      * Sets the output parameters for the processor.
