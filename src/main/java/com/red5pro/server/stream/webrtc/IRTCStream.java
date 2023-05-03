@@ -7,7 +7,7 @@ import org.ice4j.TransportAddress;
 import org.ice4j.ice.Agent;
 import org.red5.server.api.scope.IScope;
 
-import com.red5pro.io.NIOStreamConnector;
+import com.red5pro.io.StreamConnector;
 import com.red5pro.media.MuteState;
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.media.sdp.SessionDescription;
@@ -190,7 +190,7 @@ public interface IRTCStream {
      * @param streamConnector
      * @param remoteAddress
      */
-    void setStreamConnector(NIOStreamConnector streamConnector, TransportAddress remoteAddress);
+    void setStreamConnector(StreamConnector streamConnector, TransportAddress remoteAddress);
 
     /**
      * Returns the allocated UDP port for the stream.

@@ -33,8 +33,6 @@ import java.util.Map;
 
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.stream.IClientBroadcastStream;
-import org.red5.server.api.stream.IClientStream;
-import org.red5.server.api.stream.IStream;
 import org.red5.server.api.stream.IStreamListener;
 import org.red5.server.api.stream.StreamState;
 import org.red5.server.net.rtmp.event.Notify;
