@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app version="3.1" xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <display-name>live</display-name>
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>/live</param-value>
+    </context-param>
+    <!-- CORS filter with wideopen origin by default -->
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>com.red5pro.servlet.filter.CorsFilter</filter-class>
+        <init-param>
+            <param-name>exposeAllHeaders</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowedOrigins</param-name>
+            <param-value>*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowedMethods</param-name>
+            <param-value>OPTIONS, HEAD, GET, POST, PUT, PATCH, DELETE</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- WebSocket filter -->
+    <filter>
+        <filter-name>WebSocketFilter</filter-name>
+        <filter-class>org.red5.net.websocket.server.WsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>WebSocketFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+</web-app>

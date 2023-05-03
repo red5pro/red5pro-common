@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.red5pro.media.rtp.RTPCodecEnum;
 
@@ -22,10 +25,13 @@ import com.red5pro.media.rtp.RTPCodecEnum;
  *
  * @author Paul Gregoire
  */
-public class MediaField {
+public class MediaField implements Comparable<MediaField> {
 
     // Java regex tester https://www.regexplanet.com/advanced/java/index.html
     public final static Pattern PATTERN = Pattern.compile("([\\w]{4,11}) ([0-9]{1,5}) ([\\w|\\/]*)(((\\s[0-9]{1,4})+)|(\\swebrtc-datachannel))");
+
+    // get first number at the start of a string
+    public final static Pattern PATTERN_GET_FIRST_NUMBER = Pattern.compile("^(\\d+)");
 
     public final static String PROTOCOL_ANY = "RTP/SAVPF";
 
@@ -34,9 +40,6 @@ public class MediaField {
     public final static String PROTOCOL_TCP = "TCP/TLS/RTP/SAVPF";
 
     public final static String PROTOCOL_AVP = "RTP/AVP";
-
-    // public final static String PROTOCOL_AVP_R5SDK_TCP = "RTP/AVP/TCP"; //
-    // non-standard ordering
 
     public final static String PROTOCOL_SCTP = "DTLS/SCTP";
 
@@ -163,6 +166,24 @@ public class MediaField {
     }
 
     /**
+     * Lookup attribute by a given key containing a given string.
+     *
+     * @param key
+     * @param withString
+     * @return attribute if found and null otherwise
+     */
+    public AttributeField getAttribute(AttributeKey key, String withString) {
+        if (attributes != null && attributes.length > 0) {
+            for (AttributeField attr : attributes) {
+                if (attr != null && attr.getAttribute().equals(key) && attr.getValue().indexOf(withString) > -1) {
+                    return attr;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Lookup attribute by a given key and with a matching codec encoding from a set
      * of codecs.
      *
@@ -191,6 +212,84 @@ public class MediaField {
         return null;
     }
 
+    /**
+     * Returns an attributes first integer in the value.
+     *
+     * @param attr
+     * @return number if found and -1 otherwise
+     */
+    public int getAttributeInt(AttributeField attr) {
+        int ret = -1;
+        if (attr != null) {
+            Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
+            if (matcher.find()) {
+                ret = Integer.valueOf(matcher.group());
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Returns an attributes first integer in the value.
+     *
+     * @param key
+     * @return number if found and -1 otherwise
+     */
+    public int getAttributeInt(AttributeKey key) {
+        int ret = -1;
+        if (attributes != null && attributes.length > 0) {
+            for (AttributeField attr : attributes) {
+                if (attr != null && attr.getAttribute().equals(key)) {
+                    Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
+                    if (matcher.find()) {
+                        ret = Integer.valueOf(matcher.group());
+                        break;
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Returns an attributes first long in the value.
+     *
+     * @param attr
+     * @return number if found and -1 otherwise
+     */
+    public long getAttributeLong(AttributeField attr) {
+        long ret = -1;
+        if (attr != null) {
+            Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
+            if (matcher.find()) {
+                ret = Long.valueOf(matcher.group());
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * Returns an attributes first long in the value.
+     *
+     * @param key
+     * @return number if found and -1 otherwise
+     */
+    public long getAttributeLong(AttributeKey key) {
+        long ret = -1;
+        if (attributes != null && attributes.length > 0) {
+            for (AttributeField attr : attributes) {
+                if (attr != null && attr.getAttribute().equals(key)) {
+                    Matcher matcher = PATTERN_GET_FIRST_NUMBER.matcher(attr.getValue());
+                    if (matcher.find()) {
+                        ret = Long.valueOf(matcher.group());
+                        break;
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
     public List<AttributeField> getAttributeSelections(AttributeKey key, EnumSet<RTPCodecEnum> codecs) {
         List<AttributeField> ret = new ArrayList<>();
         for (RTPCodecEnum codec : codecs) {
@@ -200,8 +299,10 @@ public class MediaField {
                     if (attr != null && attr.getAttribute().equals(key) && !attr.isBinary()) {
                         String[] vals = attr.getValue().split("[\\s|/]");
                         if (vals.length >= 2) {
-                            String codecName = vals[1];
-                            if (codecName.equals(codec.encodingName)) {
+                            // ensure its trimmed
+                            String codecName = vals[1].trim();
+                            // allow any casing
+                            if (codec.encodingName.equalsIgnoreCase(codecName)) {
                                 ret.add(attr);
                             }
                         }
@@ -317,11 +418,21 @@ public class MediaField {
         return mediaId;
     }
 
+    /**
+     * Sets the media identifier or mid.
+     *
+     * @param mediaId
+     */
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((mediaType == null) ? 0 : mediaType.hashCode());
+        result = prime * result + ((mediaId == null) ? 0 : mediaId.hashCode());
         result = prime * result + port;
         return result;
     }
@@ -336,6 +447,8 @@ public class MediaField {
             return false;
         MediaField other = (MediaField) obj;
         if (mediaType != other.mediaType)
+            return false;
+        if (mediaId != other.mediaId)
             return false;
         if (port != other.port)
             return false;
@@ -396,6 +509,18 @@ public class MediaField {
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public int compareTo(MediaField that) {
+        int thisIndex = StringUtils.isNumeric(mediaId) ? Integer.valueOf(mediaId) : -1;
+        int thatIndex = StringUtils.isNumeric(that.getMediaId()) ? Integer.valueOf(that.getMediaId()) : -1;
+        if (thisIndex != -1 && thatIndex != -1) {
+            return Integer.compare(thisIndex, thatIndex);
+        } else {
+            // both are non-numeric
+            return mediaId.compareTo(that.getMediaId());
+        }
     }
 
 }

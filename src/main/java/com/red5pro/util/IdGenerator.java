@@ -93,13 +93,23 @@ public class IdGenerator {
     }
 
     /**
+     * Generates a random numeric string with a default length of 13.
+     *
+     * @return String
+     */
+    public static final String generateNumericStringId() {
+        return randomNumericStringGenerator.generate(13);
+    }
+
+    /**
      * Generates a random numeric string with a given length.
      *
      * @param length
      * @return String
      */
     public static final String generateNumericStringId(int length) {
-        return randomNumericStringGenerator.generate(13);
+        // range only allows up to 1024 chars to prevent abuse
+        return randomNumericStringGenerator.generate(Math.min(length, 1024));
     }
 
     /**
