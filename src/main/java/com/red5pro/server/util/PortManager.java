@@ -1,6 +1,7 @@
 package com.red5pro.server.util;
 
 import java.net.DatagramSocket;
+import java.net.ServerSocket;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
@@ -81,11 +82,21 @@ public class PortManager {
     }
 
     /**
-     * Get an available port.
+     * Get an available port; defaults to UDP.
      *
      * @return port for use with a socket
      */
     public static int getRTPServerPort() {
+        return getRTPServerPort(true);
+    }
+
+    /**
+     * Get an available port.
+     *
+     * @param udp true to use DatagramSocket and false to use ServerSocket
+     * @return port for use with a socket
+     */
+    public static int getRTPServerPort(boolean udp) {
         log.debug("Get port");
         int serverPort = 0;
         // check exhaustion first
@@ -94,7 +105,7 @@ public class PortManager {
                 // this will allow the return a port outside configured range
                 log.info("Configured port range has been exhausted, the next system available port will be searched");
                 // give them a port available on the system which exists outside the range
-                serverPort = findFreeUdpPort();
+                serverPort = udp ? findFreeUdpPort() : findFreeTcpPort();
             } else {
                 log.warn("Configured port range has been exhausted, no ports available");
             }
@@ -110,14 +121,28 @@ public class PortManager {
                 // add only works if its not already allocated
                 if (allocatedPorts.add(serverPort)) {
                     // if the port isn't allocated, allocate it and check availability
-                    if (!checkAvailable(serverPort)) {
-                        // port is not available
-                        log.warn("Unallocated port is already bound {}", serverPort);
-                        // XXX remove it from allocated and transfer to otherAllocated, since its allocated from elsewhere
-                        if (allocatedPorts.remove(serverPort)) {
-                            otherAllocatedPorts.add(serverPort);
+                    if (udp) {
+                        // check UDP port
+                        if (!checkAvailable(serverPort)) {
+                            // port is not available
+                            log.warn("Unallocated port is already bound {}", serverPort);
+                            // XXX remove it from allocated and transfer to otherAllocated, since its allocated from elsewhere
+                            if (allocatedPorts.remove(serverPort)) {
+                                otherAllocatedPorts.add(serverPort);
+                            }
+                            continue;
                         }
-                        continue;
+                    } else {
+                        // check TCP port
+                        if (!checkAvailable(serverPort, true)) {
+                            // port is not available
+                            log.warn("Unallocated port is already bound {}", serverPort);
+                            // XXX remove it from allocated and transfer to otherAllocated, since its allocated from elsewhere
+                            if (allocatedPorts.remove(serverPort)) {
+                                otherAllocatedPorts.add(serverPort);
+                            }
+                            continue;
+                        }
                     }
                     // break out with currently available port
                     break;
@@ -132,12 +157,10 @@ public class PortManager {
                 //serverPort = portUpdater.incrementAndGet(instance);
                 // XXX seems that we need to hit ourself again to get the next available and not assume the first one, post
                 // reset is good to go
-                serverPort = getRTPServerPort();
+                serverPort = getRTPServerPort(udp);
             }
         }
-        if (isDebug) {
-            log.debug("Port allocated {}", serverPort);
-        }
+        log.debug("Port allocated {}", serverPort);
         return serverPort;
     }
 
@@ -176,9 +199,7 @@ public class PortManager {
      * @return true if port is available and false otherwise
      */
     public static boolean checkAvailable(int port) {
-        DatagramSocket socket = null;
-        try {
-            socket = new DatagramSocket(port);
+        try (DatagramSocket socket = new DatagramSocket(port)) {
             socket.setReuseAddress(true);
             socket.setSoTimeout(soTimeoutMs);
             int retPort = socket.getLocalPort();
@@ -191,15 +212,45 @@ public class PortManager {
                     log.debug("Port didnt match: {}", retPort);
                 }
             }
+            socket.close();
             return true;
         } catch (Throwable t) {
             log.warn("Exception checking port: {}", port, t);
-        } finally {
-            if (socket != null) {
-                socket.close();
-            }
         }
         return false;
+    }
+
+    /**
+     * Checks a port for availability using ServerSocket primarily for TCP.
+     *
+     * @param port to check
+     * @param tcp true to use ServerSocket and false to use DatagramSocket
+     * @return true if port is available and false otherwise
+     */
+    public static boolean checkAvailable(int port, boolean tcp) {
+        if (tcp) {
+            try (ServerSocket socket = new ServerSocket(port)) {
+                socket.setReuseAddress(true);
+                socket.setSoTimeout(1); // 1ms
+                int retPort = socket.getLocalPort();
+                if (port == retPort) {
+                    if (isDebug) {
+                        log.debug("Port: {} is available", port);
+                    }
+                } else {
+                    if (isDebug) {
+                        log.debug("Port didnt match: {}", retPort);
+                    }
+                }
+                socket.close();
+                return true;
+            } catch (Throwable t) {
+                log.warn("Exception checking port: {}", port, t);
+            }
+            return false;
+        } else {
+            return checkAvailable(port);
+        }
     }
 
     /**
@@ -208,26 +259,40 @@ public class PortManager {
      * @return port
      */
     public static int findFreeUdpPort() {
-        DatagramSocket socket = null;
         int port = 0;
         do {
-            try {
-                socket = new DatagramSocket(0);
+            try (DatagramSocket socket = new DatagramSocket(0)) {
                 socket.setReuseAddress(true);
                 socket.setSoTimeout(soTimeoutMs);
                 port = socket.getLocalPort();
+                socket.close();
                 return port;
             } catch (Throwable t) {
-                if (isDebug) {
-                    log.warn("Exception checking port: {}", port, t);
-                }
-            } finally {
-                if (socket != null) {
-                    socket.close();
-                }
+                log.debug("Exception checking port: {}", port, t);
             }
         } while (port < MAX_PORT);
         throw new IllegalStateException("Could not find a free UDP port");
+    }
+
+    /**
+     * Returns a free TCP port on this machine.
+     *
+     * @return port
+     */
+    public static int findFreeTcpPort() {
+        int port = 0;
+        do {
+            try (ServerSocket socket = new ServerSocket(0)) {
+                socket.setReuseAddress(true);
+                socket.setSoTimeout(1); // 1ms
+                port = socket.getLocalPort();
+                socket.close();
+                return port;
+            } catch (Throwable t) {
+                log.debug("Exception checking port: {}", port, t);
+            }
+        } while (port < MAX_PORT);
+        throw new IllegalStateException("Could not find a free TCP port");
     }
 
     /**
