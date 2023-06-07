@@ -110,14 +110,18 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
 
                     // this will dispatch one event or the other
                     dispatchEvent(body, false, output);
-                    dispatchEvent(event, true, output);
+                    //Dispatch incoming event only once.
                     if (now > dispatchTo) {
+                        //Dispatch incoming before returning.
+                        dispatchEvent(event, true, output);
                         // log.debug("segment done {} {} ", now,dispatchTo);
                         return;
                     }
                 }
             }
         }
+        //Dispatched incoming since we did not. .
+        dispatchEvent(event, true, output);
         // We got here because dispatchTo limiter has not run out,
         // and duration has not expired,
         // and no more packets to pull.
