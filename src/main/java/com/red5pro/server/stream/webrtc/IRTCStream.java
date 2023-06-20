@@ -227,4 +227,32 @@ public interface IRTCStream {
      */
     boolean isRemoteEndpoint();
 
+    /**
+     * Returns whether or not session level DTLS is enabled.
+     *
+     * @return true if enabled, false otherwise
+     */
+    boolean isSessionLevelDTLS();
+
+    /**
+     * Sets whether or not session level DTLS is enabled.
+     *
+     * @param sessionLevelDTLS
+     */
+    void setSessionLevelDTLS(boolean sessionLevelDTLS);
+
+    /**
+     * Returns whether or not session level ICE is enabled.
+     *
+     * @return true if enabled, false otherwise
+     */
+    boolean isSessionLevelICE();
+
+    /**
+     * Sets whether or not session level ICE is enabled.
+     *
+     * @param setSessionLevelICE
+     */
+    void setSessionLevelICE(boolean setSessionLevelICE);
+
 }
