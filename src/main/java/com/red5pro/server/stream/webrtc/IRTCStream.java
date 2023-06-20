@@ -255,4 +255,18 @@ public interface IRTCStream {
      */
     void setSessionLevelICE(boolean setSessionLevelICE);
 
+    /**
+     * Returns whether or not end of candidates is enabled.
+     *
+     * @param setUseEndOfCandidates
+     */
+    void setUseEndOfCandidates(boolean setUseEndOfCandidates);
+
+    /**
+     * Returns whether or not end of candidates is enabled.
+     *
+     * @return true if enable, false otherwise
+     */
+    boolean useEndOfCandidates();
+
 }
