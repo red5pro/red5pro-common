@@ -537,6 +537,10 @@ public class SessionDescription {
         return userAgent == SDPUserAgent.safari;
     }
 
+    public boolean isObs() {
+        return userAgent == SDPUserAgent.obs;
+    }
+
     public boolean isRed5ProSDK() {
         return userAgent == SDPUserAgent.red5pro;
     }
@@ -578,7 +582,7 @@ public class SessionDescription {
             }
         }
         // create a list ordered by mid if it uses digits
-        final List<MediaField> ordered = new ArrayList<>(3);
+        final List<MediaField> ordered = new ArrayList<>();
         for (MediaField media : mediaDescriptions) {
             // if its video and the format is 0 skip it
             if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
@@ -590,7 +594,7 @@ public class SessionDescription {
         Collections.sort(ordered);
         // bundle is a group attribute, but we don't store it in the attr collection
         if (bundle) {
-            if (mediaDescriptions != null) {
+            if (ordered.size() > 0) {
                 sb.append("a=group:BUNDLE ");
                 ordered.forEach(media -> {
                     sb.append(media.getMediaId());
