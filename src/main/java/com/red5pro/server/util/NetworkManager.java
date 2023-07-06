@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.DatagramSocket;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -139,6 +140,7 @@ public class NetworkManager {
                     DatagramSocket socket = null;
                     try {
                         socket = new DatagramSocket();
+                        // hits the google dns server
                         socket.connect(InetAddress.getByName("8.8.8.8"), port);
                         ipAddress = socket.getLocalAddress().getHostAddress();
                     } catch (Throwable t) {
@@ -160,21 +162,18 @@ public class NetworkManager {
             }
 
             String getPublicIPV6() {
-                return NO_IP_ADDRESS;
-            }
-
-            String getLocalAddressV6() {
                 String ipAddress = null;
                 try {
                     int port = PortManager.findFreeUdpPort();
-                    // cheap and dirty way to get the preferred local IP
+                    // cheap and dirty way to get a public IPv6 address
                     DatagramSocket socket = null;
                     try {
                         socket = new DatagramSocket();
+                        // hits the google ipv6 dns server
                         socket.connect(InetAddress.getByName("2001:4860:4860:0:0:0:0:8888"), port);
                         ipAddress = socket.getLocalAddress().getHostAddress();
                     } catch (Throwable t) {
-                        log.warn("Exception getting local address via dgram", t);
+                        log.warn("Exception getting public address via dgram", t);
                     } finally {
                         if (socket != null) {
                             try {
@@ -184,11 +183,15 @@ public class NetworkManager {
                         }
                         PortManager.clearRTPServerPort(port);
                     }
-                    log.debug("Local address (detected): {}", ipAddress);
+                    log.debug("Public address (detected): {}", ipAddress);
                 } catch (Exception e) {
-                    log.warn("Exception getting local address", e);
+                    log.warn("Exception getting public address", e);
                 }
                 return ipAddress;
+            }
+
+            String getLocalAddressV6() {
+                return getLocalInterfaceIPV6();
             }
 
         },
@@ -367,15 +370,12 @@ public class NetworkManager {
             ipAddress = topologyMode.getLocalAddress();
             // store it
             setServerLocalIp(ipAddress);
-            if (ipAddress != null) {
-                // ipv6
-                if (ipAddress.contains(":")) {
-                    setServerLocalIpV6(ipAddress);
-                } else {
-                    String ipV6Address = topologyMode.getLocalAddressV6();
-                    if (ipV6Address.contains(":")) {
-                        setServerLocalIpV6(ipV6Address);
-                    }
+            if (ipAddress != null && ipAddress.contains(":")) {
+                setServerLocalIpV6(ipAddress);
+            } else {
+                String ipV6Address = topologyMode.getLocalAddressV6();
+                if (ipV6Address.contains(":")) {
+                    setServerLocalIpV6(ipV6Address);
                 }
             }
         }
@@ -392,12 +392,12 @@ public class NetworkManager {
                         if (!iaddress.isLoopbackAddress() && !iaddress.isLinkLocalAddress() && !iaddress.isSiteLocalAddress()) {
                             ipAddress = iaddress.getHostAddress() != null ? iaddress.getHostAddress() : iaddress.getHostName();
                             log.debug("Local address (nic): {}", ipAddress);
-                            // store it
-                            setServerLocalIp(ipAddress);
                             if (ipAddress != null) {
                                 // ipv6
                                 if (ipAddress.contains(":")) {
                                     setServerLocalIpV6(ipAddress);
+                                } else {
+                                    setServerLocalIp(ipAddress);
                                 }
                             }
                             break BUST_OUT;
@@ -784,6 +784,40 @@ public class NetworkManager {
         stunStack.shutDown();
         log.debug("Public IP: {}", publicIP);
         return publicIP;
+    }
+
+    /**
+     * Returns the local interface IPv6 address, if bound.
+     *
+     * @return local network IPv6 address if located and bound, otherwise no-ip
+     */
+    public static String getLocalInterfaceIPV6() {
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                NetworkInterface interface1 = interfaces.nextElement();
+                Enumeration<InetAddress> addresses = interface1.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress address = addresses.nextElement();
+                    if (address instanceof Inet6Address && !address.isLoopbackAddress()) {
+                        // Check if the IPv6 address is in the private address range
+                        String ipAddress = address.getHostAddress();
+                        log.debug("Local address (nic): {}", ipAddress);
+                        if (ipAddress.startsWith("fe80::") || ipAddress.startsWith("fe80:0:") || ipAddress.startsWith("fc00::") || ipAddress.startsWith("fec0::")) {
+                            // chop the interface off the end if its there
+                            int index = ipAddress.indexOf("%");
+                            if (index > 0) {
+                                ipAddress = ipAddress.substring(0, index);
+                            }
+                            return ipAddress;
+                        }
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            log.warn("Exception getting local interface", e);
+        }
+        return NO_IP_ADDRESS;
     }
 
     public static TopologyMode getTopologyMode() {
