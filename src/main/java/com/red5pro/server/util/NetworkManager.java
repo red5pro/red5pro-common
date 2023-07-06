@@ -16,8 +16,10 @@ import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.SynchronousQueue;
@@ -75,8 +77,17 @@ public class NetworkManager {
     // public / external-facing IP address
     private static final AtomicReference<String> serverIp = new AtomicReference<>(NO_IP_ADDRESS);
 
+    // public / external-facing IPv6 address
+    private static final AtomicReference<String> serverIpV6 = new AtomicReference<>(NO_IP_ADDRESS);
+
     // private / local IP address
     private static final AtomicReference<String> serverLocalIp = new AtomicReference<>(NO_IP_ADDRESS);
+
+    // private / local IPv6 address
+    private static final AtomicReference<String> serverLocalIpV6 = new AtomicReference<>(NO_IP_ADDRESS);
+
+    // list of usable addresses
+    private static final Set<String> usableAddresses = new HashSet<>();
 
     // collection of end-points created herein with the key being constructed based on type and address+port combo
     private static ConcurrentMap<String, IngestEndpoint<?>> ingestEndPoints = new ConcurrentHashMap<>();
@@ -148,6 +159,38 @@ public class NetworkManager {
                 return ipAddress;
             }
 
+            String getPublicIPV6() {
+                return NO_IP_ADDRESS;
+            }
+
+            String getLocalAddressV6() {
+                String ipAddress = null;
+                try {
+                    int port = PortManager.findFreeUdpPort();
+                    // cheap and dirty way to get the preferred local IP
+                    DatagramSocket socket = null;
+                    try {
+                        socket = new DatagramSocket();
+                        socket.connect(InetAddress.getByName("2001:4860:4860:0:0:0:0:8888"), port);
+                        ipAddress = socket.getLocalAddress().getHostAddress();
+                    } catch (Throwable t) {
+                        log.warn("Exception getting local address via dgram", t);
+                    } finally {
+                        if (socket != null) {
+                            try {
+                                socket.close();
+                            } catch (Exception ce) {
+                            }
+                        }
+                        PortManager.clearRTPServerPort(port);
+                    }
+                    log.debug("Local address (detected): {}", ipAddress);
+                } catch (Exception e) {
+                    log.warn("Exception getting local address", e);
+                }
+                return ipAddress;
+            }
+
         },
         PROPERTIES // configured via properties system then file
         {
@@ -192,6 +235,19 @@ public class NetworkManager {
                 return resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/local-ipv4");
             }
 
+            String getPublicIPV6() {
+                String ipAddress = resolveIPOverHTTP("http://fe80::a9fe:a9fe/latest/meta-data/public-ipv6");
+                // handle the wavelength case where public-ipv4 returns nothing
+                if (ipAddress == null) {
+                    ipAddress = resolveIPOverHTTP(AWS_IP_CHECK_URI);
+                }
+                return ipAddress;
+            }
+
+            String getLocalAddressV6() {
+                return resolveIPOverHTTP("http://fe80::a9fe:a9fe/latest/meta-data/local-ipv6");
+            }
+
         };
 
         String getPublicIP() {
@@ -202,9 +258,20 @@ public class NetworkManager {
             return NO_IP_ADDRESS;
         }
 
+        String getPublicIPV6() {
+            return NO_IP_ADDRESS;
+        }
+
+        String getLocalAddressV6() {
+            return NO_IP_ADDRESS;
+        }
+
     }
 
     static {
+        // add to the usable addresses
+        usableAddresses.add("0.0.0.0");
+        usableAddresses.add("::");
         // load up the network properties
         try (InputStream input = new FileInputStream(System.getProperty("red5.config_root") + File.separatorChar + "network.properties")) {
             // load properties
@@ -228,8 +295,14 @@ public class NetworkManager {
      * Resets the network IP addresses.
      */
     public static void resetIPAddresses() {
+        usableAddresses.remove(serverIp.get());
         serverIp.set(NO_IP_ADDRESS);
+        usableAddresses.remove(serverLocalIp.get());
         serverLocalIp.set(NO_IP_ADDRESS);
+        usableAddresses.remove(serverIpV6.get());
+        serverIpV6.set(NO_IP_ADDRESS);
+        usableAddresses.remove(serverLocalIpV6.get());
+        serverLocalIpV6.set(NO_IP_ADDRESS);
     }
 
     /**
@@ -263,6 +336,17 @@ public class NetworkManager {
             }
             // store it
             setServerIp(ipAddress);
+            if (ipAddress != null) {
+                // ipv6
+                if (ipAddress.contains(":")) {
+                    setServerIpV6(ipAddress);
+                } else {
+                    String ipV6Address = topologyMode.getPublicIPV6();
+                    if (ipV6Address.contains(":")) {
+                        setServerIpV6(ipV6Address);
+                    }
+                }
+            }
         }
         log.debug("Public address (stored): {}", ipAddress);
         // one last check to ensure we send null for our no-ip placeholder
@@ -283,6 +367,17 @@ public class NetworkManager {
             ipAddress = topologyMode.getLocalAddress();
             // store it
             setServerLocalIp(ipAddress);
+            if (ipAddress != null) {
+                // ipv6
+                if (ipAddress.contains(":")) {
+                    setServerLocalIpV6(ipAddress);
+                } else {
+                    String ipV6Address = topologyMode.getLocalAddressV6();
+                    if (ipV6Address.contains(":")) {
+                        setServerLocalIpV6(ipV6Address);
+                    }
+                }
+            }
         }
         // check for null address before continuing
         BUST_OUT: // check nic cards
@@ -299,6 +394,12 @@ public class NetworkManager {
                             log.debug("Local address (nic): {}", ipAddress);
                             // store it
                             setServerLocalIp(ipAddress);
+                            if (ipAddress != null) {
+                                // ipv6
+                                if (ipAddress.contains(":")) {
+                                    setServerLocalIpV6(ipAddress);
+                                }
+                            }
                             break BUST_OUT;
                         }
                     }
@@ -324,11 +425,30 @@ public class NetworkManager {
         return ipAddress;
     }
 
+    public static String getPublicAddressV6() {
+        return serverIpV6.get();
+    }
+
+    public static String getLocalAddressV6() {
+        return serverLocalIpV6.get();
+    }
+
+    public static boolean isPublicAddressV6() {
+        String ipAddress = serverIp.get();
+        return NO_IP_ADDRESS.equals(ipAddress) ? false : ipAddress.contains(":");
+    }
+
+    public static boolean isLocalAddressV6() {
+        String ipAddress = serverLocalIp.get();
+        return NO_IP_ADDRESS.equals(ipAddress) ? false : ipAddress.contains(":");
+    }
+
     public static void setServerIp(String ipAddress) {
         log.debug("setServerIp: {}", ipAddress);
         // disallow null or blank IP
         if (ipAddress != null && ipAddress.length() > 6) {
             NetworkManager.serverIp.set(ipAddress);
+            usableAddresses.add(ipAddress);
         }
     }
 
@@ -337,7 +457,30 @@ public class NetworkManager {
         // disallow null or blank IP
         if (ipAddress != null && ipAddress.length() > 6) {
             NetworkManager.serverLocalIp.set(ipAddress);
+            usableAddresses.add(ipAddress);
         }
+    }
+
+    public static void setServerIpV6(String ipAddress) {
+        log.debug("setServerIpV6: {}", ipAddress);
+        // disallow null or blank IP
+        if (ipAddress != null && ipAddress.length() > 6) {
+            NetworkManager.serverIpV6.set(ipAddress);
+            usableAddresses.add(ipAddress);
+        }
+    }
+
+    public static void setServerLocalIpV6(String ipAddress) {
+        log.debug("setServerLocalIpV6: {}", ipAddress);
+        // disallow null or blank IP
+        if (ipAddress != null && ipAddress.length() > 6) {
+            NetworkManager.serverLocalIpV6.set(ipAddress);
+            usableAddresses.add(ipAddress);
+        }
+    }
+
+    private static boolean usableAddress(String ipAddress) {
+        return usableAddresses.contains(ipAddress);
     }
 
     /**
@@ -353,12 +496,9 @@ public class NetworkManager {
         boolean valid = false;
         // check the port
         boolean validPort = (port > 0 && port < 65535);
-        // if its the ANY address accept it
-        if ("0.0.0.0".equals(ipAddress)) {
-            valid = true;
-        } else if (getLocalAddress().equals(ipAddress) || getPublicAddress().equals(ipAddress)) {
-            // if the address is equal to our local or public IP address then its a-ok so
-            // far
+        // if its the ANY address accept it by default
+        if (usableAddress(ipAddress)) {
+            // if the address is local or public then its a-ok
             log.debug("Local or public address matched");
             // IP is valid since we're already bound to it
             valid = true;
@@ -471,6 +611,12 @@ public class NetworkManager {
         topologyMode = TopologyMode.DEFAULT;
         serverIp.set(NO_IP_ADDRESS);
         serverLocalIp.set(NO_IP_ADDRESS);
+        serverIpV6.set(NO_IP_ADDRESS);
+        serverLocalIpV6.set(NO_IP_ADDRESS);
+        usableAddresses.clear();
+        // add to the usable addresses
+        usableAddresses.add("0.0.0.0");
+        usableAddresses.add("::");
     }
 
     /**
