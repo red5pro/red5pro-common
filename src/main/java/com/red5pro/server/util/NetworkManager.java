@@ -36,25 +36,25 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
-import org.ice4j.AbstractResponseCollector;
-import org.ice4j.BaseStunMessageEvent;
-import org.ice4j.ResponseCollector;
-import org.ice4j.StunFailureEvent;
-import org.ice4j.StunResponseEvent;
-import org.ice4j.StunTimeoutEvent;
-import org.ice4j.Transport;
-import org.ice4j.TransportAddress;
-import org.ice4j.attribute.Attribute;
-import org.ice4j.attribute.MappedAddressAttribute;
-import org.ice4j.attribute.XorMappedAddressAttribute;
-import org.ice4j.ice.nio.IceHandler;
-import org.ice4j.ice.nio.IceTransport;
-import org.ice4j.message.Message;
-import org.ice4j.message.MessageFactory;
-import org.ice4j.message.Request;
-import org.ice4j.message.Response;
-import org.ice4j.socket.IceSocketWrapper;
-import org.ice4j.stack.StunStack;
+import com.red5pro.ice.AbstractResponseCollector;
+import com.red5pro.ice.BaseStunMessageEvent;
+import com.red5pro.ice.ResponseCollector;
+import com.red5pro.ice.StunFailureEvent;
+import com.red5pro.ice.StunResponseEvent;
+import com.red5pro.ice.StunTimeoutEvent;
+import com.red5pro.ice.Transport;
+import com.red5pro.ice.TransportAddress;
+import com.red5pro.ice.attribute.Attribute;
+import com.red5pro.ice.attribute.MappedAddressAttribute;
+import com.red5pro.ice.attribute.XorMappedAddressAttribute;
+import com.red5pro.ice.nio.IceHandler;
+import com.red5pro.ice.nio.IceTransport;
+import com.red5pro.ice.message.Message;
+import com.red5pro.ice.message.MessageFactory;
+import com.red5pro.ice.message.Request;
+import com.red5pro.ice.message.Response;
+import com.red5pro.ice.socket.IceSocketWrapper;
+import com.red5pro.ice.stack.StunStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -288,7 +288,7 @@ public class NetworkManager {
             defaultTransport = props.getProperty("ice.default.transport", "udp");
             defaultStunAddress = props.getProperty("stun.address", "stun.l.google.com:19302");
             // set ice4j props
-            System.setProperty("org.ice4j.ice.harvest.NAT_HARVESTER_DEFAULT_TRANSPORT", defaultTransport);
+            System.setProperty("com.red5pro.ice.ice.harvest.NAT_HARVESTER_DEFAULT_TRANSPORT", defaultTransport);
         } catch (IOException e) {
             log.warn("Exception reading properties", e);
         }

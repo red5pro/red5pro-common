@@ -3,8 +3,8 @@ package com.red5pro.server.stream.webrtc;
 import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
-import org.ice4j.TransportAddress;
-import org.ice4j.ice.Agent;
+import com.red5pro.ice.TransportAddress;
+import com.red5pro.ice.Agent;
 import org.red5.server.api.scope.IScope;
 
 import com.red5pro.io.StreamConnector;
