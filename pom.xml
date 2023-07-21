@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     <name>red5pro-common</name>
     <!-- major, minor, release, build -->    
-    <version>11.0.1.5</version>
+    <version>11.1.0.0</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -67,7 +67,7 @@
         <json.version>[2.4.1,)</json.version>
         <bc.version>1.62</bc.version>
         <junit.version>[4.13.1,)</junit.version>
-        <ice4j.version>[3.2.80,)</ice4j.version>
+        <red5pro-ice.version>[1.0.1,)</icered5pro-ice.version>
         <slf4j.version>1.7.36</slf4j.version>
         <logback.version>1.2.11</logback.version>
     </properties>
@@ -169,10 +169,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.jitsi</groupId>
-            <artifactId>ice4j</artifactId>
-            <version>${ice4j.version}</version>
-            <classifier>red5pro</classifier>
+            <groupId>com.red5pro</groupId>
+            <artifactId>red5pro-ice</artifactId>
+            <version>${red5pro-ice.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
