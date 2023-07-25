@@ -519,6 +519,13 @@ public class MediaField implements Comparable<MediaField> {
             return Integer.compare(thisIndex, thatIndex);
         } else {
             // both are non-numeric
+            // prefer audio and video over application
+            if (SDPMediaType.application.equals(mediaType) && SDPMediaType.audioVideo.contains(that.mediaType)) {
+                return 1;
+            } else if (SDPMediaType.audioVideo.contains(mediaType) && SDPMediaType.application.equals(that.mediaType)) {
+                return -1;
+            }
+            // compare as strings
             return mediaId.compareTo(that.getMediaId());
         }
     }

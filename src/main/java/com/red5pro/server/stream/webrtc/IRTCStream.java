@@ -3,8 +3,8 @@ package com.red5pro.server.stream.webrtc;
 import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
-import org.ice4j.TransportAddress;
-import org.ice4j.ice.Agent;
+import com.red5pro.ice.TransportAddress;
+import com.red5pro.ice.Agent;
 import org.red5.server.api.scope.IScope;
 
 import com.red5pro.io.StreamConnector;
@@ -226,5 +226,47 @@ public interface IRTCStream {
      * @return true if remote and false if on the same machine or network.
      */
     boolean isRemoteEndpoint();
+
+    /**
+     * Returns whether or not session level DTLS is enabled.
+     *
+     * @return true if enabled, false otherwise
+     */
+    boolean isSessionLevelDTLS();
+
+    /**
+     * Sets whether or not session level DTLS is enabled.
+     *
+     * @param sessionLevelDTLS
+     */
+    void setSessionLevelDTLS(boolean sessionLevelDTLS);
+
+    /**
+     * Returns whether or not session level ICE is enabled.
+     *
+     * @return true if enabled, false otherwise
+     */
+    boolean isSessionLevelICE();
+
+    /**
+     * Sets whether or not session level ICE is enabled.
+     *
+     * @param setSessionLevelICE
+     */
+    void setSessionLevelICE(boolean setSessionLevelICE);
+
+    /**
+     * Returns whether or not end of candidates is enabled.
+     *
+     * @param setUseEndOfCandidates
+     */
+    void setUseEndOfCandidates(boolean setUseEndOfCandidates);
+
+    /**
+     * Returns whether or not end of candidates is enabled.
+     *
+     * @return true if enable, false otherwise
+     */
+    boolean useEndOfCandidates();
 
 }
