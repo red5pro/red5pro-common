@@ -286,6 +286,8 @@ public class NetworkManager {
             PortManager.setRtpPortBase(Integer.valueOf(props.getProperty("port.min", "49152")));
             PortManager.setRtpPortCeiling(Integer.valueOf(props.getProperty("port.max", "65535")));
             PortManager.setAllowSystemPorts(Boolean.valueOf(props.getProperty("allow.sys.ports", "false")));
+            // timeout to use when checking port availability
+            PortManager.setSoTimeout(Integer.valueOf(props.getProperty("check.port.availability.timeout", "5")));
             log.debug("Port range: {}", PortManager.getRange());
             // set local properties
             defaultTransport = props.getProperty("ice.default.transport", "udp");
