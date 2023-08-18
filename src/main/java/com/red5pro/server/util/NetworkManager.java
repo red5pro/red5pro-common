@@ -36,25 +36,25 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
-import org.ice4j.AbstractResponseCollector;
-import org.ice4j.BaseStunMessageEvent;
-import org.ice4j.ResponseCollector;
-import org.ice4j.StunFailureEvent;
-import org.ice4j.StunResponseEvent;
-import org.ice4j.StunTimeoutEvent;
-import org.ice4j.Transport;
-import org.ice4j.TransportAddress;
-import org.ice4j.attribute.Attribute;
-import org.ice4j.attribute.MappedAddressAttribute;
-import org.ice4j.attribute.XorMappedAddressAttribute;
-import org.ice4j.ice.nio.IceHandler;
-import org.ice4j.ice.nio.IceTransport;
-import org.ice4j.message.Message;
-import org.ice4j.message.MessageFactory;
-import org.ice4j.message.Request;
-import org.ice4j.message.Response;
-import org.ice4j.socket.IceSocketWrapper;
-import org.ice4j.stack.StunStack;
+import com.red5pro.ice.AbstractResponseCollector;
+import com.red5pro.ice.BaseStunMessageEvent;
+import com.red5pro.ice.ResponseCollector;
+import com.red5pro.ice.StunFailureEvent;
+import com.red5pro.ice.StunResponseEvent;
+import com.red5pro.ice.StunTimeoutEvent;
+import com.red5pro.ice.Transport;
+import com.red5pro.ice.TransportAddress;
+import com.red5pro.ice.attribute.Attribute;
+import com.red5pro.ice.attribute.MappedAddressAttribute;
+import com.red5pro.ice.attribute.XorMappedAddressAttribute;
+import com.red5pro.ice.nio.IceHandler;
+import com.red5pro.ice.nio.IceTransport;
+import com.red5pro.ice.message.Message;
+import com.red5pro.ice.message.MessageFactory;
+import com.red5pro.ice.message.Request;
+import com.red5pro.ice.message.Response;
+import com.red5pro.ice.socket.IceSocketWrapper;
+import com.red5pro.ice.stack.StunStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,8 +69,12 @@ public class NetworkManager {
 
     private static Logger log = LoggerFactory.getLogger(NetworkManager.class);
 
-    // static Amazon IP service
-    private static final String AWS_IP_CHECK_URI = "https://checkip.amazonaws.com";
+    // default usable addresses
+    private static final String[] DEFAULT_USABLE_ADDRESSES = new String[] { "0.0.0.0", "::", "0000:0000:0000:0000:0000:0000:0000:0000" };
+
+    // IP check service
+    // Two options: https://checkip.amazonaws.com or https://icanhazip.com
+    private static final String IP_CHECK_URI = System.getProperty("ip.check.uri", "https://checkip.amazonaws.com");
 
     // represents an un-set IP address
     private static final String NO_IP_ADDRESS = "no-ip";
@@ -102,8 +106,14 @@ public class NetworkManager {
     // default stun server address
     private static String defaultStunAddress;
 
+    // whether or not IPv6 is enabled via props for ICE
+    private static boolean iceIPv6Enabled;
+
     // network topology in-use
     private static TopologyMode topologyMode = TopologyMode.DEFAULT;
+
+    // dns port
+    private static int dnsPort = 53;
 
     /**
      * Network type.
@@ -129,19 +139,18 @@ public class NetworkManager {
         {
 
             String getPublicIP() {
-                return resolveIPOverHTTP(AWS_IP_CHECK_URI);
+                return resolveIPOverHTTP(IP_CHECK_URI);
             }
 
             String getLocalAddress() {
                 String ipAddress = null;
                 try {
-                    int port = PortManager.findFreeUdpPort();
                     // cheap and dirty way to get the preferred local IP
                     DatagramSocket socket = null;
                     try {
                         socket = new DatagramSocket();
                         // hits the google dns server
-                        socket.connect(InetAddress.getByName("8.8.8.8"), port);
+                        socket.connect(InetAddress.getByName("8.8.8.8"), dnsPort);
                         ipAddress = socket.getLocalAddress().getHostAddress();
                     } catch (Throwable t) {
                         log.warn("Exception getting local address via dgram", t);
@@ -152,7 +161,6 @@ public class NetworkManager {
                             } catch (Exception ce) {
                             }
                         }
-                        PortManager.clearRTPServerPort(port);
                     }
                     log.debug("Local address (detected): {}", ipAddress);
                 } catch (Exception e) {
@@ -164,13 +172,12 @@ public class NetworkManager {
             String getPublicIPV6() {
                 String ipAddress = null;
                 try {
-                    int port = PortManager.findFreeUdpPort();
                     // cheap and dirty way to get a public IPv6 address
                     DatagramSocket socket = null;
                     try {
                         socket = new DatagramSocket();
                         // hits the google ipv6 dns server
-                        socket.connect(InetAddress.getByName("2001:4860:4860:0:0:0:0:8888"), port);
+                        socket.connect(InetAddress.getByName("2001:4860:4860:0:0:0:0:8888"), dnsPort);
                         ipAddress = socket.getLocalAddress().getHostAddress();
                     } catch (Throwable t) {
                         log.warn("Exception getting public address via dgram", t);
@@ -181,7 +188,6 @@ public class NetworkManager {
                             } catch (Exception ce) {
                             }
                         }
-                        PortManager.clearRTPServerPort(port);
                     }
                     log.debug("Public address (detected): {}", ipAddress);
                 } catch (Exception e) {
@@ -229,7 +235,7 @@ public class NetworkManager {
                 String ipAddress = resolveIPOverHTTP("http://169.254.169.254/latest/meta-data/public-ipv4");
                 // handle the wavelength case where public-ipv4 returns nothing
                 if (ipAddress == null) {
-                    ipAddress = resolveIPOverHTTP(AWS_IP_CHECK_URI);
+                    ipAddress = resolveIPOverHTTP(IP_CHECK_URI);
                 }
                 return ipAddress;
             }
@@ -242,7 +248,7 @@ public class NetworkManager {
                 String ipAddress = resolveIPOverHTTP("http://fe80::a9fe:a9fe/latest/meta-data/public-ipv6");
                 // handle the wavelength case where public-ipv4 returns nothing
                 if (ipAddress == null) {
-                    ipAddress = resolveIPOverHTTP(AWS_IP_CHECK_URI);
+                    ipAddress = resolveIPOverHTTP(IP_CHECK_URI);
                 }
                 return ipAddress;
             }
@@ -272,9 +278,6 @@ public class NetworkManager {
     }
 
     static {
-        // add to the usable addresses
-        usableAddresses.add("0.0.0.0");
-        usableAddresses.add("::");
         // load up the network properties
         try (InputStream input = new FileInputStream(System.getProperty("red5.config_root") + File.separatorChar + "network.properties")) {
             // load properties
@@ -283,14 +286,25 @@ public class NetworkManager {
             PortManager.setRtpPortBase(Integer.valueOf(props.getProperty("port.min", "49152")));
             PortManager.setRtpPortCeiling(Integer.valueOf(props.getProperty("port.max", "65535")));
             PortManager.setAllowSystemPorts(Boolean.valueOf(props.getProperty("allow.sys.ports", "false")));
-            log.info("Port range: {}", PortManager.getRange());
+            // timeout to use when checking port availability
+            PortManager.setSoTimeout(Integer.valueOf(props.getProperty("check.port.availability.timeout", "5")));
+            log.debug("Port range: {}", PortManager.getRange());
             // set local properties
             defaultTransport = props.getProperty("ice.default.transport", "udp");
             defaultStunAddress = props.getProperty("stun.address", "stun.l.google.com:19302");
-            // set ice4j props
-            System.setProperty("org.ice4j.ice.harvest.NAT_HARVESTER_DEFAULT_TRANSPORT", defaultTransport);
+            // set/get ice4j props
+            System.setProperty("com.red5pro.ice.BIND_RETRIES", "1");
+            System.setProperty("com.red5pro.ice.ice.harvest.NAT_HARVESTER_DEFAULT_TRANSPORT", defaultTransport);
+            System.setProperty("com.red5pro.ice.TERMINATION_DELAY", props.getProperty("ice.termination.delay", "500"));
+            // whether or not IPv6 is enabled
+            iceIPv6Enabled = Boolean.valueOf(props.getProperty("ice.enable.ipv6", "false"));
         } catch (IOException e) {
             log.warn("Exception reading properties", e);
+        } finally {
+            // add to the usable addresses
+            for (String addr : DEFAULT_USABLE_ADDRESSES) {
+                usableAddresses.add(addr);
+            }
         }
     }
 
@@ -433,6 +447,11 @@ public class NetworkManager {
         return serverLocalIpV6.get();
     }
 
+    /**
+     * Returns if the public address is IPv6.
+     *
+     * @return true if IPv6, false if IPv4
+     */
     public static boolean isPublicAddressV6() {
         String ipAddress = serverIp.get();
         return NO_IP_ADDRESS.equals(ipAddress) ? false : ipAddress.contains(":");
@@ -441,6 +460,14 @@ public class NetworkManager {
     public static boolean isLocalAddressV6() {
         String ipAddress = serverLocalIp.get();
         return NO_IP_ADDRESS.equals(ipAddress) ? false : ipAddress.contains(":");
+    }
+
+    public static boolean hasPublicAddressV6() {
+        return !NO_IP_ADDRESS.equals(serverIpV6.get());
+    }
+
+    public static boolean hasLocalAddressV6() {
+        return !NO_IP_ADDRESS.equals(serverLocalIpV6.get());
     }
 
     public static void setServerIp(String ipAddress) {
@@ -615,8 +642,9 @@ public class NetworkManager {
         serverLocalIpV6.set(NO_IP_ADDRESS);
         usableAddresses.clear();
         // add to the usable addresses
-        usableAddresses.add("0.0.0.0");
-        usableAddresses.add("::");
+        for (String addr : DEFAULT_USABLE_ADDRESSES) {
+            usableAddresses.add(addr);
+        }
     }
 
     /**
@@ -840,6 +868,14 @@ public class NetworkManager {
 
     public static String getDefaultStunAddress() {
         return defaultStunAddress;
+    }
+
+    public static boolean isIceIPv6Enabled() {
+        return iceIPv6Enabled;
+    }
+
+    public static void setIceIPv6Enabled(boolean iceIPv6Enabled) {
+        NetworkManager.iceIPv6Enabled = iceIPv6Enabled;
     }
 
 }

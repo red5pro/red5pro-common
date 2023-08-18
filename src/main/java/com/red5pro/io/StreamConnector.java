@@ -2,8 +2,8 @@ package com.red5pro.io;
 
 import java.util.Queue;
 
-import org.ice4j.socket.IceSocketWrapper;
-import org.ice4j.stack.RawMessage;
+import com.red5pro.ice.socket.IceSocketWrapper;
+import com.red5pro.ice.stack.RawMessage;
 
 import com.red5pro.io.rtp.IRTPConnectorOutputStream;
 
