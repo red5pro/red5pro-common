@@ -89,6 +89,8 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         if (codec == 0 && (width == 0 || height == 0)) {
             return;
         }
+
+        // We will dispatch IRTMPEvent 'event' after we dispatch all the FLV tags with timestamps less than 'dispatchTo'
         while ((message = io.pullMessage()) != null) {
             hasPackets = true;
             // log.debug("insert message {}",message);
@@ -108,22 +110,29 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
                     body.setTimestamp((int) (now + timeStart));
                     // log.debug("dispatchInterstitial {} {} {}", timestamp, now,now+timeStart);
 
-                    // this will dispatch one event or the other
+                    // this may dispatch the tag or filter it out based on if we are forwarding audio/video or not.
                     dispatchEvent(body, false, output);
-                    dispatchEvent(event, true, output);
+
                     if (now > dispatchTo) {
+                        //Now we can dispatch the 'event' and then return.
+                        dispatchEvent(event, true, output);
                         // log.debug("segment done {} {} ", now,dispatchTo);
                         return;
                     }
                 }
             }
         }
+
         // We got here because dispatchTo limiter has not run out,
         // and duration has not expired,
         // and no more packets to pull.
-        // So we will do nothing unless we are expected to loop.
-        // If our duration has not expired, next call to process will loop.
+        // First action is to make sure we dispatch the incoming event tag.
+        dispatchEvent(event, true, output);
+
+        // Next action is to determine if our session has expired and if we are expected to loop.
+        // If our duration has not expired, next call to process will loop. If looping reset parameters.
         if (!hasPackets) {
+            //If the FLV was empty of tags, toss exception.
             throw new IOException("Empty insert");
         }
         if (sessionControl.getLifeCycle() == InterstitialDurationControlType.INDEFINITE || sessionControl.canLoop()) {
@@ -140,6 +149,7 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             } else {
                 open();
             }
+            //Reset timestamp delta.
             firstTimestamp = false;
         } else {
             log.debug("interstitial complete  {}", timestamp);

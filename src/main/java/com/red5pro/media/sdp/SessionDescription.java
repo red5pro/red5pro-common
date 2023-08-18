@@ -537,6 +537,10 @@ public class SessionDescription {
         return userAgent == SDPUserAgent.safari;
     }
 
+    public boolean isObs() {
+        return userAgent == SDPUserAgent.obs;
+    }
+
     public boolean isRed5ProSDK() {
         return userAgent == SDPUserAgent.red5pro;
     }
@@ -568,6 +572,8 @@ public class SessionDescription {
                         sb.append(' ');
                     }
                     sb.append("WMS *\n");
+                } else if ("-".equals(msid)) {
+                    sb.append("a=msid-semantic: WMS\n");
                 } else {
                     sb.append("a=msid-semantic:WMS ");
                     sb.append(msid);
@@ -575,18 +581,25 @@ public class SessionDescription {
                 }
             }
         }
+        // create a list ordered by mid if it uses digits
+        final List<MediaField> ordered = new ArrayList<>();
+        for (MediaField media : mediaDescriptions) {
+            // if its video and the format is 0 skip it
+            if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
+                continue;
+            }
+            ordered.add(media);
+        }
+        // sort by mid
+        Collections.sort(ordered);
         // bundle is a group attribute, but we don't store it in the attr collection
         if (bundle) {
-            if (mediaDescriptions != null) {
+            if (ordered.size() > 0) {
                 sb.append("a=group:BUNDLE ");
-                for (MediaField media : mediaDescriptions) {
-                    // if its video and the format is 0 skip it
-                    if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
-                        continue;
-                    }
+                ordered.forEach(media -> {
                     sb.append(media.getMediaId());
                     sb.append(' ');
-                }
+                });
                 // trim-off trailing space
                 sb.deleteCharAt(sb.lastIndexOf(" "));
                 sb.append('\n');
@@ -605,18 +618,12 @@ public class SessionDescription {
         if (bandwidth != null) {
             sb.append(bandwidth);
         }
-        if (mediaDescriptions != null) {
-            for (MediaField media : mediaDescriptions) {
-                // if its video and the format is 0 skip it
-                if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
-                    continue;
-                }
-                sb.append(media);
-            }
-        }
+        ordered.forEach(media -> {
+            sb.append(media);
+        });
         // finalize the sdp content
         String sdp = sb.toString();
-        // if the UA is red5pro sdk, swap lf for crlf (XXX not sure if this is required
+        // if the UA is red5pro sdk, swap lf for crlf (XXX not sure if this is required)
         // by our mobile sdk or not, doing for safety)
         if (userAgent.equals(SDPUserAgent.red5pro)) {
             return sdp.replaceAll("\n", "\r\n");

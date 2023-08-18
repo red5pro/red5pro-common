@@ -3,8 +3,11 @@ package com.red5pro.server.stream.webrtc;
 import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
+import com.red5pro.ice.TransportAddress;
+import com.red5pro.ice.Agent;
 import org.red5.server.api.scope.IScope;
 
+import com.red5pro.io.StreamConnector;
 import com.red5pro.media.MuteState;
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.media.sdp.SessionDescription;
@@ -59,28 +62,11 @@ public interface IRTCStream {
     String getLocalSdp();
 
     /**
-     * Returns the local candidates.
-     *
-     * @return candidates
-     */
-    List<String> getLocalCandidates();
-
-    /**
      * Sets remote candidates.
      *
-     * @param mlineIndex
      * @param remoteCandidates
      */
-    void setRemoteCandidates(int mlineIndex, String remoteCandidates);
-
-    /**
-     * Sets remote ICE and DTLS properties. DTLS properties will arrive in the
-     * "offer" or "answer" depending upon our direction; the streaming cannot start
-     * until we have these.
-     *
-     * @param sdp
-     */
-    void setRemoteProperties(SessionDescription sdp);
+    void setRemoteCandidates(List<String> remoteCandidates);
 
     /**
      * Initialize the streams and all the configuration steps.
@@ -192,13 +178,95 @@ public interface IRTCStream {
     void unmuteVideo();
 
     /**
-     * Returns the data channel with the given label. If a data channel is not found
-     * for the label, but the existing one has no label, it will be set to the given
-     * label until overridden by incoming labeled content.
+     * Returns the Agent if it exists.
      *
-     * @param label
-     * @return IDataMediaStream
+     * @return agent
      */
-    IDataMediaStream getDataMediaStream(String label);
+    Agent getAgent();
+
+    /**
+     * Sets the stream connector for the stream with a given remote address.
+     *
+     * @param streamConnector
+     * @param remoteAddress
+     */
+    void setStreamConnector(StreamConnector streamConnector, TransportAddress remoteAddress);
+
+    /**
+     * Returns the allocated UDP port for the stream.
+     *
+     * @return port
+     */
+    int getAllocatedUdpPort();
+
+    /**
+     * Sets the allocated UDP port for the stream. If the port is 0, the port is cleared.
+     *
+     * @param port
+     */
+    void setAllocatedUdpPort(int port);
+
+    /**
+     * Returns the allocated TCP port for the stream.
+     *
+     * @return port
+     */
+    int getAllocatedTcpPort();
+
+    /**
+     * Sets the allocated TCP port for the stream. If the port is 0, the port is cleared.
+     *
+     * @param port
+     */
+    void setAllocatedTcpPort(int port);
+
+    /**
+     * Whether or not the connection for this instance originates from a remote network.
+     *
+     * @return true if remote and false if on the same machine or network.
+     */
+    boolean isRemoteEndpoint();
+
+    /**
+     * Returns whether or not session level DTLS is enabled.
+     *
+     * @return true if enabled, false otherwise
+     */
+    boolean isSessionLevelDTLS();
+
+    /**
+     * Sets whether or not session level DTLS is enabled.
+     *
+     * @param sessionLevelDTLS
+     */
+    void setSessionLevelDTLS(boolean sessionLevelDTLS);
+
+    /**
+     * Returns whether or not session level ICE is enabled.
+     *
+     * @return true if enabled, false otherwise
+     */
+    boolean isSessionLevelICE();
+
+    /**
+     * Sets whether or not session level ICE is enabled.
+     *
+     * @param setSessionLevelICE
+     */
+    void setSessionLevelICE(boolean setSessionLevelICE);
+
+    /**
+     * Returns whether or not end of candidates is enabled.
+     *
+     * @param setUseEndOfCandidates
+     */
+    void setUseEndOfCandidates(boolean setUseEndOfCandidates);
+
+    /**
+     * Returns whether or not end of candidates is enabled.
+     *
+     * @return true if enable, false otherwise
+     */
+    boolean useEndOfCandidates();
 
 }

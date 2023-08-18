@@ -46,10 +46,19 @@ public class PortManagerTest {
     }
 
     @Test
-    public void testGetRTPServerPort() {
-        log.info("\n testGetRTPServerPort");
+    public void testGetRTPServerPortUDP() {
+        log.info("\n testGetRTPServerPortUDP");
         assertTrue(PortManager.getCount() == 0);
-        int a = PortManager.getRTPServerPort();
+        int a = PortManager.getRTPServerPort(true);
+        assertEquals(49152, a);
+        assertTrue(PortManager.getCount() == 1);
+    }
+
+    @Test
+    public void testGetRTPServerPortTCP() {
+        log.info("\n testGetRTPServerPortTCP");
+        assertTrue(PortManager.getCount() == 0);
+        int a = PortManager.getRTPServerPort(false);
         assertEquals(49152, a);
         assertTrue(PortManager.getCount() == 1);
     }

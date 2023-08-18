@@ -50,6 +50,8 @@ public class ConnectionUtils {
         SECOND_SCREEN_WS("com.red5pro.server.html5.websockets.net.WebsocketsMinaConnection"),
         // WebRTC connection
         RTC("com.red5pro.webrtc.RTCConnection"),
+        // WebRTC WHIP/WHEP connection
+        WHIP_WHEP("com.red5pro.whip.WHConnection"),
         // MPEG-TS connection
         MPEGTS("com.red5pro.mpegts.MPEGTSConnection"),
         // SRT
@@ -135,6 +137,17 @@ public class ConnectionUtils {
      */
     public static boolean isRTC(IConnection connection) {
         return ConnectionType.RTC.equals(getConnectionTypeEnum(connection));
+    }
+
+    /**
+     * Returns boolean true if connection is a WHConnection object, false otherwise
+     *
+     * @param connection
+     *            IConnection
+     * @return true if WHIP or WHEP and false otherwise
+     */
+    public static boolean isWHIPWHEP(IConnection connection) {
+        return ConnectionType.WHIP_WHEP.equals(getConnectionTypeEnum(connection));
     }
 
     /**

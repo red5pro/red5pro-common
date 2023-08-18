@@ -6,7 +6,8 @@ package com.red5pro.media.sdp.model;
  * @author Paul Gregoire
  */
 public enum AttributeKey {
-    bundleonly, candidate, // ICE candidate
+    bundleonly, bundleonlyDASHED("bundle-only"), // bundle only marker
+    candidate, // ICE candidate
     endofcandidates("end-of-candidates"), // end of ICE candidates marker
     group, // Grouping
     msidsemantic("msid-semantic"), rtcp, // RTCP connection information
@@ -47,7 +48,7 @@ public enum AttributeKey {
     imageattr, // image attributes / dimensions
     width, height, Width, Height, // capitalized versions are for legacy support
     sctpmap, sctpport("sctp-port"), maxmessagesize("max-message-size"), // sctp / datachannel / application
-    etag, charset, xgoogleflag("x-google-flag"), extmapallowmixed, // Determines allowance of mix one- and two-byte header extensions within the same stream
+    etag, charset, xgoogleflag("x-google-flag"), extmapallowmixed, extmapallowmixedDASHED("extmap-allow-mixed"), // Determines allowance of mix one- and two-byte header extensions within the same stream
     filter; // pro custom feature
 
     // used when the "name" has a dash char in it, since a dash isnt valid for an enum
