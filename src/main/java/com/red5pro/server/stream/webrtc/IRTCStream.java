@@ -269,4 +269,7 @@ public interface IRTCStream {
      */
     boolean useEndOfCandidates();
 
+    default public void handleMuteStateEvent(MuteState audioMuteStateReq, MuteState videoMuteStateReq) {
+        // default: no-op
+    }
 }
