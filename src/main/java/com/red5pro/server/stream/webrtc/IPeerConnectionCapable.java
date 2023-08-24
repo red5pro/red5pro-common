@@ -50,13 +50,4 @@ public interface IPeerConnectionCapable extends IConnection {
 
     void writeMessage(String format);
 
-    void setLocalSDP(String sdp);
-
-    String getLocalSDP();
-
-    void sendRemb(int ssrc, int bitrate);
-
-    @Deprecated
-    boolean isEdge(); // remove traces of this once we stop supporting Edge
-
 }
