@@ -146,4 +146,10 @@ public interface IRTCCapableConnection extends IConnection {
 
     boolean isSafari();
 
+    void setLocalSDP(String sdp);
+
+    String getLocalSDP();
+
+    void sendRemb(int ssrc, int bitrate);
+
 }
