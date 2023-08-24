@@ -52,6 +52,8 @@ public interface IPeerConnectionCapable extends IConnection {
 
     void setLocalSDP(String sdp);
 
+    String getLocalSDP();
+
     void sendRemb(int ssrc, int bitrate);
 
     @Deprecated
