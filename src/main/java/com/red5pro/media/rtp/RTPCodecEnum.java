@@ -161,7 +161,7 @@ public enum RTPCodecEnum {
      * @return array of payload type ids
      */
     public static int[] getVideoPayloadTypesAsArray() {
-        int[] types = new int[] { H264_PMODE1.payloadType, H264_PMODE0.payloadType, VP8.payloadType, VP9.payloadType, AV1.payloadType, HEVC.payloadType };
+        int[] types = new int[] { H264_PMODE1.payloadType, VP8.payloadType, VP9.payloadType, AV1.payloadType, HEVC.payloadType };
         return types;
     }
 
@@ -171,7 +171,7 @@ public enum RTPCodecEnum {
      * @return array of encoding names
      */
     public static String[] getAudioEncodingNamesAsArray() {
-        String[] encodings = new String[] { OPUS.encodingName, PCMU.encodingName, PCMA.encodingName, SPEEX.encodingName };
+        String[] encodings = new String[] { OPUS.encodingName, PCMU.encodingName, PCMA.encodingName, SPEEX.encodingName, AAC.encodingName, L16.encodingName };
         return encodings;
     }
 
@@ -181,7 +181,7 @@ public enum RTPCodecEnum {
      * @return array of encoding names
      */
     public static String[] getVideoEncodingNamesAsArray() {
-        String[] encodings = new String[] { H264_PMODE1.encodingName, H264_PMODE0.encodingName, VP8.encodingName, VP9.encodingName, AV1.encodingName, HEVC.encodingName };
+        String[] encodings = new String[] { H264.encodingName, VP8.encodingName, VP9.encodingName, AV1.encodingName, HEVC.encodingName };
         return encodings;
     }
 
