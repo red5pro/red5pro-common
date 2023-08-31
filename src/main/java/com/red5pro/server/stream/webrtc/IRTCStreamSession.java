@@ -61,21 +61,27 @@ public interface IRTCStreamSession {
      *
      * @return userAgent
      */
-    String getUserAgent();
+    default String getUserAgent() {
+        return SDPUserAgent.undefined.name();
+    }
 
     /**
      * Returns the user-agent enum.
      *
      * @return userAgentEnum
      */
-    SDPUserAgent getUserAgentEnum();
+    default SDPUserAgent getUserAgentEnum() {
+        return SDPUserAgent.undefined;
+    }
 
     /**
      * Returns the user-agents version string.
      *
      * @return userAgentVersion
      */
-    String getUAVersion();
+    default String getUAVersion() {
+        return "0";
+    }
 
     /**
      * Returns true if the User-Agent is Android.
