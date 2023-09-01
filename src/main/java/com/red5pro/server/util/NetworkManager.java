@@ -292,10 +292,14 @@ public class NetworkManager {
             // set local properties
             defaultTransport = props.getProperty("ice.default.transport", "udp");
             defaultStunAddress = props.getProperty("stun.address", "stun.l.google.com:19302");
-            // set/get ice4j props
+            // set/get ice props
             System.setProperty("com.red5pro.ice.BIND_RETRIES", "1");
             System.setProperty("com.red5pro.ice.ice.harvest.NAT_HARVESTER_DEFAULT_TRANSPORT", defaultTransport);
             System.setProperty("com.red5pro.ice.TERMINATION_DELAY", props.getProperty("ice.termination.delay", "500"));
+            // used for tcp socket linger, it defaults to -1 (disabled)
+            System.setProperty("SO_LINGER", props.getProperty("ice.so.linger", "-1"));
+            System.setProperty("SO_RCVBUF", props.getProperty("ice.so.recvbuf", "65535"));
+            System.setProperty("SO_SNDBUF", props.getProperty("ice.so.sendbuf", "65535"));
             // whether or not IPv6 is enabled
             iceIPv6Enabled = Boolean.valueOf(props.getProperty("ice.enable.ipv6", "false"));
         } catch (IOException e) {
