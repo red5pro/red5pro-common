@@ -119,7 +119,7 @@ public class CorsFilter implements Filter {
                     corsConfig = tmp;
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.warn("Could not read corsConfig from Red5ProPlugin", e);
             }
         } else if (appCtx.containsBean("web.handler")) {
             MultiThreadedApplicationAdapter app = (MultiThreadedApplicationAdapter) appCtx.getBean("web.handler");
@@ -133,34 +133,39 @@ public class CorsFilter implements Filter {
         }
         // let the user override the defaults
         Enumeration<String> params = filterConfig.getInitParameterNames();
-        params.asIterator().forEachRemaining(paramName -> {
-            log.debug("param: {}", paramName);
-            ParameterNames param = ParameterNames.valueOf(paramName);
-            switch (param) {
-                case exposeAllHeaders:
-                    corsConfig.setExposeAllHeaders(Boolean.valueOf(filterConfig.getInitParameter(paramName)));
-                    break;
-                case allowedOrigins:
-                    corsConfig.setAllowedOrigins(filterConfig.getInitParameter(paramName));
-                    corsConfig.setAllowCredentials(true);
-                    break;
-                case allowedMethods:
-                    corsConfig.setAllowedMethods(filterConfig.getInitParameter(paramName));
-                    break;
-                case allowedHeaders:
-                    corsConfig.setAllowedHeaders(filterConfig.getInitParameter(paramName));
-                    break;
-                case maxAge:
-                    corsConfig.setMaxAge(filterConfig.getInitParameter(paramName));
-                    break;
-                case useLowerCaseHeaders:
-                    corsConfig.setUseLowerCaseHeaders(Boolean.valueOf(filterConfig.getInitParameter(paramName)));
-                    break;
-                default:
-                    log.warn("Unknown parameter: {}", paramName);
-                    break;
-            }
-        });
+        if (params != null) {
+            log.debug("Found {} init parameters", params.asIterator().next());
+            params.asIterator().forEachRemaining(paramName -> {
+                log.debug("param: {}", paramName);
+                ParameterNames param = ParameterNames.valueOf(paramName);
+                switch (param) {
+                    case exposeAllHeaders:
+                        corsConfig.setExposeAllHeaders(Boolean.valueOf(filterConfig.getInitParameter(paramName)));
+                        break;
+                    case allowedOrigins:
+                        corsConfig.setAllowedOrigins(filterConfig.getInitParameter(paramName));
+                        corsConfig.setAllowCredentials(true);
+                        break;
+                    case allowedMethods:
+                        corsConfig.setAllowedMethods(filterConfig.getInitParameter(paramName));
+                        break;
+                    case allowedHeaders:
+                        corsConfig.setAllowedHeaders(filterConfig.getInitParameter(paramName));
+                        break;
+                    case maxAge:
+                        corsConfig.setMaxAge(filterConfig.getInitParameter(paramName));
+                        break;
+                    case useLowerCaseHeaders:
+                        corsConfig.setUseLowerCaseHeaders(Boolean.valueOf(filterConfig.getInitParameter(paramName)));
+                        break;
+                    default:
+                        log.warn("Unknown parameter: {}", paramName);
+                        break;
+                }
+            });
+        } else {
+            log.debug("No init parameters found");
+        }
     }
 
     @Override
