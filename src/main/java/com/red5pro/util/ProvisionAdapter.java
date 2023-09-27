@@ -106,7 +106,7 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
         // handle aliases
         if (provision.getStreamNameAlias() != null) {
             // publisher alias
-            result.addProperty("nameAlias", provision.getStreamNameAlias());
+            result.addProperty("streamAlias", provision.getStreamNameAlias());
         }
         if (provision.getAliases() != null) {
             // subscribe aliases
@@ -114,7 +114,7 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
             provision.getAliases().forEach(alias -> {
                 aliases.add(alias);
             });
-            result.add("aliases", aliases);
+            result.add("playAliases", aliases);
         }
         return result;
     }
@@ -164,13 +164,13 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
         }
         // publisher alias
         if (provObj.has("nameAlias")) {
-            String streamNameAlias = provObj.get("nameAlias").getAsString();
+            String streamNameAlias = provObj.get("streamAlias").getAsString();
             provision.setStreamNameAlias(streamNameAlias);
         }
         // subscribing aliases
         if (provObj.has("aliases")) {
             Set<String> aliases = new HashSet<>();
-            JsonArray aliasArr = provObj.get("aliases").getAsJsonArray();
+            JsonArray aliasArr = provObj.get("playAliases").getAsJsonArray();
             for (JsonElement alias : aliasArr) {
                 aliases.add(alias.getAsString());
             }

@@ -137,4 +137,7 @@ public interface IRTCCapableConnection extends IConnection {
 
     void sendRemb(int ssrc, int bitrate);
 
+    // TODO(paul) add this to the interface next release
+    //boolean isLocalNetwork();
+
 }
