@@ -299,7 +299,7 @@ public class Provision {
 
     @Override
     public String toString() {
-        return "Provision [guid=" + guid + ", contextPath=" + contextPath + ", streamName=" + streamName + ", qualityLevel=" + qualityLevel + ", restrictions=" + restrictions + ", parameters=" + parameters + ", primaries=" + primaries + ", secondaries=" + secondaries + ", nameAlias=" + streamNameAlias + ", aliases=" + aliases + "]";
+        return "Provision [guid=" + guid + ", contextPath=" + contextPath + ", streamName=" + streamName + ", qualityLevel=" + qualityLevel + ", restrictions=" + restrictions + ", parameters=" + parameters + ", primaries=" + primaries + ", secondaries=" + secondaries + ", streamAlias=" + streamNameAlias + ", playAliases=" + aliases + "]";
     }
 
 }
