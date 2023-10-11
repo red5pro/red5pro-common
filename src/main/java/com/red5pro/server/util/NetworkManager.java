@@ -363,7 +363,7 @@ public class NetworkManager {
                     setServerIpV6(ipAddress);
                 } else {
                     String ipV6Address = topologyMode.getPublicIPV6();
-                    if (ipV6Address.contains(":")) {
+                    if (ipV6Address != null && ipV6Address.contains(":")) {
                         setServerIpV6(ipV6Address);
                     }
                 }
