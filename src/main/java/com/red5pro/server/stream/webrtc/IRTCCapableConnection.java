@@ -131,19 +131,13 @@ public interface IRTCCapableConnection extends IConnection {
      */
     SDPUserAgent getUserAgentEnum();
 
-    /**
-     * Returns the user-agents version string.
-     *
-     * @return userAgentVersion
-     */
-    String getUAVersion();
+    void setLocalSDP(String sdp);
 
-    boolean isChrome();
+    String getLocalSDP();
 
-    boolean isEdge();
+    void sendRemb(int ssrc, int bitrate);
 
-    boolean isFirefox();
-
-    boolean isSafari();
+    // TODO(paul) add this to the interface next release
+    //boolean isLocalNetwork();
 
 }

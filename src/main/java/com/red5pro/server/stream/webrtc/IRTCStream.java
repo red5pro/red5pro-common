@@ -269,7 +269,15 @@ public interface IRTCStream {
      */
     boolean useEndOfCandidates();
 
+    /**
+     * Returns the session for this stream.
+     *
+     * @return IRTCStreamSession
+     */
+    IRTCStreamSession getSession();
+
     default public void handleMuteStateEvent(MuteState audioMuteStateReq, MuteState videoMuteStateReq) {
         // default: no-op
     }
+
 }
