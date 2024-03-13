@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.red5.server.api.scope.IScope;
+import org.red5.server.net.rtmp.event.Notify;
 
 public interface Red5ProCanvas {
     /**
@@ -82,6 +83,12 @@ public interface Red5ProCanvas {
      */
     void forward(String host, int port, String path, String name, Map<String, Object> connectParams) throws IOException;
 
+    /**
+     * Insert metadata to stream.
+     * @param event
+     */
+    void insertMetadata(Notify event); 
+        
     /**
      * Stop streaming process.
      */
