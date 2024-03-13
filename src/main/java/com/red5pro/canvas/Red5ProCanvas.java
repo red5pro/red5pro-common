@@ -87,8 +87,8 @@ public interface Red5ProCanvas {
      * Insert metadata to stream.
      * @param event
      */
-    void insertMetadata(Notify event); 
-        
+    void insertMetadata(Notify event);
+
     /**
      * Stop streaming process.
      */
