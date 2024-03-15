@@ -37,6 +37,7 @@ import org.red5.server.api.stream.IStreamListener;
 import org.red5.server.api.stream.StreamState;
 import org.red5.server.net.rtmp.event.Notify;
 
+import com.red5pro.override.api.IDispatchEventOveride;
 import com.red5pro.override.api.ProStreamTerminationEventListener;
 import com.red5pro.override.cauldron.ProcessConfiguration;
 import com.red5pro.override.cauldron.brews.Potion;
@@ -110,6 +111,8 @@ public interface IProStream extends IClientBroadcastStream {
      *            Potion
      */
     void setPotion(Potion potion);
+
+    void setDispatchEventOveride(IDispatchEventOveride handler);
 
     /**
      * Gets the Parameter Queue which the native processor is polling 'Ingrediants'
