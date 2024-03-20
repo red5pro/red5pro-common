@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
     <name>red5pro-common</name>
     <!-- major, minor, release, build -->
-    <version>12.5.0.1</version>
+    <version>12.5.0.2</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>

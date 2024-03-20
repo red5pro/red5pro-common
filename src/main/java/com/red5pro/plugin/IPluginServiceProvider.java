@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 Infrared5, Inc. All rights reserved.
+// Copyright © 2024 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -26,36 +26,18 @@
 /*
  * https://account.red5pro.com/assets/LICENSE.txt
  */
-package com.red5pro.override.api;
+package com.red5pro.plugin;
 
 import java.util.Set;
 
-import org.red5.server.api.stream.IStreamListener;
-import org.red5.server.messaging.IPipe;
-import org.red5.server.net.rtmp.event.IRTMPEvent;
-
-import com.red5pro.override.IProStream;
-
 /**
- * This interface allows an application to filter and control the routing of media and metadata frames.
- * @author Andy
+ * Red5Pro plugins that provide a service, such as cloud storage implement this interface.
+ * @author Andy Shaules
  *
  */
-public interface IDispatchEventOveride {
-    /**
-     * Dispatch events to rtmp connections.
-     * @param stream The source stream
-     * @param pipe The Red5 IPipe interface.
-     * @param event The media or metadata event.
-     */
-    public void dispatchToClients(IProStream stream, IPipe pipe, IRTMPEvent event);
+public interface IPluginServiceProvider {
 
-    /**
-     * Dispatch events to plugins. Each plugin supports a different type of client.
-     * @param stream
-     * @param listeners
-     * @param event
-     */
-    public void dispatchToPlugins(IProStream stream, Set<IStreamListener> listeners, IRTMPEvent event);
+    IPluginService getService(String serviceId);
 
+    Set<IPluginService> getServices();
 }
