@@ -48,6 +48,7 @@ public enum RTPCodecEnum {
     AAC_48K(96, "aac", "AAC", 48000, 2), // std identifier for aac 48k stereo
     AAC_41K(96, "aac", "AAC", 41000, 2), // std identifier for aac 41k stereo
     L16(97, "L16", "L16", 8000, 1), // L16 mono
+    MP3(97, "mp3", "mp3", 48000, 2),
     // video
     H264(96, "H264", "h.264", 90000), // simplified identifier for h.264
     H264_PMODE1(126, "H264", "h.264", 90000), // packetization-mode=1
