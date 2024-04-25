@@ -247,6 +247,9 @@ public class SDPTrack {
      */
     public String getEncoding() {
         String encoding = isAudio() ? "MPEG4-GENERIC" : "H264"; // default to known codecs for the sdk
+        if (payloadId == 14) {
+            encoding = "MP3";
+        }
         AttributeField codecAttr = session.getMediaDescription(mediaType).getAttribute(AttributeKey.rtpmap);
         if (codecAttr != null) {
             String[] parts = codecAttr.getValue().split("[\\s|/]");
