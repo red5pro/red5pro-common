@@ -4,9 +4,9 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -172,7 +172,7 @@ public class PortManager {
     public static int getRTPServerPortRandom() {
         //log.debug("Get port");
         // start a random port within range
-        int serverPort = RandomUtils.nextInt(rtpPortBase, rtpPortCeiling);
+        int serverPort = ThreadLocalRandom.current().nextInt(rtpPortBase, rtpPortCeiling);
         for (; serverPort < rtpPortCeiling; serverPort++) {
             // add only works if its not already allocated
             if (allocatedPorts.add(serverPort)) {

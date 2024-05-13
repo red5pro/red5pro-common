@@ -28,7 +28,7 @@ public class IdGenerator {
     private static final DigestRandomGenerator random = new DigestRandomGenerator(new SHA1Digest());
 
     // random numeric string generator - thread safe and immutable
-    public static RandomStringGenerator randomNumericStringGenerator = new RandomStringGenerator.Builder().withinRange('1', '9').build();
+    public static RandomStringGenerator randomNumericStringGenerator = RandomStringGenerator.builder().withinRange('1', '9').get();
 
     private static MessageDigest md;
 
