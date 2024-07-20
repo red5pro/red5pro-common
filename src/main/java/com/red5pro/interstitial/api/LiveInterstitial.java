@@ -3,6 +3,8 @@ package com.red5pro.interstitial.api;
 import java.io.IOException;
 
 import org.apache.mina.core.buffer.IoBuffer;
+import org.red5.codec.VideoFrameType;
+import org.red5.io.IoConstants;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.stream.IBroadcastStream;
 import org.red5.server.api.stream.IStreamListener;
@@ -11,7 +13,6 @@ import org.red5.server.net.rtmp.event.AudioData;
 import org.red5.server.net.rtmp.event.IRTMPEvent;
 import org.red5.server.net.rtmp.event.Notify;
 import org.red5.server.net.rtmp.event.VideoData;
-import org.red5.server.net.rtmp.event.VideoData.FrameType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +72,8 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
             // do nothing;
             return;
         }
-
-        if (packet instanceof VideoData) {
+        final byte dataType = packet.getDataType();
+        if (IoConstants.TYPE_VIDEO == dataType) {
             if (!isVideoPrimed && isForwardVideo()) {// send codec configs if present.
                 isVideoPrimed = true;
                 if (newStream.getCodecInfo().getVideoCodec() != null && newStream.getCodecInfo().getVideoCodec().getDecoderConfiguration() != null) {
@@ -90,14 +91,14 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
             }
 
             // check for live key frame. we need one to proceed.
-            if (!hasKeyFrame && ((VideoData) packet).getFrameType() == FrameType.KEYFRAME) {
+            if (!hasKeyFrame && ((VideoData) packet).getFrameType() == VideoFrameType.KEYFRAME) {
                 hasKeyFrame = true;
             }
 
             if (!hasKeyFrame) {// can't do nothin' with new vid yet.
                 return;
             }
-        } else if (isForwardAudio() && !hasAudio && packet instanceof AudioData) {
+        } else if (isForwardAudio() && !hasAudio && IoConstants.TYPE_AUDIO == dataType) {
             // Check for codec private data.
             if (newStream.getCodecInfo().getAudioCodec() != null && newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration() != null) {
                 AudioData privateConfig = new AudioData(newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration());

@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <name>red5pro-common</name>
     <!-- major, minor, release, build -->
-    <version>13.0.0.0</version>
+    <version>13.0.0.1</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -60,7 +60,7 @@
         <maven.compiler.release>21</maven.compiler.release>
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
-        <red5.version>2.0.0</red5.version>
+        <red5.version>2.0.4</red5.version>
         <spring.version>6.1.8</spring.version>
         <tomcat.version>11.0.0-M20</tomcat.version>
         <mina.version>2.0.23</mina.version>
@@ -71,8 +71,8 @@
         <bc.version>1.78.1</bc.version>
         <junit.version>[4.13.1,)</junit.version>
         <red5pro-ice.version>[1.0.5,)</red5pro-ice.version>
-        <slf4j.version>1.7.36</slf4j.version>
-        <logback.version>1.2.11</logback.version>
+        <slf4j.version>2.0.13</slf4j.version>
+        <logback.version>1.5.6</logback.version>
     </properties>
     <distributionManagement>
         <repository>
@@ -331,10 +331,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.1</version>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>1.4</version>
@@ -355,9 +351,8 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
