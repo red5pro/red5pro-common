@@ -20,26 +20,6 @@ import com.red5pro.override.IProStream;
  */
 public interface IRTCStream {
 
-    public static enum H264Profile {
-
-        None, ConstrainedBaseline, Baseline, Main, High;
-
-        public static H264Profile valueOf(int val) {
-            switch (val) {
-                case 1:
-                    return ConstrainedBaseline;
-                case 2:
-                    return Baseline;
-                case 3:
-                    return Main;
-                case 4:
-                    return High;
-            }
-            return None;
-        }
-
-    };
-
     /**
      * Returns the name for this stream instance.
      *
@@ -191,34 +171,6 @@ public interface IRTCStream {
      * @param remoteAddress
      */
     void setStreamConnector(StreamConnector streamConnector, TransportAddress remoteAddress);
-
-    /**
-     * Returns the allocated UDP port for the stream.
-     *
-     * @return port
-     */
-    int getAllocatedUdpPort();
-
-    /**
-     * Sets the allocated UDP port for the stream. If the port is 0, the port is cleared.
-     *
-     * @param port
-     */
-    void setAllocatedUdpPort(int port);
-
-    /**
-     * Returns the allocated TCP port for the stream.
-     *
-     * @return port
-     */
-    int getAllocatedTcpPort();
-
-    /**
-     * Sets the allocated TCP port for the stream. If the port is 0, the port is cleared.
-     *
-     * @param port
-     */
-    void setAllocatedTcpPort(int port);
 
     /**
      * Whether or not the connection for this instance originates from a remote network.
