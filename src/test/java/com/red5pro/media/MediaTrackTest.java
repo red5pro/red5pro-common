@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.red5.codec.AudioCodec;
+import org.red5.codec.VideoCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +65,7 @@ public class MediaTrackTest {
         CompositeMediaSample cms = (CompositeMediaSample) age.getObject();
         // assertTrue(cms.containsFourCC(FourCC.OPUS));
         // assertTrue(cms.containsFourCC(FourCC.PCM));
-        assertNotNull(cms.get(FourCC.PCM));
+        assertNotNull(cms.get(AudioCodec.PCM.getFourcc()));
     }
 
     // create events for the tracks
@@ -73,9 +75,9 @@ public class MediaTrackTest {
         LinkedList<GroupEvent> events = new LinkedList<>();
         // create media samples to hold opus and pcm
         MediaSample opus = MediaSample.build(now, new byte[] { 3, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, MediaType.AUDIO);
-        opus.setFourCC(FourCC.OPUS);
+        opus.setFourCC(AudioCodec.OPUS.getFourcc());
         MediaSample pcm = MediaSample.build(now, new byte[] { 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, MediaType.AUDIO);
-        pcm.setFourCC(FourCC.PCM);
+        pcm.setFourCC(AudioCodec.PCM.getFourcc());
         // create CompositeMediaSample for holding an opus frame with its decoded pcm
         // bytes
         CompositeMediaSample cms = new CompositeMediaSample();
@@ -87,7 +89,7 @@ public class MediaTrackTest {
         events.add(age);
         // create MediaSample to hold h264 bytes
         MediaSample h264 = MediaSample.build(now, new byte[] { 7, 1, 0, 1, 1, 1, 3, 3 }, MediaType.VIDEO);
-        h264.setFourCC(FourCC.H264);
+        h264.setFourCC(VideoCodec.AVC.getFourcc());
         // create the video group event
         GroupEvent vge = GroupEvent.build(h264, FourCC.H264);
         events.add(vge);

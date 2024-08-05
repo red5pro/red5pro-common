@@ -40,7 +40,7 @@ public class MediaSample implements IMediaSample {
     private String encoding;
 
     // fourCC code for the content
-    private FourCC fourCC;
+    private int fourCC;
 
     // container format of the bytes.
     private FourCC container;
@@ -259,17 +259,16 @@ public class MediaSample implements IMediaSample {
         return encoding;
     }
 
-    public FourCC getFourCC() {
+    public int getFourCC() {
         return fourCC;
     }
 
-    public void setFourCC(FourCC fourCC) {
+    public void setFourCC(int fourCC) {
         this.fourCC = fourCC;
     }
 
     public void setFourCC(char a, char b, char c, char d) {
-        this.fourCC = FourCC.getFourCC(a, b, c, d);
-        ;
+        this.fourCC = ((a << 24) | (b << 16) | (c << 8) | d);
     }
 
     public long getTimebase() {
@@ -338,22 +337,33 @@ public class MediaSample implements IMediaSample {
             buf.setClockRate(48000);
         }
         buf.setSequenceNumber(sequenceNumber);
-        if (fourCC != null) {
-            switch (fourCC) {
+        if (fourCC != 0) {
+            // determine the RTP codec by the ERTMP fourCC
+            AudioCodec aCodec = AudioCodec.valueOfByFourCc(fourCC);
+            switch (aCodec) {
                 case OPUS:
                     buf.setCodec(RTPCodecEnum.OPUS);
-                    break;
-                case H264:
-                    buf.setCodec(RTPCodecEnum.H264);
                     break;
                 case AAC:
                     buf.setCodec(RTPCodecEnum.AAC_48K);
                     break;
+                case PCM:
+                    buf.setCodec(RTPCodecEnum.PCMU);
+                    break;
+            }
+            VideoCodec vCodec = VideoCodec.valueOfByFourCc(fourCC);
+            switch (vCodec) {
+                case AVC:
+                    buf.setCodec(RTPCodecEnum.H264);
+                    break;
                 case VP8:
                     buf.setCodec(RTPCodecEnum.VP8);
                     break;
-                case PCM:
-                    buf.setCodec(RTPCodecEnum.PCMU);
+                case HEVC:
+                    buf.setCodec(RTPCodecEnum.H265);
+                    break;
+                case AV1:
+                    buf.setCodec(RTPCodecEnum.AV1);
                     break;
             }
         } else if (encoding != null) {
@@ -462,7 +472,7 @@ public class MediaSample implements IMediaSample {
         int result = 1;
         result = prime * result + type.hashCode();
         result = prime * result + ((encoding == null) ? 0 : encoding.hashCode());
-        result = prime * result + ((fourCC == null) ? 0 : fourCC.hashCode());
+        result = prime * result + fourCC;
         result = prime * result + (int) (timestamp ^ (timestamp >>> 32));
         return result;
     }

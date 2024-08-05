@@ -179,7 +179,7 @@ public interface IMediaSample {
      *
      * @return fourcc of media if known.
      */
-    FourCC getFourCC();
+    int getFourCC();
 
     /**
      *
