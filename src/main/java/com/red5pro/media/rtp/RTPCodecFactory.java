@@ -22,7 +22,7 @@ public class RTPCodecFactory {
 
     private RTPCodecEnum[] availableAudioCodecs = { RTPCodecEnum.OPUS, RTPCodecEnum.SPEEX, RTPCodecEnum.PCMU };
 
-    private RTPCodecEnum[] availableVideoCodecs = { RTPCodecEnum.H264_PMODE1, RTPCodecEnum.H264_PMODE0, RTPCodecEnum.VP8 };
+    private RTPCodecEnum[] availableVideoCodecs = { RTPCodecEnum.H264, RTPCodecEnum.VP8, RTPCodecEnum.AV1, RTPCodecEnum.H265 };
 
     private Map<RTPCodecEnum, AttributeField> audioAttributes = new HashMap<>();
 
@@ -48,15 +48,14 @@ public class RTPCodecFactory {
 
     {
         // media attrs for opus
-        audioAttributes.put(RTPCodecEnum.OPUS, new AttributeField(AttributeKey.fmtp, String.format("%d minptime=10; useinbandfec=1", RTPCodecEnum.OPUS.payloadType)));
+        audioAttributes.put(RTPCodecEnum.OPUS, new AttributeField(AttributeKey.fmtp, String.format("%d minptime=10;useinbandfec=1", RTPCodecEnum.OPUS.payloadType)));
         // -1 is for all audio media
         audioAttributes.put(RTPCodecEnum.ANY_AUDIO, new AttributeField(AttributeKey.maxptime, "60"));
-
         // media attrs for h264
         // details: https://tools.ietf.org/html/draft-ietf-rtcweb-video-03#section-6.2
         // per spec: WebRTC implementations MUST signal this information in-band; as a result, this parameter (sprop-parameter-sets) will not be present in SDP.
-        videoAttributes.put(RTPCodecEnum.H264_PMODE0, new AttributeField(AttributeKey.fmtp, String.format("%d profile-level-id=%s;packetization-mode=0", RTPCodecEnum.H264_PMODE0.payloadType, profile)));
-        videoAttributes.put(RTPCodecEnum.H264_PMODE1, new AttributeField(AttributeKey.fmtp, String.format("%d profile-level-id=%s;packetization-mode=1", RTPCodecEnum.H264_PMODE1.payloadType, profile)));
+        //videoAttributes.put(RTPCodecEnum.H264_PMODE0, new AttributeField(AttributeKey.fmtp, String.format("%d profile-level-id=%s;packetization-mode=0", RTPCodecEnum.H264.payloadType, profile)));
+        videoAttributes.put(RTPCodecEnum.H264, new AttributeField(AttributeKey.fmtp, String.format("%d profile-level-id=%s;packetization-mode=1", RTPCodecEnum.H264.payloadType, profile)));
     }
 
     public static RTPCodecFactory getInstance() {

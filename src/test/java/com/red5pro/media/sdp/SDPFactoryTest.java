@@ -99,8 +99,10 @@ public class SDPFactoryTest {
     // EnumSet.of(RTPCodecEnum.H264_PMODE1, RTPCodecEnum.VP8);
     ArrayList<RTPCodecEnum> availableVideoCodecs = new ArrayList<>(2);
     {
-        availableVideoCodecs.add(RTPCodecEnum.H264_PMODE1);
+        availableVideoCodecs.add(RTPCodecEnum.H264);
         availableVideoCodecs.add(RTPCodecEnum.VP8);
+        availableVideoCodecs.add(RTPCodecEnum.H265);
+        availableVideoCodecs.add(RTPCodecEnum.AV1);
     }
 
     static String publicIPAddress;
@@ -201,7 +203,7 @@ public class SDPFactoryTest {
     @Test
     public void testChromeEnhanced() throws SDPException {
         log.info("\n testChromeEnhanced");
-        EnumSet<RTPCodecEnum> preferredVideoCodecs = EnumSet.of(RTPCodecEnum.H264_PMODE1, RTPCodecEnum.VP8);
+        EnumSet<RTPCodecEnum> preferredVideoCodecs = EnumSet.of(RTPCodecEnum.H264, RTPCodecEnum.VP8);
         RTPCodecEnum selectedVideoCodec = RTPCodecEnum.NONE;
         int videoPayloadType = -1;
         // create local sdp
@@ -262,7 +264,7 @@ public class SDPFactoryTest {
                 log.info("Last checked video codec: {}", videoCodec);
                 // add props to the fmtp if h264 and profile is ok
                 AttributeField fmtp = null;
-                if (selectedVideoCodec == RTPCodecEnum.H264_PMODE1) {
+                if (selectedVideoCodec == RTPCodecEnum.H264) {
                     // default profile BP 3.1
                     String profile = "42801f";
                     // see if one was offered and use it if it was
@@ -316,7 +318,7 @@ public class SDPFactoryTest {
         log.info("\n testRPRO6991");
         boolean isAndroid = false, isEdge = false, isOpera = false;
 
-        EnumSet<RTPCodecEnum> preferredVideoCodecs = EnumSet.of(RTPCodecEnum.H264_PMODE1, RTPCodecEnum.VP8);
+        EnumSet<RTPCodecEnum> preferredVideoCodecs = EnumSet.of(RTPCodecEnum.H264, RTPCodecEnum.VP8);
         RTPCodecEnum selectedVideoCodec = RTPCodecEnum.NONE;
         int videoPayloadType = -1;
 
@@ -378,7 +380,7 @@ public class SDPFactoryTest {
                 log.info("Last checked video codec: {}", videoCodec);
                 // add props to the fmtp if h264 and profile is ok
                 AttributeField fmtp = null;
-                if (selectedVideoCodec == RTPCodecEnum.H264_PMODE1) {
+                if (selectedVideoCodec == RTPCodecEnum.H264) {
                     // default profile BP 3.1
                     String profile = "42801f";
                     // see if one was offered and use it if it was
@@ -561,7 +563,7 @@ public class SDPFactoryTest {
                     fail();
                 }
             } else if (mf.getMediaType().equals(SDPMediaType.video)) {
-                af = mf.getAttribute(AttributeKey.rtpmap, EnumSet.of(RTPCodecEnum.H264_PMODE1, RTPCodecEnum.VP8));
+                af = mf.getAttribute(AttributeKey.rtpmap, EnumSet.of(RTPCodecEnum.H264, RTPCodecEnum.VP8));
                 log.debug("RTPMap: {}", af.getValue());
                 if (af.getValue().contains("H264")) {
                     assertEquals("107 H264/90000", af.getValue());

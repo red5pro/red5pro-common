@@ -344,7 +344,7 @@ public class MediaSample implements IMediaSample {
                     buf.setCodec(RTPCodecEnum.OPUS);
                     break;
                 case H264:
-                    buf.setCodec(RTPCodecEnum.H264_PMODE1);
+                    buf.setCodec(RTPCodecEnum.H264);
                     break;
                 case AAC:
                     buf.setCodec(RTPCodecEnum.AAC_48K);
@@ -375,7 +375,7 @@ public class MediaSample implements IMediaSample {
                 VideoCodec videoCodec = VideoCodec.valueOf(encoding);
                 switch (videoCodec) {
                     case AVC:
-                        buf.setCodec(RTPCodecEnum.H264_PMODE1);
+                        buf.setCodec(RTPCodecEnum.H264);
                         break;
                     case VP8:
                         buf.setCodec(RTPCodecEnum.VP8);
@@ -383,10 +383,10 @@ public class MediaSample implements IMediaSample {
                     case VP9: // while unlikely, support added anyway
                         buf.setCodec(RTPCodecEnum.VP9);
                         break;
-                    case HEVC: // while unlikely, support added anyway
-                        buf.setCodec(RTPCodecEnum.HEVC);
+                    case HEVC:
+                        buf.setCodec(RTPCodecEnum.H265);
                         break;
-                    case AV1: // while unlikely, support added anyway
+                    case AV1:
                         buf.setCodec(RTPCodecEnum.AV1);
                         break;
                 }
