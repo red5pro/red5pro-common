@@ -1,5 +1,5 @@
 //
-// Copyright © 2020 Infrared5, Inc. All rights reserved.
+// Copyright © 2023 Infrared5, Inc. All rights reserved.
 //
 // The accompanying code comprising examples for use solely in conjunction with Red5 Pro (the "Example Code")
 // is  licensed  to  you  by  Infrared5  Inc.  in  consideration  of  your  agreement  to  the  following
@@ -23,15 +23,43 @@
 // WHETHER IN  AN  ACTION  OF  CONTRACT,  TORT  OR  OTHERWISE,  ARISING  FROM,  OUT  OF  OR  IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-package com.red5pro.restreamer;
+package com.red5pro.server;
+
+import com.red5pro.server.stream.IAliasProvider;
 
 /**
- * Enum constants for use in the restreamer API.
+ * Interface for scope handlers to provide functionality not available in Red5 core.
  *
  * @author Paul Gregoire
  */
-public enum APIParameter {
+public interface IProScopeHandler {
 
-    type, action, create, update, kill, list, contextpath, scopename, name, outputname, ip, host, port, cast, id, guid, meta, recording, authtype, userName, password;
+    /**
+     * Sets the stream name alias provider for this scope.
+     *
+     * @return provider
+     */
+    void setStreamNameAliasProvider(IAliasProvider provider);
+
+    /**
+     * Returns the stream name alias provider for this scope.
+     *
+     * @return provider
+     */
+    IAliasProvider getStreamNameAliasProvider();
+
+    /**
+     * Returns the webhook endpoint for this scope.
+     *
+     * @return webhook endpoint
+     */
+    String getWebhookEndpoint();
+
+    /**
+     * Sets the webhook endpoint for this scope.
+     *
+     * @param webhookEndpoint
+     */
+    void setWebhookEndpoint(String webhookEndpoint);
 
 }

@@ -3,6 +3,7 @@ package com.red5pro.media.sdp.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -381,6 +382,22 @@ public class MediaField implements Comparable<MediaField> {
         }
     }
 
+    // XXX(paul) this is not thread-safe
+    public void removeAttributeField(AttributeKey key) {
+        List<AttributeField> attrs = List.of(attributes);
+        if (!attrs.isEmpty()) {
+            for (AttributeField attr : attrs) {
+                if (attr != null && attr.getAttribute().equals(key)) {
+                    // remove it
+                    attrs.remove(attr);
+                    // reset attributes
+                    setAttributes(attrs.toArray(new AttributeField[0]));
+                    break;
+                }
+            }
+        }
+    }
+
     public AttributeField[] getAttributes(AttributeKey key) {
         List<AttributeField> subset = new ArrayList<>(1);
         if (attributes != null && attributes.length > 0) {
@@ -425,6 +442,28 @@ public class MediaField implements Comparable<MediaField> {
      */
     public void setMediaId(String mediaId) {
         this.mediaId = mediaId;
+    }
+
+    /**
+     * Sets whether or not the media is active.
+     *
+     * @param active
+     */
+    public void setActive(boolean active) {
+        if (active) {
+            removeAttributeField(AttributeKey.inactive);
+        } else {
+            addAttributeField(new AttributeField(AttributeKey.inactive, null));
+        }
+    }
+
+    /**
+     * Whether or not the media is active.
+     *
+     * @return true if active and false if inactive
+     */
+    public boolean isActive() {
+        return attributes == null || !hasAttribute(AttributeKey.inactive);
     }
 
     @Override
