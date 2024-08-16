@@ -9,7 +9,7 @@ package com.red5pro.interstitial.api;
  * @author Nate Roe
  */
 public enum InterstitialDurationControlType {
-    /** Session starts 'now'. Session ends with API call */
+    /** Session starts 'now'. Session ends with API call, or at file end if its an flv interstitial */
     INDEFINITE,
     /** Session ends at streamTimeStart + duration */
     STREAM_CLOCK,
