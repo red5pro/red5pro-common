@@ -57,6 +57,8 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
 
     public AudioCompatibility audioCompatibility = AudioCompatibility.UNKNOWN;
 
+    public boolean immediate;
+
     /**
      * Audio Codec
      */
