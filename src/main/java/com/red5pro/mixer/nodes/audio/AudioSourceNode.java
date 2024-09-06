@@ -1,6 +1,7 @@
 package com.red5pro.mixer.nodes.audio;
 
 import com.red5pro.mixer.nodes.AbstractNode;
+import com.red5pro.mixer.nodes.ISourceNode;
 import com.red5pro.util.mixer.PanGainUtil;
 
 /**
@@ -9,7 +10,7 @@ import com.red5pro.util.mixer.PanGainUtil;
  *
  * @author Nate Roe
  */
-public class AudioSourceNode extends AbstractNode {
+public class AudioSourceNode extends AbstractNode implements ISourceNode {
     private String streamGuid;
 
     // -100 to 100 (left to right)
@@ -35,6 +36,7 @@ public class AudioSourceNode extends AbstractNode {
         ampFactorL = ampFactorR = 1.0f;
     }
 
+    @Override
     public String getStreamGuid() {
         return streamGuid;
     }
