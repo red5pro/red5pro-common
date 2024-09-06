@@ -1,6 +1,7 @@
 package com.red5pro.mixer.nodes.video;
 
 import com.red5pro.mixer.nodes.AbstractNode;
+import com.red5pro.mixer.nodes.ISourceNode;
 
 /**
  * A video source, using the latest from from the given stream.
@@ -12,7 +13,7 @@ import com.red5pro.mixer.nodes.AbstractNode;
  *
  * @author Nate Roe
  */
-public class VideoSourceNode extends AbstractNode {
+public class VideoSourceNode extends AbstractNode implements ISourceNode {
     private String streamGuid;
 
     private Integer sourceX;
