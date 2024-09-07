@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.red5pro.mixer.nodes.AbstractNode;
+import com.red5pro.mixer.nodes.IContainerNode;
 
 /**
  * The output is the sum (the stereo mix) of the given nodes.
  *
  * @author Nate Roe
  */
-public class SumNode extends AbstractNode {
+public class SumNode extends AbstractNode implements IContainerNode {
     private List<AbstractNode> nodes;
 
     public SumNode() {
