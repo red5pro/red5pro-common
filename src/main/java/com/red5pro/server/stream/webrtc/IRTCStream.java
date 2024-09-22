@@ -172,33 +172,7 @@ public interface IRTCStream {
      */
     void setStreamConnector(StreamConnector streamConnector, TransportAddress remoteAddress);
 
-    /**
-     * Returns the allocated UDP port for the stream.
-     *
-     * @return port
-     */
-    int getAllocatedUdpPort();
-
-    /**
-     * Sets the allocated UDP port for the stream. If the port is 0, the port is cleared.
-     *
-     * @param port
-     */
-    void setAllocatedUdpPort(int port);
-
-    /**
-     * Returns the allocated TCP port for the stream.
-     *
-     * @return port
-     */
-    int getAllocatedTcpPort();
-
-    /**
-     * Sets the allocated TCP port for the stream. If the port is 0, the port is cleared.
-     *
-     * @param port
-     */
-    void setAllocatedTcpPort(int port);
+    // XXX(paul) port allocations were deprecated/removed in 11.2.x
 
     /**
      * Whether or not the connection for this instance originates from a remote network.
