@@ -9,6 +9,7 @@ import org.red5.server.api.event.IEvent;
 import org.red5.server.api.event.IEventListener;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
@@ -72,7 +73,7 @@ public class WireMessage implements Serializable {
         this.label = label;
         // check for json and set flag as needed
         if (message.startsWith("{") && message.endsWith("}")) {
-            this.message = JsonParser.parseString(message);
+            this.message = JsonParser.parseString(message).getAsJsonObject();
             json = true;
         } else {
             this.message = message;
@@ -102,7 +103,7 @@ public class WireMessage implements Serializable {
             String tmpMessage = (String) message;
             // check for json and set flag as needed
             if (tmpMessage.startsWith("{") && tmpMessage.endsWith("}")) {
-                this.message = JsonParser.parseString(tmpMessage);
+                this.message = JsonParser.parseString(tmpMessage).getAsJsonObject();
                 json = true;
             } else {
                 this.message = message;
@@ -153,8 +154,8 @@ public class WireMessage implements Serializable {
         return (String) message;
     }
 
-    public JsonElement getJsonMessage() {
-        return (JsonElement) message;
+    public JsonObject getJsonMessage() {
+        return (JsonObject) message;
     }
 
     @Override
@@ -243,7 +244,7 @@ public class WireMessage implements Serializable {
         if (binary) {
             out.writeObject((byte[]) message);
         } else if (json) {
-            out.writeUTF(((JsonElement) message).toString());
+            out.writeUTF(((JsonObject) message).toString());
         } else {
             out.writeUTF((String) message);
         }
@@ -264,7 +265,7 @@ public class WireMessage implements Serializable {
         if (binary) {
             message = (byte[]) in.readObject();
         } else if (json) {
-            message = JsonParser.parseString(in.readUTF());
+            message = JsonParser.parseString(in.readUTF()).getAsJsonObject();
         } else {
             message = in.readUTF();
         }
