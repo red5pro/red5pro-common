@@ -5,9 +5,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import org.apache.http.impl.conn.Wire;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.event.IEventListener;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 /**
  * Generic base type for messages destined to go out.
@@ -16,18 +18,21 @@ import org.red5.server.api.event.IEventListener;
  */
 public class WireMessage implements Serializable {
 
-    private static final long serialVersionUID = 403903737133L;
+    private static final long serialVersionUID = 403903837133L;
 
     // use for serialization in amf / notify with custom
-    public transient final static byte BINARY = 0x33, STRING = 0x34;
+    public transient final static byte BINARY = 0x33, STRING = 0x34, JSON = 0x35;
 
     protected String sender, destination, label;
 
-    // can be byte[] or String
+    // can be byte[] or String or JsonElement
     protected Object message;
 
     // whether or not message is binary
     protected boolean binary;
+
+    // whther or not message is json
+    protected boolean json;
 
     // base hash code generated in ctor
     protected transient int hashCode;
@@ -65,7 +70,13 @@ public class WireMessage implements Serializable {
         this.sender = sender;
         this.destination = destination;
         this.label = label;
-        this.message = message;
+        // check for json and set flag as needed
+        if (message.startsWith("{") && message.endsWith("}")) {
+            this.message = JsonParser.parseString(message);
+            json = true;
+        } else {
+            this.message = message;
+        }
         this.binary = false;
         generateBaseHashCode();
     }
@@ -84,8 +95,18 @@ public class WireMessage implements Serializable {
         this.label = label;
         if (isBinary) {
             this.message = (byte[]) message;
+        } else if (message instanceof JsonElement) {
+            this.message = (JsonElement) message;
+            json = true;
         } else {
-            this.message = (String) message;
+            String tmpMessage = (String) message;
+            // check for json and set flag as needed
+            if (tmpMessage.startsWith("{") && tmpMessage.endsWith("}")) {
+                this.message = JsonParser.parseString(tmpMessage);
+                json = true;
+            } else {
+                this.message = message;
+            }
         }
         this.binary = isBinary;
         generateBaseHashCode();
@@ -120,12 +141,20 @@ public class WireMessage implements Serializable {
         return binary;
     }
 
+    public boolean isJson() {
+        return json;
+    }
+
     public byte[] getBinaryMessage() {
         return (byte[]) message;
     }
 
     public String getStringMessage() {
         return (String) message;
+    }
+
+    public JsonElement getJsonMessage() {
+        return (JsonElement) message;
     }
 
     @Override
@@ -207,11 +236,14 @@ public class WireMessage implements Serializable {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeBoolean(binary);
+        out.writeBoolean(json);
         out.writeUTF(sender);
         out.writeUTF(destination);
         out.writeUTF(label);
         if (binary) {
             out.writeObject((byte[]) message);
+        } else if (json) {
+            out.writeUTF(((JsonElement) message).toString());
         } else {
             out.writeUTF((String) message);
         }
@@ -220,6 +252,8 @@ public class WireMessage implements Serializable {
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         // determine if the message is binary first
         binary = in.readBoolean();
+        // determine if the message is json
+        json = in.readBoolean();
         // read the sender
         sender = in.readUTF();
         // read the destination
@@ -229,6 +263,8 @@ public class WireMessage implements Serializable {
         // read the message
         if (binary) {
             message = (byte[]) in.readObject();
+        } else if (json) {
+            message = JsonParser.parseString(in.readUTF());
         } else {
             message = in.readUTF();
         }
