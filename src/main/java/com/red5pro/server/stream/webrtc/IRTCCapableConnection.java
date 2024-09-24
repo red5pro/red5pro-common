@@ -28,6 +28,9 @@ package com.red5pro.server.stream.webrtc;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.scope.IScope;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.red5pro.io.WireMessage;
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.server.ConnectionAttributeKey;
 import com.red5pro.server.SignalingChannel;
@@ -80,6 +83,17 @@ public interface IRTCCapableConnection extends IConnection {
      * @param message
      */
     void writeMessage(String message);
+
+    /**
+     * Write a wire message to the connection output.
+     *
+     * @param message
+     */
+    default void writeMessage(WireMessage message) {
+        if (!message.isBinary()) {
+            writeMessage(message.getStringMessage());
+        }
+    }
 
     /**
      * Set an attribute on the connection.

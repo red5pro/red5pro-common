@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Contains other nodes (children)
- * 
+ *
  * @author Nate Roe
  */
 public interface IContainerNode {
