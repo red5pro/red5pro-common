@@ -27,6 +27,7 @@ public enum ConnectionAttributeKey {
     GROUP_PORT("groupPort"), // multicast group port
     AUDIO_ENCODING("audioEncoding"), VIDEO_ENCODING("videoEncoding"), AMF_AUDIO_ENCODING("amf-audio"), AMF_VIDEO_ENCODING("amf-video"), CONFERENCE("conference"), // conference
     GROUP("group"), // group, non-multicast
+    RESTEAMER("restreamer"), // restreamer
     PERMISSIONS("permissions"); // permissions (currently used in publishing)
 
     public final String value;
