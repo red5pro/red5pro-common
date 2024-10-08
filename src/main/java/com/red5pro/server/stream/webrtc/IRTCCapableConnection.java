@@ -28,6 +28,7 @@ package com.red5pro.server.stream.webrtc;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.scope.IScope;
 
+import com.red5pro.io.WireMessage;
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.server.ConnectionAttributeKey;
 import com.red5pro.server.SignalingChannel;
@@ -80,6 +81,13 @@ public interface IRTCCapableConnection extends IConnection {
      * @param message
      */
     void writeMessage(String message);
+
+    /**
+     * Writes a message to the message queue for writing on the signal channel.
+     *
+     * @param message WireMessage
+     */
+    void writeMessage(WireMessage message);
 
     /**
      * Set an attribute on the connection.
