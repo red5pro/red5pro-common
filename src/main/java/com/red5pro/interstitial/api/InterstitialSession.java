@@ -2,6 +2,8 @@ package com.red5pro.interstitial.api;
 
 import java.io.IOException;
 
+import org.apache.mina.core.buffer.IoBuffer;
+import org.red5.codec.AACAudio;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.messaging.IMessageInput;
 import org.red5.server.net.rtmp.event.AudioData;
@@ -52,6 +54,10 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
     public int width;
 
     public int height;
+
+    public AudioCompatibility audioCompatibility = AudioCompatibility.UNKNOWN;
+
+    public boolean immediate;
 
     /**
      * Audio Codec
@@ -162,7 +168,6 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
         }
 
         int results = (int) (ourTime - theirTime);
-        System.out.println("results " + results);
         if (results == 0) {
             // shazbot! Attempt to avoid throwing scheduling error.
             results = (int) (id - them.id);
@@ -210,5 +215,67 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
         if (isNeither || isReallyAudio || isReallyVideo) {
             stream.dispatchInterstitial(event);
         }
+    }
+
+    public AudioInfo parseAudioParams(AudioData event) {
+        AudioInfo ret = new AudioInfo();
+        IoBuffer audioData = event.getData();
+        byte flgs = audioData.get();
+
+        int eventCodec = (flgs & 0xF0) >> 4;
+
+        switch (eventCodec) {
+            case 10:
+                ret.codec = InterstitialSession.AAC_AUDIO;
+                break;
+            case 11:
+                ret.codec = InterstitialSession.SPEX_AUDIO;
+                break;
+        }
+
+        if (ret.codec == codec) {
+            if (InterstitialSession.AAC_AUDIO == ret.codec) {
+                //log.info("audio {}  {}",codecId,hdr);
+                byte hdr = audioData.get();
+                if (hdr == 0) {
+                    byte[] cfg = new byte[2];
+                    audioData.get(cfg);
+                    //int objectType = (cfg[0] >> 3) & 0x1F;//five bits.
+                    int freqIndex = ((cfg[0] & 0x7) << 1) | ((cfg[1] >> 7) & 0x1);
+                    ret.audioChannels = (cfg[1] & 0x78) >> 3;
+                    ret.audioSampleRate = AACAudio.AAC_SAMPLERATES[freqIndex];
+
+                    if (audioChannels == ret.audioChannels && audioSampleRate == ret.audioSampleRate) {
+                        ret.matchesStream = AudioCompatibility.YES;
+                    } else {
+                        ret.matchesStream = AudioCompatibility.NO;
+                    }
+                }
+
+            } else if (InterstitialSession.SPEX_AUDIO == ret.codec) {
+                ret.matchesStream = AudioCompatibility.YES;
+            }
+
+        } else {
+            ret.matchesStream = AudioCompatibility.NO;
+        }
+
+        audioData.rewind();
+
+        return ret;
+    }
+
+    protected static class AudioInfo {
+        public int codec;
+
+        public int audioChannels;
+
+        public int audioSampleRate;
+
+        public AudioCompatibility matchesStream = AudioCompatibility.UNKNOWN;
+    }
+
+    protected static enum AudioCompatibility {
+        UNKNOWN, YES, NO;
     }
 }

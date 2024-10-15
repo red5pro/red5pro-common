@@ -98,15 +98,26 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
                 return;
             }
         } else if (isForwardAudio() && !hasAudio && packet instanceof AudioData) {
-            // Check for codec private data.
-            if (newStream.getCodecInfo().getAudioCodec() != null && newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration() != null) {
-                AudioData privateConfig = new AudioData(newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration());
-                privateConfig.setTimestamp(packet.getTimestamp() - timeDelta);
-                liveStream.dispatchInterstitial(privateConfig);
-            } // else forthcoming
+            if (codec == InterstitialSession.AAC_AUDIO) {
+                // Check for codec private data.
+                if (newStream.getCodecInfo().getAudioCodec() != null && newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration() != null) {
+                    AudioData privateConfig = new AudioData(newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration());
+                    AudioInfo info = parseAudioParams(privateConfig);
+                    audioCompatibility = info.matchesStream;
+                    if (info.matchesStream == AudioCompatibility.YES) {
+                        hasAudio = true;
+                    } else {
 
-            hasAudio = true;
-        } // audio could flow right away.
+                    }
+                } else {//else forthcoming.
+                    return;
+                }
+            }
+        }
+
+        if (audioCompatibility != AudioCompatibility.YES) {
+            return;
+        }
 
         try {
             IStreamPacket packetCopy = null;
@@ -150,6 +161,9 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
         if (isDeadStream) { // signal to owner.
             throw new IOException("Overide stream terminated"); // Owner will switch back, or switch to next
                                                                 // interstitial.
+        } else if (audioCompatibility == AudioCompatibility.NO) {
+            log.error("Incompatible audio in live interstitial");
+            throw new IOException("Audio not compatible");
         }
 
         dispatchEvent(event, true, liveStream);
