@@ -6,7 +6,7 @@
     <packaging>jar</packaging>
     <name>red5pro-common</name>
     <!-- major, minor, release, build -->
-    <version>13.1.0.4</version>
+    <version>13.2.0.1</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
@@ -60,8 +60,8 @@
         <maven.compiler.release>21</maven.compiler.release>
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
-        <red5.version>2.0.5</red5.version>
-        <spring.version>6.1.13</spring.version>
+        <red5.version>2.0.7</red5.version>
+        <spring.version>6.1.14</spring.version>
         <tomcat.version>11.0.0-M26</tomcat.version>
         <mina.version>2.0.23</mina.version>
         <commons-text.version>1.12.0</commons-text.version>
