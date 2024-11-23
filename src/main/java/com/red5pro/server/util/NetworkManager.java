@@ -12,7 +12,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.Collections;
@@ -36,6 +36,9 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.red5pro.ice.AbstractResponseCollector;
 import com.red5pro.ice.BaseStunMessageEvent;
 import com.red5pro.ice.ResponseCollector;
@@ -47,17 +50,14 @@ import com.red5pro.ice.TransportAddress;
 import com.red5pro.ice.attribute.Attribute;
 import com.red5pro.ice.attribute.MappedAddressAttribute;
 import com.red5pro.ice.attribute.XorMappedAddressAttribute;
-import com.red5pro.ice.nio.IceHandler;
-import com.red5pro.ice.nio.IceTransport;
 import com.red5pro.ice.message.Message;
 import com.red5pro.ice.message.MessageFactory;
 import com.red5pro.ice.message.Request;
 import com.red5pro.ice.message.Response;
+import com.red5pro.ice.nio.IceHandler;
+import com.red5pro.ice.nio.IceTransport;
 import com.red5pro.ice.socket.IceSocketWrapper;
 import com.red5pro.ice.stack.StunStack;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.red5pro.media.SourceType;
 
 /**
@@ -179,8 +179,8 @@ public class NetworkManager {
                         // hits the google ipv6 dns server
                         socket.connect(InetAddress.getByName("2001:4860:4860:0:0:0:0:8888"), dnsPort);
                         ipAddress = socket.getLocalAddress().getHostAddress();
-                    } catch (Throwable t) {
-                        log.warn("Exception getting public address via dgram", t);
+                    } catch (SocketException se) {
+                        log.warn("Exception getting public address via dgram", se);
                     } finally {
                         if (socket != null) {
                             try {
@@ -661,8 +661,7 @@ public class NetworkManager {
         String ipAddress = null;
         BufferedReader in = null;
         try {
-            URL checkip = new URL(url);
-            URLConnection con = checkip.openConnection();
+            URLConnection con = URI.create(url).toURL().openConnection();
             con.setConnectTimeout(3000);
             con.setReadTimeout(3000);
             in = new BufferedReader(new InputStreamReader(con.getInputStream()));
