@@ -83,11 +83,15 @@ public interface IRTCCapableConnection extends IConnection {
     void writeMessage(String message);
 
     /**
-     * Writes a message to the message queue for writing on the signal channel.
+     * Write a wire message to the connection output.
      *
-     * @param message WireMessage
+     * @param message
      */
-    void writeMessage(WireMessage message);
+    default void writeMessage(WireMessage message) {
+        if (!message.isBinary()) {
+            writeMessage(message.getStringMessage());
+        }
+    }
 
     /**
      * Set an attribute on the connection.
