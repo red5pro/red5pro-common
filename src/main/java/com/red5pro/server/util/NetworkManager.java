@@ -359,12 +359,14 @@ public class NetworkManager {
             setServerIp(ipAddress);
             if (ipAddress != null) {
                 // ipv6
-                if (ipAddress.contains(":")) {
-                    setServerIpV6(ipAddress);
-                } else {
-                    String ipV6Address = topologyMode.getPublicIPV6();
-                    if (ipV6Address != null && ipV6Address.contains(":")) {
-                        setServerIpV6(ipV6Address);
+                if (iceIPv6Enabled) {
+                    if (ipAddress.contains(":")) {
+                        setServerIpV6(ipAddress);
+                    } else {
+                        String ipV6Address = topologyMode.getPublicIPV6();
+                        if (ipV6Address != null && ipV6Address.contains(":")) {
+                            setServerIpV6(ipV6Address);
+                        }
                     }
                 }
             }
@@ -388,12 +390,17 @@ public class NetworkManager {
             ipAddress = topologyMode.getLocalAddress();
             // store it
             setServerLocalIp(ipAddress);
-            if (ipAddress != null && ipAddress.contains(":")) {
-                setServerLocalIpV6(ipAddress);
-            } else {
-                String ipV6Address = topologyMode.getLocalAddressV6();
-                if (ipV6Address.contains(":")) {
-                    setServerLocalIpV6(ipV6Address);
+            if (ipAddress != null) {
+                // ipv6
+                if (iceIPv6Enabled) {
+                    if (ipAddress.contains(":")) {
+                        setServerLocalIpV6(ipAddress);
+                    } else {
+                        String ipV6Address = topologyMode.getLocalAddressV6();
+                        if (ipV6Address.contains(":")) {
+                            setServerLocalIpV6(ipV6Address);
+                        }
+                    }
                 }
             }
         }
