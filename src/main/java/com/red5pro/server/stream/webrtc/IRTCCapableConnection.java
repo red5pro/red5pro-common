@@ -28,8 +28,6 @@ package com.red5pro.server.stream.webrtc;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.scope.IScope;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.red5pro.io.WireMessage;
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.server.ConnectionAttributeKey;
