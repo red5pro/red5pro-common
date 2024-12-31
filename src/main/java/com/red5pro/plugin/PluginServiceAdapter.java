@@ -40,6 +40,8 @@ import org.springframework.core.io.Resource;
  */
 public class PluginServiceAdapter implements IPluginService {
 
+    protected String streamSessionId;
+
     /** {@inheritDoc} */
     @Override
     public boolean handleRequest(Object... args) {
@@ -52,4 +54,16 @@ public class PluginServiceAdapter implements IPluginService {
         return Collections.emptyList();
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean setStreamSessionId(String iStreamName) {
+        this.streamSessionId = iStreamName;
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String getStreamSessionId() {
+        return this.streamSessionId;
+    }
 }
