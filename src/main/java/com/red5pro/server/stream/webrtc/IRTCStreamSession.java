@@ -12,6 +12,10 @@ import com.red5pro.override.IProStream;
  *
  */
 public interface IRTCStreamSession {
+    /**
+     * @return session Id
+     */
+    String getSessionId();
 
     /**
      * Start the session.
