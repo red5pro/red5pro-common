@@ -186,4 +186,8 @@ public interface IRTCStreamSession {
      */
     boolean isOBS();
 
+    void setExpirationTime(long expires);
+    
+	long getExpirationTime();
+
 }
