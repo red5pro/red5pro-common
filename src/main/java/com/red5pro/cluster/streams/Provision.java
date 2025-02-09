@@ -81,6 +81,7 @@ public class Provision {
      * Override preprocessor configuration to enable or disable preprocessing. true/false.
      */
     public final static String Param_Video_PRE_PROCESS = "preprocessor";
+
     /**
      * Preferred decoder.
      */
@@ -175,7 +176,7 @@ public class Provision {
     public final static String Param_Audio_Channel_Count = "audioCh";
 
     /**
-     * Override dynamic Preprocessing. true/false    
+     * Override dynamic Preprocessing. true/false
      */
     public final static String Param_Dynamic = "dynamic";
 
@@ -189,6 +190,7 @@ public class Provision {
     public final static String Param_Debug = "debug";
 
     public final static String Param_Debug_Enc = "debug_enc";
+
     /**
      * Map of extra params
      */
