@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.red5.server.api.scope.IScope;
+import org.red5.server.net.rtmp.event.IRTMPEvent;
+
+import com.red5pro.override.IProStream;
 
 public interface Red5ProCanvas {
     /**
@@ -45,6 +48,12 @@ public interface Red5ProCanvas {
      * Start encoding engine.
      */
     void start();
+
+    IProStream getProstream();
+
+    void insertMetadata(String onMetaData, Map<Object, Object> values);
+
+    void insertMetadata(IRTMPEvent metaData);
 
     /**
      * Start output engine, option 1 local publish. Call after starting encoding
