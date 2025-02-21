@@ -1,7 +1,5 @@
 package com.red5pro.server.stream.webrtc;
 
-import java.util.List;
-
 import javax.media.Buffer;
 
 /**
@@ -28,7 +26,5 @@ public interface IBufferHandler {
     void videoBufferReceived(Buffer outBuffer);
 
     void setVideoGroupSize(int size);
-
-    void setKeyGroup(List<Buffer> keyGroup);
 
 }

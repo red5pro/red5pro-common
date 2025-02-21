@@ -583,15 +583,18 @@ public class SessionDescription {
         }
         // create a list ordered by mid if it uses digits
         final List<MediaField> ordered = new ArrayList<>();
-        for (MediaField media : mediaDescriptions) {
-            // if its video and the format is 0 skip it
-            if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
-                continue;
+        // prevent npe from events such as failed auth or no media
+        if (mediaDescriptions != null) {
+            for (MediaField media : mediaDescriptions) {
+                // if its video and the format is 0 skip it
+                if (SDPMediaType.video == media.getMediaType() && media.getFormats()[0] == 0) {
+                    continue;
+                }
+                ordered.add(media);
             }
-            ordered.add(media);
+            // sort by mid
+            Collections.sort(ordered);
         }
-        // sort by mid
-        Collections.sort(ordered);
         // bundle is a group attribute, but we don't store it in the attr collection
         if (bundle) {
             if (ordered.size() > 0) {

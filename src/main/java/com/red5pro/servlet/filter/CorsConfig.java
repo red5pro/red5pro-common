@@ -22,6 +22,12 @@ public class CorsConfig {
     // whether to use lowercase headers or not; determined by what arrives in the request
     private boolean useLowerCaseHeaders;
 
+    // true if successful CORS pre-flight should short-circuit (return immediately)
+    // if false, will still call filter chain
+    // default is false to match pre-existing behavior
+    // (if you don't add new config explicitly setting this true, then there is no behavior change)
+    private boolean isOptionsShortCircuit = false;
+
     public void setAllowedOrigins(String allowedOrigins) {
         this.allowedOrigins = allowedOrigins;
     }
@@ -78,9 +84,16 @@ public class CorsConfig {
         return allowCredentials;
     }
 
-    @Override
-    public String toString() {
-        return "CorsConfig [allowedOrigins=" + allowedOrigins + ", allowedMethods=" + allowedMethods + ", allowedHeaders=" + allowedHeaders + ", exposeAllHeaders=" + exposeAllHeaders + ", maxAge=" + maxAge + ", isAllowCredentials=" + allowCredentials + ", useLowerCaseHeaders=" + useLowerCaseHeaders + "]";
+    public boolean isOptionsShortCircuit() {
+        return isOptionsShortCircuit;
     }
 
+    public void setOptionsShortCircuit(boolean isOptionsShortCircuit) {
+        this.isOptionsShortCircuit = isOptionsShortCircuit;
+    }
+
+    @Override
+    public String toString() {
+        return "CorsConfig [allowedOrigins=" + allowedOrigins + ", allowedMethods=" + allowedMethods + ", allowedHeaders=" + allowedHeaders + ", exposeAllHeaders=" + exposeAllHeaders + ", maxAge=" + maxAge + ", allowCredentials=" + allowCredentials + ", useLowerCaseHeaders=" + useLowerCaseHeaders + ", isOptionsShortCircuit=" + isOptionsShortCircuit + "]";
+    }
 }

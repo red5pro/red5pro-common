@@ -12,6 +12,10 @@ import com.red5pro.override.IProStream;
  *
  */
 public interface IRTCStreamSession {
+    /**
+     * @return session Id
+     */
+    String getSessionId();
 
     /**
      * Start the session.
@@ -181,5 +185,9 @@ public interface IRTCStreamSession {
      * @return true if OBS client and false otherwise
      */
     boolean isOBS();
+
+    void setExpirationTime(long expires);
+
+    long getExpirationTime();
 
 }

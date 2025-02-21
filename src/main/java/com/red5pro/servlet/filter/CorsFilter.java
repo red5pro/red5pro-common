@@ -1,24 +1,24 @@
 package com.red5pro.servlet.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.red5.server.adapter.MultiThreadedApplicationAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Red5 Pro CORS filter implementation.
@@ -41,7 +41,8 @@ public class CorsFilter implements Filter {
         allowedMethods, // allowed methods
         allowedHeaders, // allowed headers
         useLowerCaseHeaders, // use lowercase headers
-        maxAge; // max age for the request
+        maxAge, // max age for the request
+        isOptionsShortCircuit; // short-circuit OPTIONS preflight requests
     }
 
     private static enum CorsResponseHeaderNames {
@@ -106,71 +107,77 @@ public class CorsFilter implements Filter {
      */
     public void doInit() throws ServletException {
         log.debug("Initializing");
-        if (filterConfig != null) {
-            log.debug("Filter config: {}", filterConfig);
-            // start with a default config
-            corsConfig = new CorsConfig();
-            // let the user override the defaults
-            Enumeration<String> params = filterConfig.getInitParameterNames();
-            if (params != null) {
-                log.debug("Found {} init parameters", params);
-                params.asIterator().forEachRemaining(paramName -> {
-                    log.debug("param: {}", paramName);
-                    ParameterNames param = ParameterNames.valueOf(paramName);
-                    switch (param) {
-                        case exposeAllHeaders:
-                            corsConfig.setExposeAllHeaders(Boolean.valueOf(filterConfig.getInitParameter(paramName)));
-                            break;
-                        case allowedOrigins:
-                            corsConfig.setAllowedOrigins(filterConfig.getInitParameter(paramName));
-                            corsConfig.setAllowCredentials(true);
-                            break;
-                        case allowedMethods:
-                            corsConfig.setAllowedMethods(filterConfig.getInitParameter(paramName));
-                            break;
-                        case allowedHeaders:
-                            corsConfig.setAllowedHeaders(filterConfig.getInitParameter(paramName));
-                            break;
-                        case maxAge:
-                            corsConfig.setMaxAge(filterConfig.getInitParameter(paramName));
-                            break;
-                        case useLowerCaseHeaders:
-                            corsConfig.setUseLowerCaseHeaders(Boolean.valueOf(filterConfig.getInitParameter(paramName)));
-                            break;
-                        default:
+        try {
+            if (filterConfig != null) {
+                log.debug("Filter config: {}", filterConfig);
+                // start with a default config
+                corsConfig = new CorsConfig();
+                // let the user override the defaults
+                Enumeration<String> params = filterConfig.getInitParameterNames();
+                if (params != null) {
+                    log.debug("Found {} init parameters", params);
+                    params.asIterator().forEachRemaining(paramName -> {
+                        log.debug("param: {}", paramName);
+                        try {
+                            ParameterNames param = ParameterNames.valueOf(paramName);
+                            switch (param) {
+                                case exposeAllHeaders:
+                                    corsConfig.setExposeAllHeaders(Boolean.valueOf(filterConfig.getInitParameter(paramName)));
+                                    break;
+                                case allowedOrigins:
+                                    corsConfig.setAllowedOrigins(filterConfig.getInitParameter(paramName));
+                                    corsConfig.setAllowCredentials(true);
+                                    break;
+                                case allowedMethods:
+                                    corsConfig.setAllowedMethods(filterConfig.getInitParameter(paramName));
+                                    break;
+                                case allowedHeaders:
+                                    corsConfig.setAllowedHeaders(filterConfig.getInitParameter(paramName));
+                                    break;
+                                case maxAge:
+                                    corsConfig.setMaxAge(filterConfig.getInitParameter(paramName));
+                                    break;
+                                case useLowerCaseHeaders:
+                                    corsConfig.setUseLowerCaseHeaders(Boolean.valueOf(filterConfig.getInitParameter(paramName)));
+                                    break;
+                                case isOptionsShortCircuit:
+                                    corsConfig.setOptionsShortCircuit(Boolean.valueOf(filterConfig.getInitParameter(paramName)));
+                                    break;
+                                default:
+                                    log.warn("Unknown parameter: {}", paramName);
+                                    break;
+                            }
+                        } catch (IllegalArgumentException iae) {
                             log.warn("Unknown parameter: {}", paramName);
-                            break;
-                    }
-                });
-            } else {
-                log.debug("No init parameters found in web.xml, global will be used, in lieu of an application configuration");
-                // check for central config in the context
-                ApplicationContext appCtx = (ApplicationContext) filterConfig.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-                // if theres no context then this is not running in a red5 app
-                if (appCtx == null) {
-                    log.debug("No application context found");
-                    // attempt to read from Red5ProPlugin via reflection if theres no context
-                    try {
-                        Class<?> clazz = Class.forName("com.red5pro.plugin.Red5ProPlugin");
-                        Method method = clazz.getMethod("getCorsConfig");
-                        CorsConfig tmp = (CorsConfig) method.invoke(null, new Object[0]);
-                        if (tmp != null) {
-                            corsConfig = tmp;
                         }
-                    } catch (Exception e) {
-                        log.warn("Could not read corsConfig from Red5ProPlugin", e);
-                    }
-                } else if (appCtx.containsBean("web.handler")) {
-                    MultiThreadedApplicationAdapter app = (MultiThreadedApplicationAdapter) appCtx.getBean("web.handler");
-                    CorsConfig tmp = (CorsConfig) app.getAttribute("corsConfig");
-                    if (tmp != null) {
-                        corsConfig = tmp;
+                    });
+                } else {
+                    log.debug("No init parameters found in web.xml, global will be used, in lieu of an application configuration");
+                    // check for central config in the context
+                    ApplicationContext appCtx = (ApplicationContext) filterConfig.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+                    // if theres no context then this is not running in a red5 app
+                    if (appCtx == null) {
+                        log.debug("No application context found");
+                        // attempt to read from Red5ProPlugin via reflection if theres no context
+                        try {
+                            Class<?> clazz = Class.forName("com.red5pro.plugin.Red5ProPlugin");
+                            Method method = clazz.getMethod("getCorsConfig");
+                            CorsConfig tmp = (CorsConfig) method.invoke(null, new Object[0]);
+                            if (tmp != null) {
+                                corsConfig = tmp;
+                            }
+                        } catch (Exception e) {
+                            log.warn("Could not read corsConfig from Red5ProPlugin", e);
+                        }
                     }
                 }
+                log.info("Cors config: {}", corsConfig);
+            } else {
+                log.warn("Filter config is null");
             }
-            log.info("Cors config: {}", corsConfig);
-        } else {
-            log.warn("Filter config is null");
+        } catch (Throwable t) {
+            log.error("CorsFilter init() FAILURE", t);
+            throw t;
         }
     }
 
@@ -246,8 +253,27 @@ public class CorsFilter implements Filter {
         }
         // max age
         response.setHeader((useLowerCaseHeaders ? CorsResponseHeaderNames.maxAge.getHeaderNameLC() : CorsResponseHeaderNames.maxAge.getHeaderName()), maxAge);
-        // hand off to the next filter if we've made it this far
-        chain.doFilter(req, res);
+
+        // log response headers (debugDump is called too early to do this there.)
+        if (isDebug) {
+            response.getHeaderNames().iterator().forEachRemaining(headerName -> {
+                log.debug("Resp. Header {}: {}", headerName, response.getHeader(headerName));
+            });
+        }
+
+        if (corsConfig.isOptionsShortCircuit() && request.getMethod().equalsIgnoreCase("OPTIONS")) {
+            log.trace("short-circuit OPTIONS request.");
+            // if OPTIONS (CORS preflight) then abort the chain and return immediately
+            response.setStatus(HttpServletResponse.SC_OK);
+
+            // nate: i got this junk from here, not sure it's needed: https://stackoverflow.com/a/35770368
+            @SuppressWarnings("unused")
+            PrintWriter writer = response.getWriter();
+            // don't set content length , don't close, don't continue filter chain
+        } else {
+            // hand off to the next filter if we've made it this far
+            chain.doFilter(req, res);
+        }
     }
 
     @Override
@@ -264,13 +290,13 @@ public class CorsFilter implements Filter {
         if (isDebug) {
             // dump the headers
             request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
-                log.debug("Header {}: {}", headerName, request.getHeader(headerName));
+                log.debug("Req. Header {}: {}", headerName, request.getHeader(headerName));
             });
             request.getParameterNames().asIterator().forEachRemaining(paramName -> {
-                log.debug("Parameter {}: {}", paramName, request.getParameter(paramName));
+                log.debug("Req. Parameter {}: {}", paramName, request.getParameter(paramName));
             });
             request.getAttributeNames().asIterator().forEachRemaining(attrName -> {
-                log.debug("Attribute {}: {}", attrName, request.getAttribute(attrName));
+                log.debug("Req. Attribute {}: {}", attrName, request.getAttribute(attrName));
             });
         }
     }

@@ -4,9 +4,10 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,10 +26,14 @@ public class PortManager {
     // maximum ephemeral port inclusive
     private static final int MAX_PORT = 65535;
 
-    // default low anon ephemeral port inclusive; max 65535
+    /**
+     * Lowest port number that can be allocated(inclusive).
+     */
     private static int rtpPortBase = 49152;
 
-    // maximum anon ephemeral port 65535
+    /**
+     * Highest port number that can be allocated(inclusive).
+     */
     private static int rtpPortCeiling = MAX_PORT;
 
     // base socket timeout in milliseconds
@@ -53,6 +58,8 @@ public class PortManager {
     // single static instance of this port manager for use with the atomic updater
     private static final PortManager instance = new PortManager();
 
+    private static ReentrantLock criticalSection = new ReentrantLock();
+
     /**
      * Clear an allocated port entry.
      *
@@ -61,12 +68,15 @@ public class PortManager {
     public static void clearRTPServerPort(int rtpPort) {
         if (allocatedPorts.remove(rtpPort)) {
             if (isDebug) {
-                log.debug("Removing server port {}", rtpPort);
+                log.debug("Clearing server port for re-use {}", rtpPort);
             }
         } else {
             if (isDebug) {
                 log.debug("Port {} was not allocated or has already been cleared", rtpPort);
             }
+        }
+        if (otherAllocatedPorts.remove(rtpPort)) {
+            log.debug("Port {} was recovered for use {}", rtpPort);
         }
     }
 
@@ -90,6 +100,22 @@ public class PortManager {
         return getRTPServerPort(true);
     }
 
+    private static int getNextInRange() throws InterruptedException {
+        // Grab the lock, but bail if interrupted.
+        criticalSection.lockInterruptibly();
+        try {
+            int previous = portUpdater.get(instance);
+            if (previous >= rtpPortCeiling) {//should never be greater-than but you never know what the future brings.
+                portUpdater.set(instance, (rtpPortBase - 1));
+            }
+            return portUpdater.incrementAndGet(instance);
+        } finally {
+            if (criticalSection.isHeldByCurrentThread()) {
+                criticalSection.unlock();
+            }
+        }
+    }
+
     /**
      * Get an available port.
      *
@@ -99,8 +125,61 @@ public class PortManager {
     public static int getRTPServerPort(boolean udp) {
         log.debug("Get port");
         int serverPort = 0;
-        // check exhaustion first
-        if (isRangeExhausted()) {
+        //Checking range exhaustion in loop to halt potential thread races.
+        while (!isRangeExhausted()) {
+            try {
+                serverPort = getNextInRange();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return 0;
+            }
+            if (serverPort == 0) {
+                break;//problems.
+            }
+            // check the other list first
+            if (otherAllocatedPorts.contains(serverPort)) {
+                // port is not available
+                log.info("Port is bound elsewhere {}", serverPort);
+                serverPort = 0;// Do not let thread escape with 'otherAllocatedPort' number.
+                continue;
+            }
+            // add only works if its not already allocated
+            if (allocatedPorts.add(serverPort)) {
+                // if the port isn't allocated, allocate it and check availability
+                if (udp) {
+                    // check UDP port
+                    if (!checkAvailable(serverPort)) {
+                        // port is not available
+                        log.warn("Unallocated port is already bound or not freed yet {}", serverPort);
+                        // XXX remove it from allocated and transfer to otherAllocated, since its allocated from elsewhere
+                        if (allocatedPorts.remove(serverPort)) {
+                            otherAllocatedPorts.add(serverPort);
+                        }
+                        serverPort = 0;// Do not let thread escape with unavailable port number.
+                        continue;
+                    }
+                } else {
+                    // check TCP port
+                    if (!checkAvailable(serverPort, true)) {
+                        // port is not available
+                        log.warn("Unallocated port is already bound or not freed yet {}", serverPort);
+                        // XXX remove it from allocated and transfer to otherAllocated, since its allocated from elsewhere
+                        if (allocatedPorts.remove(serverPort)) {
+                            otherAllocatedPorts.add(serverPort);
+
+                        }
+                        serverPort = 0;// Do not let thread escape with unavailable port number.
+                        continue;
+                    }
+                }
+                // return with currently available port
+                return serverPort;
+            } else {// else continue while range is not exhausted.
+                serverPort = 0;
+            }
+        }
+
+        if (serverPort == 0) {
             if (allowSystemPorts) {
                 // this will allow the return a port outside configured range
                 log.info("Configured port range has been exhausted, the next system available port will be searched");
@@ -109,58 +188,9 @@ public class PortManager {
             } else {
                 log.warn("Configured port range has been exhausted, no ports available");
             }
-        } else {
-            serverPort = portUpdater.incrementAndGet(instance);
-            for (; serverPort < rtpPortCeiling; serverPort = portUpdater.incrementAndGet(instance)) {
-                // check the other list first
-                if (otherAllocatedPorts.contains(serverPort)) {
-                    // port is not available
-                    log.info("Port is bound elsewhere {}", serverPort);
-                    continue;
-                }
-                // add only works if its not already allocated
-                if (allocatedPorts.add(serverPort)) {
-                    // if the port isn't allocated, allocate it and check availability
-                    if (udp) {
-                        // check UDP port
-                        if (!checkAvailable(serverPort)) {
-                            // port is not available
-                            log.warn("Unallocated port is already bound {}", serverPort);
-                            // XXX remove it from allocated and transfer to otherAllocated, since its allocated from elsewhere
-                            if (allocatedPorts.remove(serverPort)) {
-                                otherAllocatedPorts.add(serverPort);
-                            }
-                            continue;
-                        }
-                    } else {
-                        // check TCP port
-                        if (!checkAvailable(serverPort, true)) {
-                            // port is not available
-                            log.warn("Unallocated port is already bound {}", serverPort);
-                            // XXX remove it from allocated and transfer to otherAllocated, since its allocated from elsewhere
-                            if (allocatedPorts.remove(serverPort)) {
-                                otherAllocatedPorts.add(serverPort);
-                            }
-                            continue;
-                        }
-                    }
-                    // break out with currently available port
-                    break;
-                }
-            }
-            // reset the port incrementer if we've exceeded the bounds (minus 1 since we always use incrementAndGet)
-            if (serverPort > rtpPortCeiling) {
-                // if the first port exceeded the bounds reset
-                portUpdater.set(instance, (rtpPortBase - 1));
-                log.info("Port range reset at {} due to exceeding bounds {}..{}", serverPort, rtpPortBase, rtpPortCeiling);
-                // get a new port post reset
-                //serverPort = portUpdater.incrementAndGet(instance);
-                // XXX seems that we need to hit ourself again to get the next available and not assume the first one, post
-                // reset is good to go
-                serverPort = getRTPServerPort(udp);
-            }
         }
-        log.debug("Port allocated {}", serverPort);
+
+        log.debug("Ports exhausted");
         return serverPort;
     }
 
@@ -172,8 +202,8 @@ public class PortManager {
     public static int getRTPServerPortRandom() {
         //log.debug("Get port");
         // start a random port within range
-        int serverPort = RandomUtils.nextInt(rtpPortBase, rtpPortCeiling);
-        for (; serverPort < rtpPortCeiling; serverPort++) {
+        int serverPort = ThreadLocalRandom.current().nextInt(rtpPortBase, rtpPortCeiling + 1);//+1 to include rtpPortCeiling.
+        for (; serverPort <= rtpPortCeiling; serverPort++) {
             // add only works if its not already allocated
             if (allocatedPorts.add(serverPort)) {
                 // flag to check availability
@@ -350,11 +380,11 @@ public class PortManager {
     /**
      * Returns allocated UDP ports; this can include ports allocated outside this application in the specified range.
      *
-     * @return allocated port count
+     * @return allocated port count plus ports found to be allocated by other processes or leaked by faulty client behavior/handling.
      */
     public static int getCount() {
         // may not be accurate
-        return allocatedPorts.size();
+        return allocatedPorts.size() + otherAllocatedPorts.size();
     }
 
     /**
@@ -368,12 +398,13 @@ public class PortManager {
 
     /**
      * Returns port range exhaustion state.
+     * Range includes rtpPortCeiling and rtpPortBase.
      *
      * @return true if ports in configured range are exhausted and false if not exhausted
      */
     public static boolean isRangeExhausted() {
-        log.trace("isRangeExhausted - {} == {}", (rtpPortCeiling - rtpPortBase), getCount());
-        return (rtpPortCeiling - rtpPortBase) == getCount();
+        log.trace("isRangeExhausted - {} == {}", ((rtpPortCeiling + 1) - rtpPortBase), getCount());
+        return ((rtpPortCeiling + 1) - rtpPortBase) == getCount();
     }
 
     /**
@@ -381,6 +412,12 @@ public class PortManager {
      */
     public static void cleanAllocations() {
         allocatedPorts.forEach(port -> {
+            // XXX be aware that checking the port incurs a blocking penalty on receive, up to soTimeoutMs
+            if (checkAvailable(port)) {
+                clearRTPServerPort(port);
+            }
+        });
+        otherAllocatedPorts.forEach(port -> {
             // XXX be aware that checking the port incurs a blocking penalty on receive, up to soTimeoutMs
             if (checkAvailable(port)) {
                 clearRTPServerPort(port);

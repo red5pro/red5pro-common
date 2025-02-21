@@ -44,6 +44,11 @@ public class InterstitialInsert {
     public Long duration;
 
     /**
+     * If immediate is true, flushes interstitial queue, ends any current interstitial, and begins this interstitial immediately.
+     */
+    public boolean immediate;
+
+    /**
      * Should audio from the interstitial be forwarded? (default: true) Otherwise
      * the base live stream will be used.
      */
