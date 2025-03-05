@@ -3,10 +3,12 @@ package com.red5pro.server.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -199,6 +201,40 @@ public class PortManagerTest {
             executor.shutdown();
         }
         log.info("Random hits: {} misses: {} total allocated: {} total average time: {}s", hit.get(), miss.get(), PortManager.getCount(), ((elapsedTime.get() / max) / 1000L));
+    }
+
+    // test for RED5DEV-1566
+    @Test
+    public void testRangeBounds() throws InterruptedException {
+        final int portBase = 49160, portCeiling = 49163; // 4 ports
+        // configure range
+        PortManager.setRtpPortBase(portBase);
+        PortManager.setRtpPortCeiling(portCeiling);
+        PortManager.setAllowSystemPorts(false); // no system ports
+        PortManager.setCheckPortAvailability(true); // check availability
+        // hold bound ports
+        HashSet<Integer> ports = new HashSet<>();
+        // counter
+        int portCount = 0;
+        // attempt to exceed the range by 4
+        for (int port = PortManager.getRTPServerPort(); portCount < 8; port = PortManager.getRTPServerPort()) {
+            System.out.println("Port: " + port);
+            if (port != 0) {
+                ports.add(port);
+                portCount++;   
+                assertTrue(port >= portBase && port <= portCeiling);
+            } else {
+                break;
+            }
+        }
+        if (portCount > 4) {
+            fail("Port range exceeded; port count: " + portCount);
+        } else {
+            System.out.println("Port count: " + portCount);
+        }
+        for (int port : ports) {
+            PortManager.clearRTPServerPort(port);
+        }
     }
 
 }
