@@ -141,10 +141,25 @@ public class Ingest {
         return "Ingest [host=" + host + ", port=" + port + ", context=" + context + ", name=" + name + ", level=" + level + "]";
     }
 
+    /**
+     *
+     * @param host required
+     * @param port required
+     * @return
+     */
     public static Ingest build(String host, int port) {
         return new Ingest(host, port);
     }
 
+    /**
+     *
+     * @param host required
+     * @param port required
+     * @param context optional, overrides provision context path
+     * @param name optional overrides provision stream name.
+     * @param level optional sets ABR priority
+     * @return
+     */
     public static Ingest build(String host, int port, String context, String name, int level) {
         return new Ingest(host, port, context, name, level);
     }
