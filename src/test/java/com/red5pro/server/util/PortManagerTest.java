@@ -221,7 +221,7 @@ public class PortManagerTest {
             System.out.println("Port: " + port);
             if (port != 0) {
                 ports.add(port);
-                portCount++;   
+                portCount++;
                 assertTrue(port >= portBase && port <= portCeiling);
             } else {
                 break;
