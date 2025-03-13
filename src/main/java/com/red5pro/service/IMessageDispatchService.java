@@ -55,4 +55,18 @@ public interface IMessageDispatchService {
      */
     long getMessageExpirationMs();
 
+    /**
+     * Returns the number of messages sent.
+     * 
+     * @return sentCount
+     */
+    default int getSentCount() {
+        return -1;
+    }
+
+    /**
+     * Stops the service.
+     */
+    default void stop() {
+    }
 }
