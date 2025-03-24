@@ -494,6 +494,7 @@ public class MediaField implements Comparable<MediaField> {
     }
 
     // order of sections m, i, c, b, k, a
+    @SuppressWarnings("incomplete-switch")
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("m=");
@@ -534,15 +535,39 @@ public class MediaField implements Comparable<MediaField> {
         // next line(s) attributes
         if (attributes != null) {
             for (AttributeField attribute : attributes) {
-                switch (attribute.getAttribute()) {
-                    case fmtp:
-                    case rtpmap:
-                    case rtcpfb:
-                        if (Arrays.binarySearch(formats, Integer.valueOf(attribute.getValue().split("\\s")[0])) == -1) {
-                            break;
-                        }
-                    default:
-                        sb.append(attribute);
+                final AttributeKey attrKey = attribute.getAttribute();
+                // only include all attributes if the media is active
+                if (isActive()) {
+                    switch (attrKey) {
+                        case fmtp:
+                        case rtpmap:
+                        case rtcpfb:
+                            if (Arrays.binarySearch(formats, Integer.valueOf(attribute.getValue().split("\\s")[0])) == -1) {
+                                break;
+                            }
+                        default:
+                            sb.append(attribute);
+                    }
+                } else {
+                    // only include certain attributes if the media is inactive
+                    switch (attrKey) {
+                        case rtpmap:
+                            if (Arrays.binarySearch(formats, Integer.valueOf(attribute.getValue().split("\\s")[0])) == -1) {
+                                break;
+                            }
+                        case mid:
+                        case iceufrag:
+                        case icepwd:
+                        case fingerprint:
+                        case setup:
+                        case sendonly:
+                        case recvonly:
+                        case rtcpmux:
+                        case inactive:
+                        case candidate:
+                        case endofcandidates:
+                            sb.append(attribute);
+                    }
                 }
             }
         }

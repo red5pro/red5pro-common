@@ -3,10 +3,10 @@ package com.red5pro.server.stream.webrtc;
 import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
-import com.red5pro.ice.TransportAddress;
-import com.red5pro.ice.Agent;
 import org.red5.server.api.scope.IScope;
 
+import com.red5pro.ice.Agent;
+import com.red5pro.ice.TransportAddress;
 import com.red5pro.io.StreamConnector;
 import com.red5pro.media.MuteState;
 import com.red5pro.media.sdp.SDPUserAgent;
@@ -82,6 +82,13 @@ public interface IRTCStream {
      * @return scope
      */
     IScope getScope();
+
+    /**
+     * Returns the connection.
+     *
+     * @return connection
+     */
+    IRTCCapableConnection getConnection();
 
     /**
      * Returns whether or not we're controlling ICE.

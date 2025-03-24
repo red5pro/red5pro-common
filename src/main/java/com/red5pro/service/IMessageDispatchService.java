@@ -57,7 +57,7 @@ public interface IMessageDispatchService {
 
     /**
      * Returns the number of messages sent.
-     * 
+     *
      * @return sentCount
      */
     default int getSentCount() {

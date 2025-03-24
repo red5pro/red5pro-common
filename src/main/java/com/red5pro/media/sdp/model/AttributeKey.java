@@ -22,7 +22,8 @@ public enum AttributeKey {
     sendrecv, // Send and receive flag
     sendonly, // Send-only flag
     recvonly, // Receive-only flag
-    inactive, rtcpmux("rtcp-mux"), // RTCP mux flag
+    inactive, // inactive media stream
+    rtcpmux("rtcp-mux"), // RTCP mux flag
     rtcpfb("rtcp-fb"), rtpmap, // RTP codec mapping
     rtcprsize("rtcp-rsize"), // RTCP reduced-size (non-compound)
     fmtp, // Format parameter
