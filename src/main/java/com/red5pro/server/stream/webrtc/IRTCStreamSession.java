@@ -186,8 +186,36 @@ public interface IRTCStreamSession {
      */
     boolean isOBS();
 
+    /**
+     * Check header to determine if this is an FFMpeg client.
+     *
+     * @return true if FFMpeg client and false otherwise
+     */
+    boolean isLibAvFFmpeg();
+
+    /**
+     * Check header to determine if this is a macOS app.
+     *
+     * @return true if macOS app and false otherwise
+     */
+    boolean isMacOSApp();
+
+    /**
+     * Check header to determine if this is an OkHttp client.
+     *
+     * @return true if OkHttp client and false otherwise
+     */
+    boolean isOkHttp();
+
     void setExpirationTime(long expires);
 
     long getExpirationTime();
+
+    /**
+     * Returns true if the session is data channel only.
+     *
+     * @return true if data channel only and false otherwise
+     */
+    boolean isDataChannelOnly();
 
 }
