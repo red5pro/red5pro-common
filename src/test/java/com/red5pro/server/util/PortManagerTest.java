@@ -9,6 +9,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,8 +36,12 @@ public class PortManagerTest {
 
     @Before
     public void setUp() throws Exception {
+        // bind to the unavailable port so it will be unavailable
         socket = new DatagramSocket(unavailablePort);
         unavailablePort = socket.getLocalPort();
+        // reset the ranges
+        PortManager.setRtpPortBase(49152);
+        PortManager.setRtpPortCeiling(65535);
     }
 
     @After
@@ -110,9 +115,6 @@ public class PortManagerTest {
     @Test
     public void testZMaxItOutLinear() throws InterruptedException {
         final int portBase = 49152, portCeiling = 65535;
-        // configure range
-        PortManager.setRtpPortBase(portBase);
-        PortManager.setRtpPortCeiling(portCeiling);
         // counters
         final AtomicInteger hit = new AtomicInteger();
         final AtomicInteger miss = new AtomicInteger();
@@ -159,9 +161,6 @@ public class PortManagerTest {
     @Test
     public void testZMaxItOutRandom() throws InterruptedException {
         final int portBase = 49152, portCeiling = 65535;
-        // configure range
-        PortManager.setRtpPortBase(portBase);
-        PortManager.setRtpPortCeiling(portCeiling);
         // counters
         final AtomicInteger hit = new AtomicInteger();
         final AtomicInteger miss = new AtomicInteger();
@@ -206,8 +205,8 @@ public class PortManagerTest {
     // test for RED5DEV-1566
     @Test
     public void testRangeBounds() throws InterruptedException {
+        // reset for custom range
         final int portBase = 49160, portCeiling = 49163; // 4 ports
-        // configure range
         PortManager.setRtpPortBase(portBase);
         PortManager.setRtpPortCeiling(portCeiling);
         PortManager.setAllowSystemPorts(false); // no system ports
@@ -235,6 +234,60 @@ public class PortManagerTest {
         for (int port : ports) {
             PortManager.clearRTPServerPort(port);
         }
+    }
+
+    @Test
+    public void testExhaustRange() throws InterruptedException {
+        log.info("----------------------------------------------------------------------------------\n testExhaustRange");
+        final int portBase = 50000, portCeiling = 50004; // allow 5 ports to be allocated
+        PortManager.setRtpPortBase(portBase);
+        PortManager.setRtpPortCeiling(portCeiling);
+        // counters
+        final AtomicInteger hit = new AtomicInteger();
+        final AtomicInteger miss = new AtomicInteger();
+        final AtomicLong elapsedTime = new AtomicLong();
+        int exes = 0, max = 6;
+        ExecutorService executor = Executors.newFixedThreadPool(max);
+        CountDownLatch latch = new CountDownLatch(max);
+        do {
+            executor.submit(() -> {
+                int port = 0;
+                Instant start = Instant.now();
+                for (int i = 0; i < 1000; i++) {
+                    try {
+                        port = PortManager.getRTPServerPort(true);
+                        if (port >= portBase && port <= portCeiling) {
+                            // hit
+                            hit.incrementAndGet();
+                        } else {
+                            // miss
+                            miss.incrementAndGet();
+                        }
+                    } catch (Throwable t) {
+                        log.warn("Exception allocating a port", t);
+                    }
+                }
+                elapsedTime.addAndGet(Instant.now().toEpochMilli() - start.toEpochMilli());
+                latch.countDown();
+            });
+            exes++;
+        } while (exes < max);
+        try {
+            // wait for the latch
+            if (latch.await(3L, TimeUnit.MINUTES)) {
+                // try to get a port
+                int port = PortManager.getRTPServerPort(true);
+                System.out.println("Port: " + port);
+                assertTrue(port < 1);
+            } else {
+                log.warn("Latch timed out");
+            }
+        } finally {
+            List<Runnable> remainingWorkers = executor.shutdownNow();
+            log.info("Workers post latch: {}", remainingWorkers.size());
+        }
+        log.info("Random hits: {} misses: {} total allocated: {} total average time: {}s", hit.get(), miss.get(), PortManager.getCount(),
+                ((elapsedTime.get() / max) / 1000L));
     }
 
 }
