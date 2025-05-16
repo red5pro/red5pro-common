@@ -286,8 +286,7 @@ public class PortManagerTest {
             List<Runnable> remainingWorkers = executor.shutdownNow();
             log.info("Workers post latch: {}", remainingWorkers.size());
         }
-        log.info("Random hits: {} misses: {} total allocated: {} total average time: {}s", hit.get(), miss.get(), PortManager.getCount(),
-                ((elapsedTime.get() / max) / 1000L));
+        log.info("Random hits: {} misses: {} total allocated: {} total average time: {}s", hit.get(), miss.get(), PortManager.getCount(), ((elapsedTime.get() / max) / 1000L));
     }
 
 }
