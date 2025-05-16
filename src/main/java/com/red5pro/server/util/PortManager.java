@@ -125,22 +125,22 @@ public class PortManager {
     public static int getRTPServerPort(boolean udp) {
         log.debug("Get port");
         int serverPort = 0;
-        //Checking range exhaustion in loop to halt potential thread races.
+        // Checking range exhaustion in loop to halt potential thread races
         while (!isRangeExhausted()) {
             try {
                 serverPort = getNextInRange();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                return 0;
+                break;
             }
             if (serverPort == 0) {
-                break;//problems.
+                break;
             }
             // check the other list first
             if (otherAllocatedPorts.contains(serverPort)) {
                 // port is not available
                 log.info("Port is bound elsewhere {}", serverPort);
-                serverPort = 0;// Do not let thread escape with 'otherAllocatedPort' number.
+                serverPort = 0; // Do not let thread escape with 'otherAllocatedPort' number
                 continue;
             }
             // add only works if its not already allocated
@@ -155,7 +155,7 @@ public class PortManager {
                         if (allocatedPorts.remove(serverPort)) {
                             otherAllocatedPorts.add(serverPort);
                         }
-                        serverPort = 0;// Do not let thread escape with unavailable port number.
+                        serverPort = 0; // Do not let thread escape with unavailable port number
                         continue;
                     }
                 } else {
@@ -168,17 +168,16 @@ public class PortManager {
                             otherAllocatedPorts.add(serverPort);
 
                         }
-                        serverPort = 0;// Do not let thread escape with unavailable port number.
+                        serverPort = 0; // Do not let thread escape with unavailable port number
                         continue;
                     }
                 }
-                // return with currently available port
-                return serverPort;
-            } else {// else continue while range is not exhausted.
+                // break to return currently available port
+                break;
+            } else { // else continue while range is not exhausted.
                 serverPort = 0;
             }
         }
-
         if (serverPort == 0) {
             if (allowSystemPorts) {
                 // this will allow the return a port outside configured range
@@ -189,8 +188,11 @@ public class PortManager {
                 log.warn("Configured port range has been exhausted, no ports available");
             }
         }
-
-        log.debug("Ports exhausted");
+        // XXX(paul) port 0 must be filtered in caller, its valid for UDP binding as "any available port"
+        log.debug("Ports exhausted, no ports available. Current port for return: {}", serverPort);
+        if (serverPort == 0) {
+            log.warn("No ports available");
+        }
         return serverPort;
     }
 
@@ -229,6 +231,11 @@ public class PortManager {
      * @return true if port is available and false otherwise
      */
     public static boolean checkAvailable(int port) {
+        // dont allow port 0 (any available port) to be checked here
+        if (port == 0) {
+            return false;
+        }
+        // check the port with a bind
         try (DatagramSocket socket = new DatagramSocket(port)) {
             socket.setReuseAddress(true);
             socket.setSoTimeout(soTimeoutMs);
