@@ -55,12 +55,12 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
      */
     public LiveInterstitial(IInterstitialStream liveStream, IInterstitialStream newStream, boolean isInterstitialAudio, boolean isInterstitialVideo) {
         super(isInterstitialAudio, isInterstitialVideo);
-
-        log.trace("LiveInterstitial ctor. isForwardVideo: {}, isForwardAudio: {}", isInterstitialVideo, isInterstitialAudio);
+        log.trace("LiveInterstitial ctor. target: {}, int'tial: {},  isForwardVideo: {}, isForwardAudio: {}", liveStream, newStream, isInterstitialVideo, isInterstitialAudio);
         this.liveStream = liveStream;
         this.newStream = newStream;
         newStream.addTerminationEventListener(this);
         liveStream.addTerminationEventListener(this);
+        this.fileName = newStream.getBroadcastStreamPublishName();
         this.timeDelta = (int) (liveStream.getCreationTime() - newStream.getCreationTime());
         // log.trace("TIMEDELTA: {} (from liveStream: {}, newStream: {})", timeDelta,
         // liveStream.getCreationTime(), newStream.getCreationTime());
