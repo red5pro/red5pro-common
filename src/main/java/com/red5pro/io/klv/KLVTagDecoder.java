@@ -65,7 +65,7 @@ public abstract class KLVTagDecoder {
         if (libraries.containsKey(label)) {
             try {
                 logger.info("KLV decoder found.  UL: {}", label);
-                KLVTagDecoder decoder = (KLVTagDecoder) libraries.get(label).getConstructors()[0].newInstance();
+                KLVTagDecoder decoder = (KLVTagDecoder) libraries.get(label).getDeclaredConstructor().newInstance();
                 cache.put(label, decoder);
                 return decoder;
             } catch (Throwable e) {
