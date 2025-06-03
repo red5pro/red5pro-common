@@ -69,7 +69,7 @@ public abstract class KLVTagDecoder {
                 cache.put(label, decoder);
                 return decoder;
             } catch (Throwable e) {
-            	logger.error("",e);
+            	logger.error("Failed to instantiate KLV decoder for label: {}", label, e);
             }
         }
         return null;
