@@ -9,4 +9,8 @@ public enum SourceType {
 
     RTMP, RTSP, RTP, RTC, HLS, MPEGTS, SRT;
 
+    public final static String ATTRIBUTE = "sourceType";
+
+    public static SourceType[] cachedValues = SourceType.values();
+
 }
