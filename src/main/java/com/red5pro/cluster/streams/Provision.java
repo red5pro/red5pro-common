@@ -116,7 +116,7 @@ public class Provision {
     public final static String Param_Rate_Control_Mode = "rateControlMode";
 
     /**
-     * Depending on rate control mode, allos encoder to skip frames to maintain bitrate.
+     * Depending on rate control mode, allows encoder to skip frames to maintain bitrate.
      */
     public final static String Param_Video_Skip_Frame = "videoSkipFrame";
 
