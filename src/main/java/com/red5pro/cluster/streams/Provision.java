@@ -43,28 +43,28 @@ import com.red5pro.util.ProvisionAdapter;
  */
 public class Provision {
 
-    public final static String Param_Video_Bitrate = "videoBR";
-
-    public final static String Param_Audio_Bitrate = "audioBR";
-
-    public final static String Param_Video_Height = "videoHeight";
-
-    public final static String Param_Video_Width = "videoWidth";
-
-    /**
-     * Codec dependent support for 'baseline', 'main', 'high'.
-     */
-    public final static String Param_Video_Profile = "videoProfile";
-
-    public final static String Param_Audio_Sample_Rate = "audioSR";
-
-    public final static String Param_Audio_Channel_Count = "audioCh";
-
-    public final static String Param_User_Name = "userName";
+    public final static String Param_Username = "username";
 
     public final static String Param_Password = "password";
 
+    public final static String Param_Token = "token";
+
     public final static String Param_QOS = "qos";
+
+    /**
+     * In processing operations, zero equals no resizing..
+     */
+    public final static String Param_Video_Height = "videoHeight";
+
+    /**
+     * In processing operations, zero equals no resizing..
+     */
+    public final static String Param_Video_Width = "videoWidth";
+
+    /**
+     * Codec dependent support for 'baseline', 'main', 'high', and smoetimes 'extended_baseline' and 'scalable_baseline'
+     */
+    public final static String Param_Video_Profile = "videoProfile";
 
     /**
      * H264 param for MBR/Preprocessor.<br>
@@ -78,9 +78,14 @@ public class Provision {
     public final static String Param_Video_QP_Max = "videoQPMax";
 
     /**
-     * max bitrate allowed
+     * Override preprocessor configuration to enable or disable preprocessing. true/false.
      */
-    public final static String Param_Video_BR_Max = "videoBRMax";
+    public final static String Param_Video_PRE_PROCESS = "preprocessor";
+
+    /**
+     * Preferred decoder.
+     */
+    public final static String Param_Use_Decoder = "usedecoder";
 
     /**
      * Encoding entropy cabac=1/calcv=0.
@@ -88,9 +93,52 @@ public class Provision {
     public final static String Param_Video_Entropy_Profile = "videoEntropyProfile";
 
     /**
-     * 0 bitrate, 1 quality
+     * 0 = CAMERA_VIDEO_REAL_TIME, 1 = SCREEN_CONTENT_REAL_TIME
      */
     public final static String Param_Video_Enc_Mode = "videoEncMode";
+
+    /**
+     * 0= low, 1 = medium, 2 = high
+     */
+    public final static String Param_Video_Complexity = "videoComplexity";
+
+    /**
+     * Enables qpMax and qoMin changes based on the complexity of the current scene.
+     */
+    public final static String Param_Enable_Adaptive_Quant = "enableAdaptiveQuant";
+
+    /**
+     * -1 = off,
+     *  0 = quality mode: Encoder will allocate more bits to frames that require it to achieve the desired quality level.
+     *  1 = bitrate mode. Mode to enable CBR or VBR.
+     *  2 = Encoder maintains  buffer fullness by adjusting quality
+     */
+    public final static String Param_Rate_Control_Mode = "rateControlMode";
+
+    /**
+     * Depending on rate control mode, allows encoder to skip frames to maintain bitrate.
+     */
+    public final static String Param_Video_Skip_Frame = "videoSkipFrame";
+
+    /**
+     * 0 = auto, 1= fixed, Greater than 1 sets fixed number threads. Use with sliceMode=2,sliceCount=encoderThreadCount
+     */
+    public final static String Param_Encoder_Thread_Count = "encoderThreadCount";
+
+    /**
+     * Number of decoding, if applicable threads. 0 = auto, 1 = single threaded. Greater than 1 sets fixed number of slices.
+     */
+    public final static String Param_Decoder_Thread_Count = "decoderThreadCount";
+
+    /**
+     * 0 = auto, 1 = single slice, Greater than 1 =  Fixed number of slices defined by Param_sliceCount
+     */
+    public final static String Param_Slice_Mode = "sliceMode";
+
+    /**
+     * If slice mode is not 0 or 1, Param_sliceCount sets the number of slices.
+     */
+    public final static String Param_sliceCount = "sliceCount";
 
     /**
      * Key frame interval, by frame count.
@@ -98,19 +146,55 @@ public class Provision {
     public final static String Param_Video_Key = "videoKey";
 
     /**
-     * Video Framerate.
+     * Video Framerate. For ABR variants. Values 2-10 reduces frame rate by  1/2, 1/3, 1/4, etc... , 1/10, else framerate is same as input framerate.
      */
     public final static String Param_Video_FPS = "videoFPS";
 
     /**
-     *
+     * Video bitrate in BITS per second. For CBR. set videoBRMax and videoBR the same.
+     */
+    public final static String Param_Video_Bitrate = "videoBR";
+
+    /**
+     * Video bitrate max in BITS per second. For CBR. set videoBRMax and videoBR the same.
+     */
+    public final static String Param_Video_BR_Max = "videoBRMax";
+
+    /**
+     * Audio bitrate in BITS per secon.
+     */
+    public final static String Param_Audio_Bitrate = "audioBR";
+
+    /**
+     * Audio sample rate.
+     */
+    public final static String Param_Audio_Sample_Rate = "audioSR";
+
+    /**
+     * Audio channels.
+     */
+    public final static String Param_Audio_Channel_Count = "audioCh";
+
+    /**
+     * Override dynamic Preprocessing. true/false
+     */
+    public final static String Param_Dynamic = "dynamic";
+
+    public final static String Param_Strict = "strict";
+
+    /**
+     * Hardware encoder/decoder module four character code.
      */
     public final static String Param_HardwareKey = "hardware";
 
+    public final static String Param_Debug = "debug";
+
+    public final static String Param_Debug_Enc = "debug_enc";
+
     /**
-     *
+     * Map of extra params
      */
-    public final static String Param_Strict = "strict";
+    public final static String Param_Extra_Params = "extraParams";
 
     /**
      * Gson for serialize and deserialize ops.

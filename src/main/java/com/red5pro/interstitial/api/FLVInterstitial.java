@@ -100,8 +100,28 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
                     // Packet unused if:
                     if (body instanceof Notify && !includeMetaData) {
                         continue;// we dont want insert's meta
-                    } else if (body instanceof AudioData && codec == 0) {
-                        continue; // live stream has no Audio
+                    } else if (body instanceof AudioData) {
+                        if (codec == 0) {
+                            continue; // live stream has no Audio
+                        }
+                        switch (audioCompatibility) {
+                            case YES:
+                                break;
+
+                            case UNKNOWN:
+                                AudioInfo info = parseAudioParams((AudioData) body);
+                                audioCompatibility = info.matchesStream;
+                                if (audioCompatibility == AudioCompatibility.YES) {
+                                    break;
+                                } else if (isForwardAudio() && audioCompatibility == AudioCompatibility.NO) {
+                                    log.error("FLV has incompatible audio. rate: {}  Channels: {}", info.audioSampleRate, info.audioChannels);
+                                    throw new IOException();
+                                }
+
+                            case NO://not forwarding audio or file audio properties are unknown.
+                                continue;
+                        }
+
                     } else if (body instanceof VideoData && (width == 0 || height == 0)) {
                         continue;// live stream has no video.
                     }
@@ -135,7 +155,7 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             //If the FLV was empty of tags, toss exception.
             throw new IOException("Empty insert");
         }
-        if (sessionControl.getLifeCycle() == InterstitialDurationControlType.INDEFINITE || sessionControl.canLoop()) {
+        if (sessionControl.canLoop()) {
             log.debug("loop file");
             OOBControlMessage oobCtrlMsg = new OOBControlMessage();
             oobCtrlMsg.setTarget(ISeekableProvider.KEY);
@@ -153,6 +173,9 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             firstTimestamp = false;
         } else {
             log.debug("interstitial complete  {}", timestamp);
+            dispose();
+            this.sessionControl.resumeProgram();
+
         }
     }
 

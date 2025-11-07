@@ -12,7 +12,7 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.Collections;
@@ -36,6 +36,9 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.red5pro.ice.AbstractResponseCollector;
 import com.red5pro.ice.BaseStunMessageEvent;
 import com.red5pro.ice.ResponseCollector;
@@ -47,17 +50,14 @@ import com.red5pro.ice.TransportAddress;
 import com.red5pro.ice.attribute.Attribute;
 import com.red5pro.ice.attribute.MappedAddressAttribute;
 import com.red5pro.ice.attribute.XorMappedAddressAttribute;
-import com.red5pro.ice.nio.IceHandler;
-import com.red5pro.ice.nio.IceTransport;
 import com.red5pro.ice.message.Message;
 import com.red5pro.ice.message.MessageFactory;
 import com.red5pro.ice.message.Request;
 import com.red5pro.ice.message.Response;
+import com.red5pro.ice.nio.IceHandler;
+import com.red5pro.ice.nio.IceTransport;
 import com.red5pro.ice.socket.IceSocketWrapper;
 import com.red5pro.ice.stack.StunStack;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.red5pro.media.SourceType;
 
 /**
@@ -179,8 +179,8 @@ public class NetworkManager {
                         // hits the google ipv6 dns server
                         socket.connect(InetAddress.getByName("2001:4860:4860:0:0:0:0:8888"), dnsPort);
                         ipAddress = socket.getLocalAddress().getHostAddress();
-                    } catch (Throwable t) {
-                        log.warn("Exception getting public address via dgram", t);
+                    } catch (SocketException se) {
+                        log.warn("Exception getting public address via dgram", se);
                     } finally {
                         if (socket != null) {
                             try {
@@ -279,7 +279,12 @@ public class NetworkManager {
 
     static {
         // load up the network properties
-        try (InputStream input = new FileInputStream(System.getProperty("red5.config_root") + File.separatorChar + "network.properties")) {
+        String configRoot = System.getProperty("red5.config_root");
+        if (configRoot == null) {
+            log.warn("red5.config_root system property not set, network properties will not be loaded");
+            configRoot = ".";
+        }
+        try (InputStream input = new FileInputStream(configRoot + File.separatorChar + "network.properties")) {
             // load properties
             props.load(input);
             // configure port range
@@ -359,12 +364,14 @@ public class NetworkManager {
             setServerIp(ipAddress);
             if (ipAddress != null) {
                 // ipv6
-                if (ipAddress.contains(":")) {
-                    setServerIpV6(ipAddress);
-                } else {
-                    String ipV6Address = topologyMode.getPublicIPV6();
-                    if (ipV6Address != null && ipV6Address.contains(":")) {
-                        setServerIpV6(ipV6Address);
+                if (iceIPv6Enabled) {
+                    if (ipAddress.contains(":")) {
+                        setServerIpV6(ipAddress);
+                    } else {
+                        String ipV6Address = topologyMode.getPublicIPV6();
+                        if (ipV6Address != null && !ipV6Address.isEmpty() && ipV6Address.contains(":")) {
+                            setServerIpV6(ipV6Address);
+                        }
                     }
                 }
             }
@@ -388,12 +395,17 @@ public class NetworkManager {
             ipAddress = topologyMode.getLocalAddress();
             // store it
             setServerLocalIp(ipAddress);
-            if (ipAddress != null && ipAddress.contains(":")) {
-                setServerLocalIpV6(ipAddress);
-            } else {
-                String ipV6Address = topologyMode.getLocalAddressV6();
-                if (ipV6Address.contains(":")) {
-                    setServerLocalIpV6(ipV6Address);
+            if (ipAddress != null) {
+                // ipv6
+                if (iceIPv6Enabled) {
+                    if (ipAddress.contains(":")) {
+                        setServerLocalIpV6(ipAddress);
+                    } else {
+                        String ipV6Address = topologyMode.getLocalAddressV6();
+                        if (ipV6Address != null && !ipV6Address.isEmpty() && ipV6Address.contains(":")) {
+                            setServerLocalIpV6(ipV6Address);
+                        }
+                    }
                 }
             }
         }
@@ -403,10 +415,10 @@ public class NetworkManager {
             try {
                 Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
                 while (ifaces.hasMoreElements()) {
-                    NetworkInterface iface = (NetworkInterface) ifaces.nextElement();
+                    NetworkInterface iface = ifaces.nextElement();
                     Enumeration<InetAddress> iaddresses = iface.getInetAddresses();
                     while (iaddresses.hasMoreElements()) {
-                        InetAddress iaddress = (InetAddress) iaddresses.nextElement();
+                        InetAddress iaddress = iaddresses.nextElement();
                         if (!iaddress.isLoopbackAddress() && !iaddress.isLinkLocalAddress() && !iaddress.isSiteLocalAddress()) {
                             ipAddress = iaddress.getHostAddress() != null ? iaddress.getHostAddress() : iaddress.getHostName();
                             log.debug("Local address (nic): {}", ipAddress);
@@ -546,10 +558,10 @@ public class NetworkManager {
                     int count = 0;
                     Enumeration<NetworkInterface> ifaces = NetworkInterface.getNetworkInterfaces();
                     while (ifaces.hasMoreElements()) {
-                        NetworkInterface iface = (NetworkInterface) ifaces.nextElement();
+                        NetworkInterface iface = ifaces.nextElement();
                         Enumeration<InetAddress> iaddresses = iface.getInetAddresses();
                         while (iaddresses.hasMoreElements()) {
-                            InetAddress iaddress = (InetAddress) iaddresses.nextElement();
+                            InetAddress iaddress = iaddresses.nextElement();
                             log.debug("Local address {}: {} link local: {} site local: {}", iface.getName(), iaddress, iaddress.isLinkLocalAddress(), iaddress.isSiteLocalAddress());
                             if (!iaddress.isLoopbackAddress() && !iaddress.isLinkLocalAddress()) {
                                 String nicAddress = iaddress.getHostAddress() != null ? iaddress.getHostAddress() : iaddress.getHostName();
@@ -615,7 +627,7 @@ public class NetworkManager {
         // create a non-concurrent copy of the current end-points map
         Map<String, IngestEndpoint<?>> result = ingestEndPoints.entrySet().stream().filter(e -> e.getValue().getType() == type).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         // make it unmodifiable / read-only
-        return (Map<String, IngestEndpoint<?>>) Collections.unmodifiableMap(result);
+        return Collections.unmodifiableMap(result);
     }
 
     /**
@@ -661,8 +673,7 @@ public class NetworkManager {
         String ipAddress = null;
         BufferedReader in = null;
         try {
-            URL checkip = new URL(url);
-            URLConnection con = checkip.openConnection();
+            URLConnection con = URI.create(url).toURL().openConnection();
             con.setConnectTimeout(3000);
             con.setReadTimeout(3000);
             in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -744,73 +755,74 @@ public class NetworkManager {
         // create an ice socket wrapper with the transport based on the addresses
         // supplied
         IceSocketWrapper iceSocket = IceSocketWrapper.build(localTransportAddress, stunTransportAddress);
-        // add the wrapper to the stack
-        if (iceSocket.isUDP()) {
-            // when its udp, bind so we'll be listening
-            stunStack.addSocket(iceSocket, stunTransportAddress, true);
-        } else if (iceSocket.isTCP()) {
-            // get the handler
-            IceHandler handler = IceTransport.getIceHandler();
-            // now connect as a client
-            NioSocketConnector connector = new NioSocketConnector(1);
-            SocketSessionConfig config = connector.getSessionConfig();
-            config.setReuseAddress(true);
-            config.setTcpNoDelay(true);
-            // set an idle time of 30s (default)
-            config.setIdleTime(IdleStatus.BOTH_IDLE, IceTransport.getTimeout());
-            // set connection timeout of x milliseconds
-            connector.setConnectTimeoutMillis(3000L);
-            // add the ice protocol encoder/decoder
-            connector.getFilterChain().addLast("protocol", IceTransport.getProtocolcodecfilter());
-            // set the handler on the connector
-            connector.setHandler(handler);
-            // register
-            handler.registerStackAndSocket(stunStack, iceSocket);
-            // dont bind when using tcp, since java doesn't allow client+server at the same
-            // time
-            stunStack.addSocket(iceSocket, stunTransportAddress, false);
-            // connect
-            connector.setDefaultRemoteAddress(stunTransportAddress);
-            ConnectFuture future = connector.connect(stunTransportAddress, localTransportAddress);
-            future.addListener(new IoFutureListener<ConnectFuture>() {
-
-                @Override
-                public void operationComplete(ConnectFuture future) {
-                    log.debug("operationComplete {} {}", future.isDone(), future.isCanceled());
-                    if (future.isConnected()) {
-                        IoSession sess = future.getSession();
-                        if (sess != null) {
-                            iceSocket.setSession(sess);
-                        }
-                    } else {
-                        log.warn("Exception connecting", future.getException());
-                    }
-                }
-
-            });
-            future.awaitUninterruptibly();
-        }
-        Request bindingRequest = MessageFactory.createBindingRequest();
-        stunStack.sendRequest(bindingRequest, stunTransportAddress, localTransportAddress, responseCollector);
-        // wait for its arrival with a timeout of 3s
-        Response res = que.poll(3000L, TimeUnit.MILLISECONDS);
-        if (res != null) {
-            // in classic STUN, the response contains a MAPPED-ADDRESS
-            MappedAddressAttribute maAtt = (MappedAddressAttribute) res.getAttribute(Attribute.Type.MAPPED_ADDRESS);
-            if (maAtt != null) {
-                publicIP = maAtt.getAddress().getHostString();
-            }
-            // in STUN bis, the response contains a XOR-MAPPED-ADDRESS
-            XorMappedAddressAttribute xorAtt = (XorMappedAddressAttribute) res.getAttribute(Attribute.Type.XOR_MAPPED_ADDRESS);
-            if (xorAtt != null) {
-                byte xoring[] = new byte[16];
-                System.arraycopy(Message.MAGIC_COOKIE, 0, xoring, 0, 4);
-                System.arraycopy(res.getTransactionID(), 0, xoring, 4, 12);
-                publicIP = xorAtt.applyXor(xoring).getHostString();
-            }
-        }
-        // clean up
         if (iceSocket != null) {
+            // add the wrapper to the stack
+            if (iceSocket.isUDP()) {
+                // when its udp, bind so we'll be listening
+                stunStack.addSocket(iceSocket, stunTransportAddress, true);
+            } else if (iceSocket.isTCP()) {
+                // get the handler
+                IceHandler handler = IceTransport.getIceHandler();
+                // now connect as a client
+                NioSocketConnector connector = new NioSocketConnector(1);
+                SocketSessionConfig config = connector.getSessionConfig();
+                config.setReuseAddress(true);
+                config.setTcpNoDelay(true);
+                // set an idle time of 30s (default)
+                config.setIdleTime(IdleStatus.BOTH_IDLE, IceTransport.getTimeout());
+                // set connection timeout of x milliseconds
+                connector.setConnectTimeoutMillis(3000L);
+                // add the ice protocol encoder/decoder
+                connector.getFilterChain().addLast("protocol", IceTransport.getProtocolcodecfilter());
+                // set the handler on the connector
+                connector.setHandler(handler);
+                // register
+                handler.registerStackAndSocket(stunStack, iceSocket);
+                // dont bind when using tcp, since java doesn't allow client+server at the same
+                // time
+                stunStack.addSocket(iceSocket, stunTransportAddress, false);
+                // connect
+                connector.setDefaultRemoteAddress(stunTransportAddress);
+                ConnectFuture future = connector.connect(stunTransportAddress, localTransportAddress);
+                future.addListener(new IoFutureListener<ConnectFuture>() {
+
+                    @Override
+                    public void operationComplete(ConnectFuture token) {
+                        log.debug("operationComplete {} {}", token.isDone(), token.isCanceled());
+                        if (token.isConnected()) {
+                            IoSession sess = token.getSession();
+                            if (sess != null) {
+                                iceSocket.setSession(sess);
+                            }
+                        } else {
+                            log.warn("Exception connecting", token.getException());
+                        }
+                    }
+
+                });
+                future.awaitUninterruptibly();
+            }
+            Request bindingRequest = MessageFactory.createBindingRequest();
+            stunStack.sendRequest(bindingRequest, stunTransportAddress, localTransportAddress, responseCollector);
+            // wait for its arrival with a timeout of 3s
+            Response res = que.poll(3000L, TimeUnit.MILLISECONDS);
+            if (res != null) {
+                // in classic STUN, the response contains a MAPPED-ADDRESS
+                MappedAddressAttribute maAtt = (MappedAddressAttribute) res.getAttribute(Attribute.Type.MAPPED_ADDRESS);
+                if (maAtt != null) {
+                    publicIP = maAtt.getAddress().getHostString();
+                }
+                // in STUN bis, the response contains a XOR-MAPPED-ADDRESS
+                XorMappedAddressAttribute xorAtt = (XorMappedAddressAttribute) res.getAttribute(Attribute.Type.XOR_MAPPED_ADDRESS);
+                if (xorAtt != null) {
+                    byte xoring[] = new byte[16];
+                    System.arraycopy(Message.MAGIC_COOKIE, 0, xoring, 0, 4);
+                    System.arraycopy(res.getTransactionID(), 0, xoring, 4, 12);
+                    publicIP = xorAtt.applyXor(xoring).getHostString();
+                }
+            }
+            // clean up
+
             iceSocket.close();
         }
         stunStack.shutDown();

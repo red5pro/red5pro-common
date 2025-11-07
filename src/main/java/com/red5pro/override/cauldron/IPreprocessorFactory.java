@@ -25,6 +25,8 @@
 //
 package com.red5pro.override.cauldron;
 
+import java.util.Map;
+
 import com.red5pro.override.IProStream;
 
 public interface IPreprocessorFactory {
@@ -36,8 +38,23 @@ public interface IPreprocessorFactory {
      * Call with nulls for defaults. Uses same Provision parameters as mbr but with
      * optionally width/height of zero for canceling resize.<br>
      *
-     * @param stream
-     *            stream to configure and scrub/re-key
+     * @param stream stream to configure and scrub/re-key
+     *
+     * @deprecated
      */
-    void configure(IProStream stream);
+    default void configure(IProStream stream) {
+    };
+
+    /**
+     * The new Configuration method for setting preprocessor properties.
+     * @return map of properties applied to the processor.
+     */
+    Map<String, Object> getParams();
+
+    /**
+     * Enable PreProcessor Config table.
+     * @return true if PreprocessorConfigTable table is in use.
+     */
+    boolean isDynamic();
+
 }

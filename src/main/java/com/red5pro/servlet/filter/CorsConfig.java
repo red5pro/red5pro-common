@@ -22,6 +22,29 @@ public class CorsConfig {
     // whether to use lowercase headers or not; determined by what arrives in the request
     private boolean useLowerCaseHeaders;
 
+    // true if successful CORS pre-flight should short-circuit (return immediately)
+    // if false, will still call filter chain
+    // default is false to match pre-existing behavior
+    // (if you don't add new config explicitly setting this true, then there is no behavior change)
+    private boolean isOptionsShortCircuit = false;
+
+    /*
+        Security headers for WebTransport
+            Cross-Origin-Opener-Policy "same-origin"
+            Cross-Origin-Embedder-Policy "require-corp"
+            Cross-Origin-Resource-Policy "cross-origin"
+
+            <property name="coepValue" value="require-corp" />
+            <property name="coopValue" value="same-origin" />
+            <property name="corpValue" value="cross-origin" />
+
+    */
+    private String coepValue = "require-corp";
+
+    private String coopValue = "same-origin";
+
+    private String corpValue = "cross-origin";
+
     public void setAllowedOrigins(String allowedOrigins) {
         this.allowedOrigins = allowedOrigins;
     }
@@ -78,9 +101,41 @@ public class CorsConfig {
         return allowCredentials;
     }
 
-    @Override
-    public String toString() {
-        return "CorsConfig [allowedOrigins=" + allowedOrigins + ", allowedMethods=" + allowedMethods + ", allowedHeaders=" + allowedHeaders + ", exposeAllHeaders=" + exposeAllHeaders + ", maxAge=" + maxAge + ", isAllowCredentials=" + allowCredentials + ", useLowerCaseHeaders=" + useLowerCaseHeaders + "]";
+    public boolean isOptionsShortCircuit() {
+        return isOptionsShortCircuit;
     }
 
+    public void setOptionsShortCircuit(boolean isOptionsShortCircuit) {
+        this.isOptionsShortCircuit = isOptionsShortCircuit;
+    }
+
+    public String getCoepValue() {
+        return coepValue;
+    }
+
+    public void setCoepValue(String coepValue) {
+        this.coepValue = coepValue;
+    }
+
+    public String getCoopValue() {
+        return coopValue;
+    }
+
+    public void setCoopValue(String coopValue) {
+        this.coopValue = coopValue;
+    }
+
+    public String getCorpValue() {
+        return corpValue;
+    }
+
+    public void setCorpValue(String corpValue) {
+        this.corpValue = corpValue;
+    }
+
+    @Override
+    public String toString() {
+        return "CorsConfig [allowedOrigins=" + allowedOrigins + ", allowedMethods=" + allowedMethods + ", allowedHeaders=" + allowedHeaders + ", exposeAllHeaders=" + exposeAllHeaders + ", maxAge=" + maxAge + ", allowCredentials=" + allowCredentials + ", useLowerCaseHeaders=" + useLowerCaseHeaders + ", isOptionsShortCircuit=" + isOptionsShortCircuit + ", coepValue=" + coepValue + ", coopValue=" + coopValue
+                + ", corpValue=" + corpValue + "]";
+    }
 }

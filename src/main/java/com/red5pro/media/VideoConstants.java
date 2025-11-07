@@ -38,25 +38,39 @@ public class VideoConstants {
     private static final Logger log = LoggerFactory.getLogger(VideoConstants.class);
 
     /**
-     * The <pre>/rtp</pre> constant. Introduced in order to achieve consistency in the
-     * casing of the String.
+     * The RTP and RTMP constants.
      */
-    public static final String _RTP = "/rtp";
+    public static final String _RTP = "/rtp", _RTMP = "/rtmp";
 
     /**
-     * The H264 constant.
+     * The H264 constants.
      */
-    public static final String H264 = "h264";
+    public static final String H264 = "h264", H264_RTP = H264 + _RTP, H264_RTMP = H264 + _RTMP;
 
     /**
-     * The H264/rtp constant.
+     * The H265 constants.
      */
-    public static final String H264_RTP = H264 + _RTP;
+    public static final String H265 = "h265", H265_RTP = H265 + _RTP, H265_RTMP = H265 + _RTMP;
 
     /**
-     * The H264/rtmp constant.
+     * The AV1 constants.
      */
-    public static final String H264_RTMP = H264 + "/rtmp";
+    public static final String AV1 = "AV1", AV1_RTP = AV1 + _RTP, AV1_RTMP = AV1 + _RTMP;
+
+    /**
+     * The VP8 constants.
+     */
+    public static final String VP8 = "VP8", VP8_RTP = VP8 + _RTP, VP8_RTMP = VP8 + _RTMP;
+
+    /**
+     * The VP9 constants.
+     */
+    public static final String VP9 = "VP9", VP9_RTP = VP9 + _RTP, VP9_RTMP = VP9 + _RTMP;
+
+    /**
+     * MPEG constants.
+     */
+    public static final String MPEG = "mpeg", MPEG_RTP = "mpeg/rtp";
 
     /**
      * The name of the RED RTP format (RFC2198)
@@ -67,42 +81,6 @@ public class VideoConstants {
      * The name of the ulpfec RTP format (RFC5109)
      */
     public static final String ULPFEC = "ulpfec";
-
-    /**
-     * The VP8 constant
-     */
-    public static final String VP8 = "VP8";
-
-    /**
-     * The VP8/rtp constant.
-     */
-    public static final String VP8_RTP = VP8 + _RTP;
-
-    /**
-     * The VP8/rtmp constant.
-     */
-    public static final String VP8_RTMP = VP8 + "/rtmp";
-
-    /**
-     * The VP9 constant
-     */
-    public static final String VP9 = "VP9";
-
-    /**
-     * The VP9/rtp constant.
-     */
-    public static final String VP9_RTP = VP9 + _RTP;
-
-    /**
-     * The VP9/rtmp constant.
-     */
-    public static final String VP9_RTMP = VP9 + "/rtmp";
-
-    /** MPEG format. */
-    public static final String MPEG = "mpeg";
-
-    /** MPEG RTP format. */
-    public static final String MPEG_RTP = "mpeg/rtp";
 
     /**
      * The default value of the <pre>clockRate</pre> property for video.
@@ -128,6 +106,11 @@ public class VideoConstants {
     public static final String H264_SPROP_PARAMETER_SETS_FMTP = "sprop-parameter-sets";
 
     public static final String H264_PROFILE_LEVEL_ID_FMTP = "profile-level-id";
+
+    /**
+     * The parameters for an H.265 RTP payload.
+     */
+    public static final String H265_SPROP_VPS_FMTP = "sprop-vps", H265_SPROP_SPS_FMTP = "sprop-sps", H265_SPROP_PPS_FMTP = "sprop-pps";
 
     /**
      * Determines whether two sets of format parameters match in the context of a

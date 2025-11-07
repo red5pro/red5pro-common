@@ -51,14 +51,11 @@ public enum RTPCodecEnum {
     MP3(97, "mp3", "mp3", 48000, 2),
     // video
     H264(96, "H264", "h.264", 90000), // simplified identifier for h.264
-    H264_PMODE1(126, "H264", "h.264", 90000), // packetization-mode=1
-    H264_PMODE0(97, "H264", "h.264", 90000), // packetization-mode=0
     VP8(100, "VP8", "VP8", 90000), // std identifier for vp8
     VP9(101, "VP9", "VP9", 90000), // std identifier for vp9
     AV1(103, "AV1", "AV1", 90000), // std identifier for av1
     // h.265
     H265(104, "H265", "h.265", 90000), // simplified identifier for h.265
-    HEVC(104, "H265", "h.265", 90000), // std identifier for h.265
     // other
     RED(116, "red", "Redundant", 90000), ULPFEC(117, "ulpfec", "Generic Forward Error Correction", 90000),
     // special identifiers for something working with any codec or payload type
@@ -128,14 +125,6 @@ public enum RTPCodecEnum {
      */
     public static RTPCodecEnum getByEncodingName(String encodingName) {
         // System.err.printf("getByEncodingName: %s\n", encodingName);
-        // specially handle h264 mode 0 or mode 1 (default)
-        if ("H264M0".equals(encodingName)) {
-            // System.err.println("Mode 0!!");
-            return H264_PMODE0;
-        } else if ("H264M1".equals(encodingName)) {
-            // System.err.println("Mode 1!!");
-            return H264_PMODE1;
-        }
         for (RTPCodecEnum rce : RTPCodecEnum.values()) {
             if (rce.getEncodingName().equalsIgnoreCase(encodingName)) {
                 // System.err.printf("Codec: %s\n", String.valueOf(rce));
@@ -162,7 +151,7 @@ public enum RTPCodecEnum {
      * @return array of payload type ids
      */
     public static int[] getVideoPayloadTypesAsArray() {
-        int[] types = new int[] { H264_PMODE1.payloadType, VP8.payloadType, VP9.payloadType, AV1.payloadType, HEVC.payloadType };
+        int[] types = new int[] { H264.payloadType, VP8.payloadType, VP9.payloadType, AV1.payloadType, H265.payloadType };
         return types;
     }
 
@@ -182,7 +171,7 @@ public enum RTPCodecEnum {
      * @return array of encoding names
      */
     public static String[] getVideoEncodingNamesAsArray() {
-        String[] encodings = new String[] { H264.encodingName, VP8.encodingName, VP9.encodingName, AV1.encodingName, HEVC.encodingName };
+        String[] encodings = new String[] { H264.encodingName, VP8.encodingName, VP9.encodingName, AV1.encodingName, H265.encodingName };
         return encodings;
     }
 

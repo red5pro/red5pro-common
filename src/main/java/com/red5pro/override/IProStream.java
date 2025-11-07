@@ -175,8 +175,11 @@ public interface IProStream extends IClientBroadcastStream {
      *            processor class. Use null for default.
      * @param params
      *            processor parameters. Use null for default.
+     * @deprecated
      */
-    void usePreprocessor(String clazz, Map<String, Object> params);
+
+    default void usePreprocessor(String clazz, Map<String, Object> params) {
+    };
 
     /**
      * Return the number of subscribers for the given sidestream by id, or return

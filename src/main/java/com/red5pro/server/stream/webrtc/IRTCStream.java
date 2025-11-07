@@ -3,10 +3,10 @@ package com.red5pro.server.stream.webrtc;
 import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
-import com.red5pro.ice.TransportAddress;
-import com.red5pro.ice.Agent;
 import org.red5.server.api.scope.IScope;
 
+import com.red5pro.ice.Agent;
+import com.red5pro.ice.TransportAddress;
 import com.red5pro.io.StreamConnector;
 import com.red5pro.media.MuteState;
 import com.red5pro.media.sdp.SDPUserAgent;
@@ -19,26 +19,6 @@ import com.red5pro.override.IProStream;
  * @author Paul Gregoire
  */
 public interface IRTCStream {
-
-    public static enum H264Profile {
-
-        None, ConstrainedBaseline, Baseline, Main, High;
-
-        public static H264Profile valueOf(int val) {
-            switch (val) {
-                case 1:
-                    return ConstrainedBaseline;
-                case 2:
-                    return Baseline;
-                case 3:
-                    return Main;
-                case 4:
-                    return High;
-            }
-            return None;
-        }
-
-    };
 
     /**
      * Returns the name for this stream instance.
@@ -102,6 +82,13 @@ public interface IRTCStream {
      * @return scope
      */
     IScope getScope();
+
+    /**
+     * Returns the connection.
+     *
+     * @return connection
+     */
+    IRTCCapableConnection getConnection();
 
     /**
      * Returns whether or not we're controlling ICE.
@@ -192,33 +179,7 @@ public interface IRTCStream {
      */
     void setStreamConnector(StreamConnector streamConnector, TransportAddress remoteAddress);
 
-    /**
-     * Returns the allocated UDP port for the stream.
-     *
-     * @return port
-     */
-    int getAllocatedUdpPort();
-
-    /**
-     * Sets the allocated UDP port for the stream. If the port is 0, the port is cleared.
-     *
-     * @param port
-     */
-    void setAllocatedUdpPort(int port);
-
-    /**
-     * Returns the allocated TCP port for the stream.
-     *
-     * @return port
-     */
-    int getAllocatedTcpPort();
-
-    /**
-     * Sets the allocated TCP port for the stream. If the port is 0, the port is cleared.
-     *
-     * @param port
-     */
-    void setAllocatedTcpPort(int port);
+    // XXX(paul) port allocations were deprecated/removed in 11.2.x
 
     /**
      * Whether or not the connection for this instance originates from a remote network.

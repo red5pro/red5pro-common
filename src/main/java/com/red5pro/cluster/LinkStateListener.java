@@ -41,5 +41,11 @@ public interface LinkStateListener {
 
     void originClose(String host);
 
+    void edgeAck(String host);
+
     void edgeClose(String host);
+
+    void streamDemandStart(String context, String name);
+
+    void streamDemandClose(String context, String name);
 }
