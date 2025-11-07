@@ -279,7 +279,12 @@ public class NetworkManager {
 
     static {
         // load up the network properties
-        try (InputStream input = new FileInputStream(System.getProperty("red5.config_root") + File.separatorChar + "network.properties")) {
+        String configRoot = System.getProperty("red5.config_root");
+        if (configRoot == null) {
+            log.warn("red5.config_root system property not set, network properties will not be loaded");
+            configRoot = ".";
+        }
+        try (InputStream input = new FileInputStream(configRoot + File.separatorChar + "network.properties")) {
             // load properties
             props.load(input);
             // configure port range
@@ -364,7 +369,7 @@ public class NetworkManager {
                         setServerIpV6(ipAddress);
                     } else {
                         String ipV6Address = topologyMode.getPublicIPV6();
-                        if (ipV6Address != null && ipV6Address.contains(":")) {
+                        if (ipV6Address != null && !ipV6Address.isEmpty() && ipV6Address.contains(":")) {
                             setServerIpV6(ipV6Address);
                         }
                     }
@@ -397,7 +402,7 @@ public class NetworkManager {
                         setServerLocalIpV6(ipAddress);
                     } else {
                         String ipV6Address = topologyMode.getLocalAddressV6();
-                        if (ipV6Address.contains(":")) {
+                        if (ipV6Address != null && !ipV6Address.isEmpty() && ipV6Address.contains(":")) {
                             setServerLocalIpV6(ipV6Address);
                         }
                     }

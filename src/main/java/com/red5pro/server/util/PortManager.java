@@ -249,7 +249,6 @@ public class PortManager {
                     log.debug("Port didnt match: {}", retPort);
                 }
             }
-            socket.close();
             return true;
         } catch (Throwable t) {
             log.warn("Exception checking port: {}", port, t);
@@ -279,7 +278,6 @@ public class PortManager {
                         log.debug("Port didnt match: {}", retPort);
                     }
                 }
-                socket.close();
                 return true;
             } catch (Throwable t) {
                 log.warn("Exception checking port: {}", port, t);
@@ -302,7 +300,6 @@ public class PortManager {
                 socket.setReuseAddress(true);
                 socket.setSoTimeout(soTimeoutMs);
                 port = socket.getLocalPort();
-                socket.close();
                 return port;
             } catch (Throwable t) {
                 log.debug("Exception checking port: {}", port, t);
@@ -323,7 +320,6 @@ public class PortManager {
                 socket.setReuseAddress(true);
                 socket.setSoTimeout(1); // 1ms
                 port = socket.getLocalPort();
-                socket.close();
                 return port;
             } catch (Throwable t) {
                 log.debug("Exception checking port: {}", port, t);

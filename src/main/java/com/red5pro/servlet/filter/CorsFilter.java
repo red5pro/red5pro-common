@@ -253,7 +253,12 @@ public class CorsFilter implements Filter {
         }
         // max age
         response.setHeader((useLowerCaseHeaders ? CorsResponseHeaderNames.maxAge.getHeaderNameLC() : CorsResponseHeaderNames.maxAge.getHeaderName()), maxAge);
-
+        // security headers for webtransport
+        if (corsConfig.getCoopValue() != null && corsConfig.getCoepValue() != null && corsConfig.getCorpValue() != null) {
+            response.setHeader("Cross-Origin-Opener-Policy", corsConfig.getCoopValue());
+            response.setHeader("Cross-Origin-Embedder-Policy", corsConfig.getCoepValue());
+            response.setHeader("Cross-Origin-Resource-Policy", corsConfig.getCorpValue());
+        }
         // log response headers (debugDump is called too early to do this there.)
         if (isDebug) {
             response.getHeaderNames().iterator().forEachRemaining(headerName -> {
