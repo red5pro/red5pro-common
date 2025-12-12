@@ -36,7 +36,9 @@ public interface StreamForwardingHandle {
      * termination (connection closed, remote unpublish, exceptions, etc.).
      * <p>
      * Only one handler can be registered; subsequent calls replace the previous handler.
-     * The handler should be registered before calling {@link #awaitStarted}.
+     * <p>
+     * Note: Prefer passing the death handler to {@link Red5ProCanvas#forward} instead of
+     * calling this method, to ensure the handler is registered before any async work begins.
      *
      * @param handler callback invoked on forwarding death
      */
