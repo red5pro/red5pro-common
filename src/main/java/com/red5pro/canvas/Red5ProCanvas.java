@@ -79,17 +79,17 @@ public interface Red5ProCanvas {
      * @param host
      *            host of rtmp server.
      * @param port
-     *            port of rtmo server
+     *            port of rtmp server
      * @param path
      *            path of rtmp app
      * @param name
      *            name of publish stream
      * @param connectParams
      *            client connect params
-     * @throws IOException
-     *             if connection fails
+     * @return handle to the forwarding operation, allowing callers to wait for
+     *         startup, register death handlers, check status, and stop forwarding
      */
-    void forward(String host, int port, String path, String name, Map<String, Object> connectParams) throws IOException;
+    StreamForwardingHandle forward(String host, int port, String path, String name, Map<String, Object> connectParams);
 
     /**
      * Stop streaming process.
