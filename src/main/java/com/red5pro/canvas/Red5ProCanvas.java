@@ -2,6 +2,7 @@ package com.red5pro.canvas;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.red5.server.api.scope.IScope;
 import org.red5.server.net.rtmp.event.IRTMPEvent;
@@ -79,17 +80,20 @@ public interface Red5ProCanvas {
      * @param host
      *            host of rtmp server.
      * @param port
-     *            port of rtmo server
+     *            port of rtmp server
      * @param path
      *            path of rtmp app
      * @param name
      *            name of publish stream
      * @param connectParams
      *            client connect params
-     * @throws IOException
-     *             if connection fails
+     * @param deathHandler
+     *            callback invoked if forwarding dies unexpectedly after starting
+     *            (may be null for default logging behavior)
+     * @return handle to the forwarding operation, allowing callers to wait for
+     *         startup, check status, and stop forwarding
      */
-    void forward(String host, int port, String path, String name, Map<String, Object> connectParams) throws IOException;
+    StreamForwardingHandle forward(String host, int port, String path, String name, Map<String, Object> connectParams, Consumer<Throwable> deathHandler);
 
     /**
      * Stop streaming process.
