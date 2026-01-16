@@ -197,7 +197,7 @@ public interface IProStream extends IClientBroadcastStream {
      * Flag indicates that "published" webhook call will be deferred (don't make this call as usual)
      * @return
      */
-    boolean isDeferPublishedWebhook();
+    boolean isPublishedWebhookEnabled();
 
     /**
      * Return the total number of subscribers for the all sidestreams.
