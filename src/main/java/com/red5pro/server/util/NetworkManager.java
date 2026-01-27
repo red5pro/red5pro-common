@@ -307,6 +307,15 @@ public class NetworkManager {
             System.setProperty("SO_SNDBUF", props.getProperty("ice.so.sendbuf", "65535"));
             // whether or not IPv6 is enabled
             iceIPv6Enabled = Boolean.valueOf(props.getProperty("ice.enable.ipv6", "false"));
+            // if set to true, specifies that remote candidates with private IP addresses should be ignored
+            System.setProperty("SKIP_REMOTE_PRIVATE_HOSTS", props.getProperty("ice.ignore.privatehost", "true"));
+            // if set to true, specifies that remote candidates with non-public IP addresses should be ignored. This
+            // includes RFC1918, CGNAT (100.64.0.0/10), loopback, link-local, and other non-routable ranges.
+            System.setProperty("SKIP_REMOTE_NON_PUBLIC_HOSTS", props.getProperty("ice.ignore.nonpublichost", "true"));
+            // if set to true, prioritizes valid pairs using network-cost before candidate priority. Note: This
+            // follows the expired draft-thatcher-ice-network-cost guidance and should only be enabled when peers support it.
+            System.setProperty("com.red5pro.ice.USE_NETWORK_COST", props.getProperty("ice.enable.networkcost", "true"));
+            log.debug("Network properties loaded: {}", props.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining(", ")));
         } catch (IOException e) {
             log.warn("Exception reading properties", e);
         } finally {
