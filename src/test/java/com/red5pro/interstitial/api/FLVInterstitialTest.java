@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.red5.codec.IStreamCodecInfo;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.stream.IStreamListener;
+import org.red5.server.messaging.IMessage;
 import org.red5.server.net.rtmp.event.IRTMPEvent;
 import org.red5.server.net.rtmp.event.VideoData;
 import org.red5.server.stream.message.RTMPMessage;
@@ -40,8 +41,8 @@ public class FLVInterstitialTest {
      * Build a list of video keyframe RTMPMessages with timestamps
      * startMs, startMs+stepMs, startMs+2*stepMs, ...
      */
-    private static List<org.red5.server.messaging.IMessage> buildFlvFrames(int startMs, int stepMs, int count) {
-        List<org.red5.server.messaging.IMessage> out = new ArrayList<>(count);
+    private static List<IMessage> buildFlvFrames(int startMs, int stepMs, int count) {
+        List<IMessage> out = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             // 0x17 = video keyframe, AVC; remaining bytes are minimal AVC NALU header
             VideoData vd = new VideoData(IoBuffer.wrap(new byte[] { 0x17, 1, 0, 0, 0 }));
@@ -64,7 +65,7 @@ public class FLVInterstitialTest {
      * start. Video params are set to 640x480 so frames are not filtered out.
      * No audio (codec=0 keeps AudioData filtering consistent).
      */
-    private static FLVInterstitial buildSession(List<org.red5.server.messaging.IMessage> frames, long start, long duration) {
+    private static FLVInterstitial buildSession(List<IMessage> frames, long start, long duration) {
         FLVInterstitial fi = new FLVInterstitial(null, "test.flv", false, true);
         fi.io = new FakeMessageInput(frames);
         fi.setVideoParams(640, 480);
@@ -161,7 +162,7 @@ public class FLVInterstitialTest {
         final int LIVE_START = 1000;
 
         // 150 frames: more than enough to cover 30 ticks without running dry
-        List<org.red5.server.messaging.IMessage> frames = buildFlvFrames(0, STEP, TICKS * 5);
+        List<IMessage> frames = buildFlvFrames(0, STEP, TICKS * 5);
 
         // Session start = LIVE_START, duration = 5000 ms — comfortably covers all ticks
         FLVInterstitial fi = buildSession(frames, LIVE_START, 5000);
@@ -212,7 +213,7 @@ public class FLVInterstitialTest {
         long totalOvershoot = 0;
 
         for (int s = 0; s < SESSIONS; s++) {
-            List<org.red5.server.messaging.IMessage> frames = buildFlvFrames(0, STEP, FRAMES_PER_SESSION);
+            List<IMessage> frames = buildFlvFrames(0, STEP, FRAMES_PER_SESSION);
             // Session starts at current live timestamp
             FLVInterstitial fi = buildSession(frames, liveTs, 2000);
             CapturingStream output = new CapturingStream();
@@ -264,7 +265,7 @@ public class FLVInterstitialTest {
         final int STEP = 33;
 
         // Phase 1: run one tick to prime the session (drives the overshoot bug)
-        List<org.red5.server.messaging.IMessage> frames1 = buildFlvFrames(0, STEP, 20);
+        List<IMessage> frames1 = buildFlvFrames(0, STEP, 20);
         FLVInterstitial fi = buildSession(frames1, 0, 5000);
         CapturingStream output1 = new CapturingStream();
         fi.process(0, liveTick(0), output1);
@@ -272,7 +273,7 @@ public class FLVInterstitialTest {
         // Phase 2: dispose, then re-seed with a fresh FLV starting at ts=0
         fi.dispose();
 
-        List<org.red5.server.messaging.IMessage> frames2 = buildFlvFrames(0, STEP, 20);
+        List<IMessage> frames2 = buildFlvFrames(0, STEP, 20);
         fi.io = new FakeMessageInput(frames2);
         fi.setVideoParams(640, 480);
         // Fresh sessionControl so firstTimestamp resets properly
