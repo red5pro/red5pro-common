@@ -294,4 +294,39 @@ public class FLVInterstitialTest {
         // Post-fix: only tags with timestamp <= live clock (0) should be dispatched
         assertTrue("After dispose() and re-seed, dispatched tag timestamp " + dispatchedMax + " overshoots live clock " + liveTsAtCall + " by " + (dispatchedMax - liveTsAtCall) + " ms" + " — boundary tag from previous run leaked or overshoot bug present", dispatchedMax <= liveTsAtCall);
     }
+
+    // ---------------------------------------------------------------------------
+    // Test 4: last dispatched FLV timestamp must be <= last live timestamp
+    // ---------------------------------------------------------------------------
+
+    /**
+     * Verifies the post-fix contract: the maximum timestamp in dispatched FLV
+     * events must never exceed the maximum live clock timestamp.
+     *
+     * This test pins the precise contract that prevents downstream backward-step
+     * padding and complements the existing overshoot tests. The boundary is reached
+     * naturally as live events advance, but the dispatched FLV must stay synchronized
+     * or lag, never lead ahead.
+     */
+    @Test
+    public void lastDispatchedFlvTimestamp_neverExceedsLastLiveTimestamp() throws IOException {
+        final int STEP = 33;
+        final int FIRST_LIVE = 500;
+        final int TICKS = 60;
+
+        // Over-provision FLV so the boundary is always reached
+        List<IMessage> frames = buildFlvFrames(0, STEP, TICKS * 3);
+        FLVInterstitial fi = buildSession(frames, FIRST_LIVE, 5000);
+        CapturingStream output = new CapturingStream();
+
+        int lastLiveTs = FIRST_LIVE;
+        for (int i = 0; i < TICKS; i++) {
+            int ts = FIRST_LIVE + i * STEP;
+            lastLiveTs = ts;
+            fi.process(ts, liveTick(ts), output);
+        }
+
+        int dispatchedMax = output.maxInterstitialTs();
+        assertTrue("last FLV ts " + dispatchedMax + " exceeds last live ts " + lastLiveTs, dispatchedMax <= lastLiveTs);
+    }
 }
