@@ -50,6 +50,8 @@ public enum AttributeKey {
     width, height, Width, Height, // capitalized versions are for legacy support
     sctpmap, sctpport("sctp-port"), maxmessagesize("max-message-size"), // sctp / datachannel / application
     etag, charset, xgoogleflag("x-google-flag"), extmapallowmixed, extmapallowmixedDASHED("extmap-allow-mixed"), // Determines allowance of mix one- and two-byte header extensions within the same stream
+    rid, // RTP stream identifier for simulcast eg a=rid:0 send
+    simulcast, // simulcast eg a=simulcast:send 0;1;2
     filter; // pro custom feature
 
     // used when the "name" has a dash char in it, since a dash isnt valid for an enum
