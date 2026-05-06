@@ -1,6 +1,7 @@
 package com.red5pro.interstitial.api;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -121,6 +122,35 @@ public class LiveInterstitialTest {
 
         for (IRTMPEvent e : liveStream.dispatched) {
             assertTrue("dispatched ts " + e.getTimestamp() + " smells like creationTime arithmetic", e.getTimestamp() < 100_000);
+        }
+    }
+
+    @Test
+    public void bufferOverflow_failsSession() throws IOException {
+        // Deliver MAX_PRE_ANCHOR_BUFFER + 1 packets with no process() call.
+        // The (MAX+1)th must trip the cap, set isDeadStream, and clear the buffer.
+        for (int i = 0; i <= 64; i++) {
+            subject.packetReceived((IBroadcastStream) null, videoPacket(500 + i));
+        }
+        // Nothing dispatched yet (all buffered or dropped on overflow).
+        assertEquals(0, liveStream.dispatched.size());
+        // A subsequent process() call must surface the dead-stream contract.
+        try {
+            subject.process(2000L, liveTick(2000), liveStream);
+            fail("process() after buffer overflow should throw IOException");
+        } catch (IOException expected) {
+            // pass
+        }
+    }
+
+    @Test
+    public void deadStream_processThrows() throws IOException {
+        subject.streamStopped(null);
+        try {
+            subject.process(2000L, liveTick(2000), liveStream);
+            fail("process() on dead stream should throw IOException");
+        } catch (IOException expected) {
+            // pass
         }
     }
 
