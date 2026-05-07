@@ -39,6 +39,10 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
 
     private boolean hasPackets;
 
+    /** Tag pulled from io but whose timestamp is past the current dispatchTo cutoff.
+     *  Held for the next process() call so we don't overshoot the live clock. */
+    private IRTMPEvent pending;
+
     public FLVInterstitial(IScope appScope, String fileName, boolean isForwardAudio, boolean isForwardVideo) {
         super(isForwardAudio, isForwardVideo);
 
@@ -59,6 +63,7 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         }
         // in case we get abruptly reopened.
         hasPackets = false;
+        pending = null;
         IContext context = appScope.getContext();
         IProviderService providerService = (IProviderService) context.getBean(IProviderService.BEAN_NAME);
         io = providerService.getVODProviderInput(appScope, fileName);
@@ -85,62 +90,79 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         }
         long dispatchTo = timestamp - timeStart;
 
-        IMessage message = null;
         if (codec == 0 && (width == 0 || height == 0)) {
             return;
         }
 
+        // Drain any tag held over from the previous call first.
+        if (pending != null) {
+            long pNow = pending.getTimestamp();
+            if (pNow > dispatchTo) {
+                // Still past cutoff — keep holding, dispatch the live event and return.
+                dispatchEvent(event, true, output);
+                return;
+            }
+            pending.setTimestamp((int) (pNow + timeStart));
+            dispatchEvent(pending, false, output);
+            pending = null;
+        }
+
         // We will dispatch IRTMPEvent 'event' after we dispatch all the FLV tags with timestamps less than 'dispatchTo'
+        IMessage message;
         while ((message = io.pullMessage()) != null) {
             hasPackets = true;
             // log.debug("insert message {}",message);
-            if (message instanceof RTMPMessage) {
-                IRTMPEvent body = ((RTMPMessage) message).getBody();
-                if (body != null) {
-                    // Packet unused if:
-                    if (body instanceof Notify && !includeMetaData) {
-                        continue;// we dont want insert's meta
-                    } else if (body instanceof AudioData) {
-                        if (codec == 0) {
-                            continue; // live stream has no Audio
-                        }
-                        switch (audioCompatibility) {
-                            case YES:
-                                break;
-
-                            case UNKNOWN:
-                                AudioInfo info = parseAudioParams((AudioData) body);
-                                audioCompatibility = info.matchesStream;
-                                if (audioCompatibility == AudioCompatibility.YES) {
-                                    break;
-                                } else if (isForwardAudio() && audioCompatibility == AudioCompatibility.NO) {
-                                    log.error("FLV has incompatible audio. rate: {}  Channels: {}", info.audioSampleRate, info.audioChannels);
-                                    throw new IOException();
-                                }
-
-                            case NO://not forwarding audio or file audio properties are unknown.
-                                continue;
-                        }
-
-                    } else if (body instanceof VideoData && (width == 0 || height == 0)) {
-                        continue;// live stream has no video.
-                    }
-
-                    long now = body.getTimestamp();
-                    body.setTimestamp((int) (now + timeStart));
-                    // log.debug("dispatchInterstitial {} {} {}", timestamp, now,now+timeStart);
-
-                    // this may dispatch the tag or filter it out based on if we are forwarding audio/video or not.
-                    dispatchEvent(body, false, output);
-
-                    if (now > dispatchTo) {
-                        //Now we can dispatch the 'event' and then return.
-                        dispatchEvent(event, true, output);
-                        // log.debug("segment done {} {} ", now,dispatchTo);
-                        return;
-                    }
-                }
+            if (!(message instanceof RTMPMessage)) {
+                continue;
             }
+            IRTMPEvent body = ((RTMPMessage) message).getBody();
+            if (body == null) {
+                continue;
+            }
+            // Packet unused if:
+            if (body instanceof Notify && !includeMetaData) {
+                continue;// we dont want insert's meta
+            } else if (body instanceof AudioData) {
+                if (codec == 0) {
+                    continue; // live stream has no Audio
+                }
+                switch (audioCompatibility) {
+                    case YES:
+                        break;
+
+                    case UNKNOWN:
+                        AudioInfo info = parseAudioParams((AudioData) body);
+                        audioCompatibility = info.matchesStream;
+                        if (audioCompatibility == AudioCompatibility.YES) {
+                            break;
+                        } else if (isForwardAudio() && audioCompatibility == AudioCompatibility.NO) {
+                            log.error("FLV has incompatible audio. rate: {}  Channels: {}", info.audioSampleRate, info.audioChannels);
+                            throw new IOException();
+                        }
+
+                    case NO://not forwarding audio or file audio properties are unknown.
+                        continue;
+                }
+
+            } else if (body instanceof VideoData && (width == 0 || height == 0)) {
+                continue;// live stream has no video.
+            }
+
+            long now = body.getTimestamp();
+            if (now > dispatchTo) {
+                // Hold this tag for the next process() call instead of overshooting.
+                // Invariant: pending stores the *raw* FLV timestamp (pre-timeStart);
+                // do not call body.setTimestamp(...) before this assignment.
+                pending = body;
+                dispatchEvent(event, true, output);
+                // log.debug("segment done {} {} ", now,dispatchTo);
+                return;
+            }
+            body.setTimestamp((int) (now + timeStart));
+            // log.debug("dispatchInterstitial {} {} {}", timestamp, now,now+timeStart);
+
+            // this may dispatch the tag or filter it out based on if we are forwarding audio/video or not.
+            dispatchEvent(body, false, output);
         }
 
         // We got here because dispatchTo limiter has not run out,
@@ -171,6 +193,7 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             }
             //Reset timestamp delta.
             firstTimestamp = false;
+            pending = null; // any held tag is from the pre-loop run; discard
         } else {
             log.debug("interstitial complete  {}", timestamp);
             dispose();
@@ -188,6 +211,7 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         }
         hasPackets = false;
         fileName = null;
+        pending = null;
     }
 
     @Override
