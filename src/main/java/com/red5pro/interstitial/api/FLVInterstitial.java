@@ -313,9 +313,34 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             log.warn("Failed to open next pod file: {} (index {}/{})", fileName, currentFileIndex + 1, fileNames.size());
             return false;
         }
-        // The new FLV's body.getTimestamp() starts at 0; we want the dispatched timestamp to
-        // continue from currentTimestamp, so set timeStart accordingly.
-        timeStart = currentTimestamp;
+        // The new FLV's body.getTimestamp() starts at 0; pick timeStart so the new file's
+        // dispatched timeline picks up immediately after the closing file's last dispatched
+        // tag, NOT at currentTimestamp. Anchoring to currentTimestamp bakes the engine's
+        // wallClockGap (the time the engine sat past the closing file's last tag before the
+        // advance fired) into the dispatched timeline as drift. Across many pod boundaries
+        // this accumulates and downstream muxers inject permanent padding.
+        //
+        // Cap at currentTimestamp: closingMaxDispatchedTs + 1 is always <= currentTimestamp
+        // by construction (tags only dispatch when now + timeStart <= currentTimestamp), but
+        // the cap is defensive against any path that might bump the closing ts above the
+        // live clock. timeStart > currentTimestamp would put the new file's first tag ahead
+        // of live, which the pending-overshoot guard then has to claw back per call.
+        //
+        // Trade-off: setting timeStart in the past relative to engine clock means the new
+        // file's first frames dispatch with timestamps slightly behind currentTimestamp.
+        // The engine catches up over a few process() ticks via the pending-overshoot path —
+        // subscriber decoders see monotonic content arriving in order.
+        long closingLastVideoDispatchedTs = closingLastVideoBodyTs >= 0 ? closingLastVideoBodyTs + closingTimeStart : Long.MIN_VALUE;
+        long closingLastAudioDispatchedTs = closingLastAudioBodyTs >= 0 ? closingLastAudioBodyTs + closingTimeStart : Long.MIN_VALUE;
+        long closingMaxDispatchedTs = Math.max(closingLastVideoDispatchedTs, closingLastAudioDispatchedTs);
+        if (closingMaxDispatchedTs != Long.MIN_VALUE) {
+            // 1ms gap so the new file's first tag never collides with the closing file's last.
+            timeStart = Math.min(closingMaxDispatchedTs + 1, currentTimestamp);
+        } else {
+            // No tags dispatched from the closing file (rare — empty file or all filtered out).
+            // Fall back to engine clock so the new file picks up at "now."
+            timeStart = currentTimestamp;
+        }
         // Per-file tracking starts fresh for the new file.
         lastVideoBodyTs = -1L;
         lastAudioBodyTs = -1L;
