@@ -155,7 +155,9 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
                 return;
             }
             recordLastBodyTs(pending, pNow);
-            pending.setTimestamp((int) (pNow + timeStart));
+            long pStamped = pNow + timeStart;
+            warnIfOvershootsLive(pStamped, timestamp, "pending");
+            pending.setTimestamp((int) pStamped);
             dispatchEvent(pending, false, output);
             pending = null;
         }
@@ -217,7 +219,9 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
                     return;
                 }
                 recordLastBodyTs(body, now);
-                body.setTimestamp((int) (now + timeStart));
+                long stamped = now + timeStart;
+                warnIfOvershootsLive(stamped, timestamp, "pull");
+                body.setTimestamp((int) stamped);
                 // log.debug("dispatchInterstitial {} {} {}", timestamp, now,now+timeStart);
 
                 // this may dispatch the tag or filter it out based on if we are forwarding audio/video or not.
@@ -378,6 +382,23 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             lastVideoBodyTs = rawTs;
         } else if (body instanceof AudioData) {
             lastAudioBodyTs = rawTs;
+        }
+    }
+
+    /**
+     * Drift-violation detector: logs WARN if a re-stamped FLV body's dispatched timestamp ever
+     * exceeds the current live-clock timestamp passed into {@link #process}. The pending /
+     * pull-cutoff guard should make this impossible — if it fires, either the cutoff math drifted
+     * or {@code timeStart} was set ahead of the live clock at a pod boundary. Use this signal to
+     * pinpoint downstream nonmonotonic-DTS reports back to the FLV interstitial.
+     *
+     * @param stampedTs    the dispatched timestamp the body is about to carry (raw + timeStart)
+     * @param liveTs       the engine's live-clock timestamp for this {@code process()} call
+     * @param origin       short tag identifying the dispatch site ("pending" / "pull") for the log
+     */
+    private void warnIfOvershootsLive(long stampedTs, long liveTs, String origin) {
+        if (stampedTs > liveTs) {
+            log.warn("FLV interstitial overshoot ({}): stampedTs={} liveTs={} delta={}ms file={} timeStart={}", origin, stampedTs, liveTs, stampedTs - liveTs, fileName, timeStart);
         }
     }
 
