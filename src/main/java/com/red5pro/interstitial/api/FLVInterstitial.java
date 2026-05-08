@@ -1,7 +1,9 @@
 package com.red5pro.interstitial.api;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.red5.server.api.IContext;
@@ -23,7 +25,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class provides interstitial source from FLV files from within a given
- * scope.
+ * scope. Single-file usage plays one FLV. Multi-file (pod) usage plays a list
+ * of FLVs back-to-back as one continuous {@link InterstitialSession}, with no
+ * gap between files — file-to-file transitions happen internally without
+ * re-prompting the engine, so the session's PTS / duration control covers the
+ * entire pod.
+ *
+ * <p>All files in a pod must be encoded with compatible parameters (codec,
+ * profile, sample rate, resolution). Mismatched parameters may glitch on
+ * transition since the main stream's audio/video format is configured once at
+ * session start.
  *
  * @author Andy
  */
@@ -43,11 +54,52 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
      *  Held for the next process() call so we don't overshoot the live clock. */
     private IRTMPEvent pending;
 
-    public FLVInterstitial(IScope appScope, String fileName, boolean isForwardAudio, boolean isForwardVideo) {
-        super(isForwardAudio, isForwardVideo);
+    /** Ordered list of FLV file names making up the pod. Always non-empty; single-file usage stores a list of size 1. */
+    private final List<String> fileNames;
 
+    /** Index into {@link #fileNames} of the file currently being read. Advances on EOF until end-of-pod. */
+    private int currentFileIndex;
+
+    /**
+     * Drift diagnostics: most recent intrinsic (pre-{@code timeStart}-offset) body timestamps
+     * of dispatched VideoData / AudioData tags from the file currently being read. Reset to
+     * {@code -1} when {@link #advanceToNextPodFile} opens a new file. Logged at the file
+     * boundary together with {@code timeStart} so cumulative A/V skew across pod transitions
+     * is visible. {@code -1} means "no tag of that type dispatched yet from this file."
+     */
+    private long lastVideoBodyTs = -1L;
+
+    private long lastAudioBodyTs = -1L;
+
+    /**
+     * Single-file constructor — equivalent to a pod of size 1. Behaves exactly as the original
+     * {@code FLVInterstitial(IScope, String, boolean, boolean)} contract for backwards compatibility.
+     */
+    public FLVInterstitial(IScope appScope, String fileName, boolean isForwardAudio, boolean isForwardVideo) {
+        this(appScope, Collections.singletonList(fileName), isForwardAudio, isForwardVideo);
+    }
+
+    /**
+     * Multi-file (pod) constructor. The session plays each file in {@code fileNames} in order,
+     * advancing internally when one exhausts so the engine sees a single continuous interstitial.
+     * Useful for SCTE-35-driven ad pods where multiple creatives need to fill one break window
+     * with no inter-ad gap.
+     *
+     * @param appScope        application scope (used to resolve VOD providers per file)
+     * @param fileNames       ordered list of file names; must be non-empty
+     * @param isForwardAudio  forward this session's audio packets to the output
+     * @param isForwardVideo  forward this session's video packets to the output
+     * @throws IllegalArgumentException if {@code fileNames} is null or empty
+     */
+    public FLVInterstitial(IScope appScope, List<String> fileNames, boolean isForwardAudio, boolean isForwardVideo) {
+        super(isForwardAudio, isForwardVideo);
+        if (fileNames == null || fileNames.isEmpty()) {
+            throw new IllegalArgumentException("FLVInterstitial requires at least one fileName");
+        }
         this.appScope = appScope;
-        this.fileName = fileName;
+        this.fileNames = List.copyOf(fileNames);
+        this.currentFileIndex = 0;
+        this.fileName = this.fileNames.get(0);
     }
 
     @Override
@@ -102,72 +154,89 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
                 dispatchEvent(event, true, output);
                 return;
             }
+            recordLastBodyTs(pending, pNow);
             pending.setTimestamp((int) (pNow + timeStart));
             dispatchEvent(pending, false, output);
             pending = null;
         }
 
-        // We will dispatch IRTMPEvent 'event' after we dispatch all the FLV tags with timestamps less than 'dispatchTo'
+        // Outer loop: when the current pod file exhausts, advance to the next file (if any) and
+        // keep dispatching tags. Single-file usage exits the outer loop after one iteration since
+        // there is no next file. We will dispatch IRTMPEvent 'event' after we dispatch all the
+        // FLV tags with timestamps less than 'dispatchTo'; tags that overshoot are held in
+        // {@link #pending} for the next call.
         IMessage message;
-        while ((message = io.pullMessage()) != null) {
-            hasPackets = true;
-            // log.debug("insert message {}",message);
-            if (!(message instanceof RTMPMessage)) {
-                continue;
-            }
-            IRTMPEvent body = ((RTMPMessage) message).getBody();
-            if (body == null) {
-                continue;
-            }
-            // Packet unused if:
-            if (body instanceof Notify && !includeMetaData) {
-                continue;// we dont want insert's meta
-            } else if (body instanceof AudioData) {
-                if (codec == 0) {
-                    continue; // live stream has no Audio
+        while (true) {
+            while ((message = io.pullMessage()) != null) {
+                hasPackets = true;
+                // log.debug("insert message {}",message);
+                if (!(message instanceof RTMPMessage)) {
+                    continue;
                 }
-                switch (audioCompatibility) {
-                    case YES:
-                        break;
-
-                    case UNKNOWN:
-                        AudioInfo info = parseAudioParams((AudioData) body);
-                        audioCompatibility = info.matchesStream;
-                        if (audioCompatibility == AudioCompatibility.YES) {
+                IRTMPEvent body = ((RTMPMessage) message).getBody();
+                if (body == null) {
+                    continue;
+                }
+                // Packet unused if:
+                if (body instanceof Notify && !includeMetaData) {
+                    continue;// we dont want insert's meta
+                } else if (body instanceof AudioData) {
+                    if (codec == 0) {
+                        continue; // live stream has no Audio
+                    }
+                    switch (audioCompatibility) {
+                        case YES:
                             break;
-                        } else if (isForwardAudio() && audioCompatibility == AudioCompatibility.NO) {
-                            log.error("FLV has incompatible audio. rate: {}  Channels: {}", info.audioSampleRate, info.audioChannels);
-                            throw new IOException();
-                        }
 
-                    case NO://not forwarding audio or file audio properties are unknown.
-                        continue;
+                        case UNKNOWN:
+                            AudioInfo info = parseAudioParams((AudioData) body);
+                            audioCompatibility = info.matchesStream;
+                            if (audioCompatibility == AudioCompatibility.YES) {
+                                break;
+                            } else if (isForwardAudio() && audioCompatibility == AudioCompatibility.NO) {
+                                log.error("FLV has incompatible audio. rate: {}  Channels: {}", info.audioSampleRate, info.audioChannels);
+                                throw new IOException();
+                            }
+
+                        case NO://not forwarding audio or file audio properties are unknown.
+                            continue;
+                    }
+
+                } else if (body instanceof VideoData && (width == 0 || height == 0)) {
+                    continue;// live stream has no video.
                 }
 
-            } else if (body instanceof VideoData && (width == 0 || height == 0)) {
-                continue;// live stream has no video.
+                long now = body.getTimestamp();
+                if (now > dispatchTo) {
+                    // Hold this tag for the next process() call instead of overshooting.
+                    // Invariant: pending stores the *raw* FLV timestamp (pre-timeStart);
+                    // do not call body.setTimestamp(...) before this assignment.
+                    pending = body;
+                    dispatchEvent(event, true, output);
+                    // log.debug("segment done {} {} ", now,dispatchTo);
+                    return;
+                }
+                recordLastBodyTs(body, now);
+                body.setTimestamp((int) (now + timeStart));
+                // log.debug("dispatchInterstitial {} {} {}", timestamp, now,now+timeStart);
+
+                // this may dispatch the tag or filter it out based on if we are forwarding audio/video or not.
+                dispatchEvent(body, false, output);
             }
 
-            long now = body.getTimestamp();
-            if (now > dispatchTo) {
-                // Hold this tag for the next process() call instead of overshooting.
-                // Invariant: pending stores the *raw* FLV timestamp (pre-timeStart);
-                // do not call body.setTimestamp(...) before this assignment.
-                pending = body;
-                dispatchEvent(event, true, output);
-                // log.debug("segment done {} {} ", now,dispatchTo);
-                return;
+            // Current file exhausted (pullMessage returned null). If the pod has more files,
+            // advance and keep dispatching against the new file. Otherwise fall through to the
+            // original end-of-stream path (loop or dispose).
+            if (currentFileIndex + 1 < fileNames.size() && advanceToNextPodFile(timestamp)) {
+                dispatchTo = timestamp - timeStart;
+                continue;
             }
-            body.setTimestamp((int) (now + timeStart));
-            // log.debug("dispatchInterstitial {} {} {}", timestamp, now,now+timeStart);
-
-            // this may dispatch the tag or filter it out based on if we are forwarding audio/video or not.
-            dispatchEvent(body, false, output);
+            break;
         }
 
         // We got here because dispatchTo limiter has not run out,
         // and duration has not expired,
-        // and no more packets to pull.
+        // and no more packets to pull (and no more pod files to advance to).
         // First action is to make sure we dispatch the incoming event tag.
         dispatchEvent(event, true, output);
 
@@ -178,6 +247,8 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             throw new IOException("Empty insert");
         }
         if (sessionControl.canLoop()) {
+            // Loops the LAST file of a pod (or the only file in single-file usage). Pod-wide
+            // looping is not supported here; callers requiring it should rebuild the session.
             log.debug("loop file");
             OOBControlMessage oobCtrlMsg = new OOBControlMessage();
             oobCtrlMsg.setTarget(ISeekableProvider.KEY);
@@ -202,6 +273,120 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         }
     }
 
+    /**
+     * Closes the current file's input and opens the next file in the pod. Re-anchors the per-file
+     * timing offset so the new file's intrinsic timestamps (which start at 0) align with the
+     * current main-stream timestamp. Preserves {@link #hasPackets} across the transition (a
+     * mid-pod empty file does not invalidate the session — only an entirely empty pod does), and
+     * resets {@link InterstitialSession#audioCompatibility} so the new file's first audio config
+     * tag re-evaluates compatibility.
+     *
+     * @param currentTimestamp the main-stream timestamp at which the advance is happening
+     * @return {@code true} if the next file opened successfully; {@code false} on I/O failure
+     */
+    private boolean advanceToNextPodFile(long currentTimestamp) {
+        // Capture closing-file diagnostics before any state mutates. {@code lastVideoBodyTs} and
+        // {@code lastAudioBodyTs} are intrinsic (pre-{@code timeStart}-offset) timestamps of the
+        // last dispatched VideoData / AudioData tags from the file we're about to close; they
+        // come straight from {@link IRTMPEvent#getTimestamp()} as captured in {@link #process}
+        // before {@code body.setTimestamp(...)} re-anchors them. {@code -1} means "no tag of
+        // that type was dispatched from this file" (rare — empty audio or empty video stream).
+        int closingIndex = currentFileIndex;
+        String closingFile = fileName;
+        long closingTimeStart = timeStart;
+        long closingLastVideoBodyTs = lastVideoBodyTs;
+        long closingLastAudioBodyTs = lastAudioBodyTs;
+
+        currentFileIndex++;
+        fileName = fileNames.get(currentFileIndex);
+        if (io != null) {
+            io.unsubscribe(this);
+            io = null;
+        }
+        boolean preservedHasPackets = hasPackets;
+        open();
+        hasPackets = preservedHasPackets;
+        // The next file may be encoded with different audio params even if the pod was assembled
+        // from "compatible" creatives — re-check on the first audio config tag from the new file.
+        audioCompatibility = AudioCompatibility.UNKNOWN;
+        if (io == null) {
+            log.warn("Failed to open next pod file: {} (index {}/{})", fileName, currentFileIndex + 1, fileNames.size());
+            return false;
+        }
+        // The new FLV's body.getTimestamp() starts at 0; we want the dispatched timestamp to
+        // pick up immediately after the closing file's last dispatched tag, NOT at
+        // currentTimestamp (which may be ahead of the closing file's last dispatched ts due to
+        // engine wall-clock lag at file EOF). Re-anchoring to currentTimestamp bakes that gap
+        // into the dispatched timeline as boundary drift; anchoring to the closing file's
+        // dispatched-ts continuation removes it.
+        //
+        // Pod-boundary drift sources:
+        //   (a) wallClockGap — the engine sat past the file's last dispatched ts before the
+        //       advance fired. Old behavior captured this gap; new behavior eliminates it.
+        //   (b) avSkew — per-file AAC quantization (~21 ms) leaving audio offset from video at
+        //       file end. Untouched by this change; future tier-2 fix (audio tail clip) addresses
+        //       it if needed.
+        //
+        // Trade-off: setting timeStart in the past relative to engine clock means the new
+        // file's first frames dispatch with timestamps slightly behind currentTimestamp. That's
+        // benign — the engine catches up over a few process() ticks, subscriber decoders see
+        // monotonic content arriving in order, no rendering issue. Only consequence is a brief
+        // burst of frames at advance time as the engine fast-forwards, which is exactly what
+        // the wallClockGap was hiding before.
+        long closingLastVideoDispatchedTs = closingLastVideoBodyTs >= 0 ? closingLastVideoBodyTs + closingTimeStart : Long.MIN_VALUE;
+        long closingLastAudioDispatchedTs = closingLastAudioBodyTs >= 0 ? closingLastAudioBodyTs + closingTimeStart : Long.MIN_VALUE;
+        long closingMaxDispatchedTs = Math.max(closingLastVideoDispatchedTs, closingLastAudioDispatchedTs);
+        if (closingMaxDispatchedTs != Long.MIN_VALUE) {
+            // 1ms gap so the new file's first tag never collides with the closing file's last.
+            timeStart = closingMaxDispatchedTs + 1;
+        } else {
+            // No tags dispatched from the closing file (rare — empty file or all filtered out).
+            // Fall back to engine clock so the new file picks up at "now."
+            timeStart = currentTimestamp;
+        }
+        // Per-file tracking starts fresh for the new file.
+        lastVideoBodyTs = -1L;
+        lastAudioBodyTs = -1L;
+
+        // Drift trace: file boundary report. The two key signals are
+        // (a) {@code avSkewMs} — how far apart the closing file's last video and audio tags ended
+        //     in the file's intrinsic clock. Bounded by the AAC frame quantization floor
+        //     (~21 ms at 48 kHz/1024-sample frames); cannot be eliminated at file level. The
+        //     per-track timeStart approach (or audio tail clip) would be needed to neutralize
+        //     this — neither is wired up yet.
+        // (b) {@code wallClockGapMs} — the gap between (closing file's last dispatched ts on
+        //     the engine clock) and (currentTimestamp at advance). Pre-fix this gap was BAKED
+        //     into the dispatched timeline because newTimeStart = currentTimestamp; post-fix
+        //     newTimeStart = closingMaxDispatchedTs + 1, so this gap is now informational only
+        //     (it shows how much drift the OLD behavior would have introduced). Compare
+        //     {@code newTimeStart} vs {@code currentTimestamp} in the log: any difference is
+        //     drift the engine no longer bakes in.
+        // Enable the FLVInterstitial logger at DEBUG to see these:
+        //   <logger name="com.red5pro.interstitial.api.FLVInterstitial" level="DEBUG"/>
+        long avSkewMs = (closingLastVideoBodyTs >= 0 && closingLastAudioBodyTs >= 0) ? (closingLastAudioBodyTs - closingLastVideoBodyTs) : Long.MIN_VALUE;
+        long lastVideoDispatchedTs = closingLastVideoBodyTs >= 0 ? closingLastVideoBodyTs + closingTimeStart : -1L;
+        long lastAudioDispatchedTs = closingLastAudioBodyTs >= 0 ? closingLastAudioBodyTs + closingTimeStart : -1L;
+        long maxLastDispatchedTs = Math.max(lastVideoDispatchedTs, lastAudioDispatchedTs);
+        long wallClockGapMs = maxLastDispatchedTs >= 0 ? (currentTimestamp - maxLastDispatchedTs) : Long.MIN_VALUE;
+        log.debug("Pod boundary closingIdx={} closingFile={} oldTimeStart={} currentTimestamp={} newTimeStart={} closingLastVideoBodyTs={} closingLastAudioBodyTs={} lastVideoDispatchedTs={} lastAudioDispatchedTs={} avSkewMs={} wallClockGapMs={} -> opening file {}/{}: {}", closingIndex, closingFile, closingTimeStart, currentTimestamp, timeStart, closingLastVideoBodyTs, closingLastAudioBodyTs, lastVideoDispatchedTs,
+                lastAudioDispatchedTs, avSkewMs == Long.MIN_VALUE ? "n/a" : avSkewMs, wallClockGapMs == Long.MIN_VALUE ? "n/a" : wallClockGapMs, currentFileIndex + 1, fileNames.size(), fileName);
+        return true;
+    }
+
+    /**
+     * Drift diagnostics helper: records the most recent intrinsic body timestamp by type so the
+     * pod-boundary log in {@link #advanceToNextPodFile} can report A/V skew at file end. {@code rawTs}
+     * is the pre-{@code timeStart}-offset value pulled from the FLV reader (i.e. file-intrinsic).
+     * No-op for non-A/V events (Notify/metadata) since those don't contribute to A/V alignment.
+     */
+    private void recordLastBodyTs(IRTMPEvent body, long rawTs) {
+        if (body instanceof VideoData) {
+            lastVideoBodyTs = rawTs;
+        } else if (body instanceof AudioData) {
+            lastAudioBodyTs = rawTs;
+        }
+    }
+
     @Override
     public void dispose() {
         log.debug("dispose");
@@ -212,6 +397,7 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         hasPackets = false;
         fileName = null;
         pending = null;
+        fireDisposedCallbackOnce();
     }
 
     @Override
