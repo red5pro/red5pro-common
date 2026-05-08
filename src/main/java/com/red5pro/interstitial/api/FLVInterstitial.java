@@ -314,53 +314,22 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             return false;
         }
         // The new FLV's body.getTimestamp() starts at 0; we want the dispatched timestamp to
-        // pick up immediately after the closing file's last dispatched tag, NOT at
-        // currentTimestamp (which may be ahead of the closing file's last dispatched ts due to
-        // engine wall-clock lag at file EOF). Re-anchoring to currentTimestamp bakes that gap
-        // into the dispatched timeline as boundary drift; anchoring to the closing file's
-        // dispatched-ts continuation removes it.
-        //
-        // Pod-boundary drift sources:
-        //   (a) wallClockGap — the engine sat past the file's last dispatched ts before the
-        //       advance fired. Old behavior captured this gap; new behavior eliminates it.
-        //   (b) avSkew — per-file AAC quantization (~21 ms) leaving audio offset from video at
-        //       file end. Untouched by this change; future tier-2 fix (audio tail clip) addresses
-        //       it if needed.
-        //
-        // Trade-off: setting timeStart in the past relative to engine clock means the new
-        // file's first frames dispatch with timestamps slightly behind currentTimestamp. That's
-        // benign — the engine catches up over a few process() ticks, subscriber decoders see
-        // monotonic content arriving in order, no rendering issue. Only consequence is a brief
-        // burst of frames at advance time as the engine fast-forwards, which is exactly what
-        // the wallClockGap was hiding before.
-        long closingLastVideoDispatchedTs = closingLastVideoBodyTs >= 0 ? closingLastVideoBodyTs + closingTimeStart : Long.MIN_VALUE;
-        long closingLastAudioDispatchedTs = closingLastAudioBodyTs >= 0 ? closingLastAudioBodyTs + closingTimeStart : Long.MIN_VALUE;
-        long closingMaxDispatchedTs = Math.max(closingLastVideoDispatchedTs, closingLastAudioDispatchedTs);
-        if (closingMaxDispatchedTs != Long.MIN_VALUE) {
-            // 1ms gap so the new file's first tag never collides with the closing file's last.
-            timeStart = closingMaxDispatchedTs + 1;
-        } else {
-            // No tags dispatched from the closing file (rare — empty file or all filtered out).
-            // Fall back to engine clock so the new file picks up at "now."
-            timeStart = currentTimestamp;
-        }
+        // continue from currentTimestamp, so set timeStart accordingly.
+        timeStart = currentTimestamp;
         // Per-file tracking starts fresh for the new file.
         lastVideoBodyTs = -1L;
         lastAudioBodyTs = -1L;
 
         // Drift trace: file boundary report. The two key signals are
         // (a) {@code avSkewMs} — how far apart the closing file's last video and audio tags ended
-        //     in the file's intrinsic clock. Bounded by the AAC frame quantization floor
-        //     (~21 ms at 48 kHz/1024-sample frames); cannot be eliminated at file level. The
-        //     per-track timeStart approach (or audio tail clip) would be needed to neutralize
-        //     this — neither is wired up yet.
+        //     in the file's intrinsic clock. Non-zero values accumulate across pods because we
+        //     re-anchor both A and V to {@code timeStart = currentTimestamp} on every advance,
+        //     erasing the per-file V/A offset; over N pod files the cumulative skew on the
+        //     dispatched timeline is roughly the sum of these.
         // (b) {@code wallClockGapMs} — the gap between (closing file's last dispatched ts on
-        //     the engine clock) and (currentTimestamp at advance). Pre-fix this gap was BAKED
-        //     into the dispatched timeline because newTimeStart = currentTimestamp; post-fix
-        //     newTimeStart = closingMaxDispatchedTs + 1, so this gap is now informational only
-        //     (it shows how much drift the OLD behavior would have introduced). Compare
-        //     {@code newTimeStart} vs {@code currentTimestamp} in the log: any difference is
-        //     drift the engine no longer bakes in.
+        //     the engine clock) and (currentTimestamp where the new file will start). When the
+        //     engine kept up with the file in real time these match; when not, this exposes how
+        //     the dispatched A/V timeline lagged or sprinted.
         // Enable the FLVInterstitial logger at DEBUG to see these:
         //   <logger name="com.red5pro.interstitial.api.FLVInterstitial" level="DEBUG"/>
         long avSkewMs = (closingLastVideoBodyTs >= 0 && closingLastAudioBodyTs >= 0) ? (closingLastAudioBodyTs - closingLastVideoBodyTs) : Long.MIN_VALUE;
