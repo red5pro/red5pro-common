@@ -46,7 +46,17 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
 
     private boolean firstTimestamp;
 
-    private long timeStart;
+    /**
+     * Per-stream anchor offsets added to a tag's intrinsic (file-relative) timestamp when stamping
+     * for the dispatched timeline. Tracking V and A separately preserves the per-file V/A offset
+     * across pod boundaries: the closing file's last V and last A typically end at different
+     * intrinsic timestamps, so anchoring both to a single value at the boundary collapses that
+     * offset and leaves an audio gap of (V_last - A_last) per advance. Across N pod files that
+     * cumulative gap surfaces downstream as PTS holes / nonmonotonic-DTS reports.
+     */
+    private long timeStartVideo;
+
+    private long timeStartAudio;
 
     private boolean hasPackets;
 
@@ -61,11 +71,12 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
     private int currentFileIndex;
 
     /**
-     * Drift diagnostics: most recent intrinsic (pre-{@code timeStart}-offset) body timestamps
-     * of dispatched VideoData / AudioData tags from the file currently being read. Reset to
-     * {@code -1} when {@link #advanceToNextPodFile} opens a new file. Logged at the file
-     * boundary together with {@code timeStart} so cumulative A/V skew across pod transitions
-     * is visible. {@code -1} means "no tag of that type dispatched yet from this file."
+     * Drift diagnostics: most recent intrinsic (pre-anchor) body timestamps of dispatched
+     * VideoData / AudioData tags from the file currently being read. Reset to {@code -1} when
+     * {@link #advanceToNextPodFile} opens a new file. Drives the per-stream re-anchor at file
+     * boundaries: the new file's {@link #timeStartVideo} / {@link #timeStartAudio} are derived
+     * from these so each stream picks up exactly 1 ms after IT left off. {@code -1} means "no
+     * tag of that type dispatched yet from this file."
      */
     private long lastVideoBodyTs = -1L;
 
@@ -138,9 +149,9 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         if (!firstTimestamp) {
             // log.debug("setting first ts {}", timestamp);
             firstTimestamp = true;
-            timeStart = timestamp;
+            timeStartVideo = timestamp;
+            timeStartAudio = timestamp;
         }
-        long dispatchTo = timestamp - timeStart;
 
         if (codec == 0 && (width == 0 || height == 0)) {
             return;
@@ -149,13 +160,15 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         // Drain any tag held over from the previous call first.
         if (pending != null) {
             long pNow = pending.getTimestamp();
-            if (pNow > dispatchTo) {
+            long pTimeStart = timeStartFor(pending);
+            long pDispatchTo = timestamp - pTimeStart;
+            if (pNow > pDispatchTo) {
                 // Still past cutoff — keep holding, dispatch the live event and return.
                 dispatchEvent(event, true, output);
                 return;
             }
             recordLastBodyTs(pending, pNow);
-            long pStamped = pNow + timeStart;
+            long pStamped = pNow + pTimeStart;
             warnIfOvershootsLive(pStamped, timestamp, "pending");
             pending.setTimestamp((int) pStamped);
             dispatchEvent(pending, false, output);
@@ -209,20 +222,22 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
                 }
 
                 long now = body.getTimestamp();
-                if (now > dispatchTo) {
+                long bTimeStart = timeStartFor(body);
+                long bDispatchTo = timestamp - bTimeStart;
+                if (now > bDispatchTo) {
                     // Hold this tag for the next process() call instead of overshooting.
-                    // Invariant: pending stores the *raw* FLV timestamp (pre-timeStart);
+                    // Invariant: pending stores the *raw* FLV timestamp (pre-anchor);
                     // do not call body.setTimestamp(...) before this assignment.
                     pending = body;
                     dispatchEvent(event, true, output);
-                    // log.debug("segment done {} {} ", now,dispatchTo);
+                    // log.debug("segment done {} {} ", now,bDispatchTo);
                     return;
                 }
                 recordLastBodyTs(body, now);
-                long stamped = now + timeStart;
+                long stamped = now + bTimeStart;
                 warnIfOvershootsLive(stamped, timestamp, "pull");
                 body.setTimestamp((int) stamped);
-                // log.debug("dispatchInterstitial {} {} {}", timestamp, now,now+timeStart);
+                // log.debug("dispatchInterstitial {} {} {}", timestamp, now, stamped);
 
                 // this may dispatch the tag or filter it out based on if we are forwarding audio/video or not.
                 dispatchEvent(body, false, output);
@@ -230,9 +245,10 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
 
             // Current file exhausted (pullMessage returned null). If the pod has more files,
             // advance and keep dispatching against the new file. Otherwise fall through to the
-            // original end-of-stream path (loop or dispose).
+            // original end-of-stream path (loop or dispose). The cutoff is now recomputed
+            // per-tag using the post-advance timeStartVideo / timeStartAudio, so no top-level
+            // refresh is needed here.
             if (currentFileIndex + 1 < fileNames.size() && advanceToNextPodFile(timestamp)) {
-                dispatchTo = timestamp - timeStart;
                 continue;
             }
             break;
@@ -290,14 +306,15 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
      */
     private boolean advanceToNextPodFile(long currentTimestamp) {
         // Capture closing-file diagnostics before any state mutates. {@code lastVideoBodyTs} and
-        // {@code lastAudioBodyTs} are intrinsic (pre-{@code timeStart}-offset) timestamps of the
-        // last dispatched VideoData / AudioData tags from the file we're about to close; they
-        // come straight from {@link IRTMPEvent#getTimestamp()} as captured in {@link #process}
-        // before {@code body.setTimestamp(...)} re-anchors them. {@code -1} means "no tag of
-        // that type was dispatched from this file" (rare — empty audio or empty video stream).
+        // {@code lastAudioBodyTs} are intrinsic (pre-anchor) timestamps of the last dispatched
+        // VideoData / AudioData tags from the file we're about to close; they come straight from
+        // {@link IRTMPEvent#getTimestamp()} as captured in {@link #process} before
+        // {@code body.setTimestamp(...)} re-anchors them. {@code -1} means "no tag of that type
+        // was dispatched from this file" (rare — empty audio or empty video stream).
         int closingIndex = currentFileIndex;
         String closingFile = fileName;
-        long closingTimeStart = timeStart;
+        long closingTimeStartVideo = timeStartVideo;
+        long closingTimeStartAudio = timeStartAudio;
         long closingLastVideoBodyTs = lastVideoBodyTs;
         long closingLastAudioBodyTs = lastAudioBodyTs;
 
@@ -317,33 +334,30 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             log.warn("Failed to open next pod file: {} (index {}/{})", fileName, currentFileIndex + 1, fileNames.size());
             return false;
         }
-        // The new FLV's body.getTimestamp() starts at 0; pick timeStart so the new file's
-        // dispatched timeline picks up immediately after the closing file's last dispatched
-        // tag, NOT at currentTimestamp. Anchoring to currentTimestamp bakes the engine's
-        // wallClockGap (the time the engine sat past the closing file's last tag before the
-        // advance fired) into the dispatched timeline as drift. Across many pod boundaries
-        // this accumulates and downstream muxers inject permanent padding.
+        // Per-stream re-anchor: each stream picks up 1 ms after IT left off in the closing
+        // file. Tracking V and A separately preserves the per-file V/A offset across the
+        // boundary so the audio timeline doesn't gap by (V_last - A_last) on every advance.
         //
-        // Cap at currentTimestamp: closingMaxDispatchedTs + 1 is always <= currentTimestamp
-        // by construction (tags only dispatch when now + timeStart <= currentTimestamp), but
-        // the cap is defensive against any path that might bump the closing ts above the
-        // live clock. timeStart > currentTimestamp would put the new file's first tag ahead
-        // of live, which the pending-overshoot guard then has to claw back per call.
-        //
-        // Trade-off: setting timeStart in the past relative to engine clock means the new
-        // file's first frames dispatch with timestamps slightly behind currentTimestamp.
-        // The engine catches up over a few process() ticks via the pending-overshoot path —
-        // subscriber decoders see monotonic content arriving in order.
-        long closingLastVideoDispatchedTs = closingLastVideoBodyTs >= 0 ? closingLastVideoBodyTs + closingTimeStart : Long.MIN_VALUE;
-        long closingLastAudioDispatchedTs = closingLastAudioBodyTs >= 0 ? closingLastAudioBodyTs + closingTimeStart : Long.MIN_VALUE;
-        long closingMaxDispatchedTs = Math.max(closingLastVideoDispatchedTs, closingLastAudioDispatchedTs);
-        if (closingMaxDispatchedTs != Long.MIN_VALUE) {
-            // 1ms gap so the new file's first tag never collides with the closing file's last.
-            timeStart = Math.min(closingMaxDispatchedTs + 1, currentTimestamp);
+        // No min-cap against currentTimestamp: a tag is only dispatched when
+        // raw_ts <= currentTimestamp - timeStartFor(body), so closingLastDispatchedTs is at
+        // most currentTimestamp by construction. The new anchor is therefore at most
+        // currentTimestamp + 1 — a one-tick overshoot that the pending-overshoot guard absorbs
+        // on the next process() call. Capping at currentTimestamp instead would force the new
+        // file's first tag to share a timestamp with the closing file's last tag, producing
+        // duplicate timestamps that downstream packagers reject as nonmonotonic.
+        long closingLastVideoDispatchedTs = closingLastVideoBodyTs >= 0 ? closingLastVideoBodyTs + closingTimeStartVideo : Long.MIN_VALUE;
+        long closingLastAudioDispatchedTs = closingLastAudioBodyTs >= 0 ? closingLastAudioBodyTs + closingTimeStartAudio : Long.MIN_VALUE;
+        if (closingLastVideoBodyTs >= 0) {
+            timeStartVideo = closingLastVideoDispatchedTs + 1;
         } else {
-            // No tags dispatched from the closing file (rare — empty file or all filtered out).
-            // Fall back to engine clock so the new file picks up at "now."
-            timeStart = currentTimestamp;
+            // No video dispatched from the closing file (audio-only or all filtered out).
+            // Fall back to engine clock so the new file's video picks up at "now."
+            timeStartVideo = currentTimestamp;
+        }
+        if (closingLastAudioBodyTs >= 0) {
+            timeStartAudio = closingLastAudioDispatchedTs + 1;
+        } else {
+            timeStartAudio = currentTimestamp;
         }
         // Per-file tracking starts fresh for the new file.
         lastVideoBodyTs = -1L;
@@ -351,10 +365,9 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
 
         // Drift trace: file boundary report. The two key signals are
         // (a) {@code avSkewMs} — how far apart the closing file's last video and audio tags ended
-        //     in the file's intrinsic clock. Non-zero values accumulate across pods because we
-        //     re-anchor both A and V to {@code timeStart = currentTimestamp} on every advance,
-        //     erasing the per-file V/A offset; over N pod files the cumulative skew on the
-        //     dispatched timeline is roughly the sum of these.
+        //     in the file's intrinsic clock. With per-stream anchors this offset is now PRESERVED
+        //     across the boundary (the new file inherits the same V/A skew), so cumulative drift
+        //     does not accumulate on the dispatched timeline.
         // (b) {@code wallClockGapMs} — the gap between (closing file's last dispatched ts on
         //     the engine clock) and (currentTimestamp where the new file will start). When the
         //     engine kept up with the file in real time these match; when not, this exposes how
@@ -362,19 +375,28 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         // Enable the FLVInterstitial logger at DEBUG to see these:
         //   <logger name="com.red5pro.interstitial.api.FLVInterstitial" level="DEBUG"/>
         long avSkewMs = (closingLastVideoBodyTs >= 0 && closingLastAudioBodyTs >= 0) ? (closingLastAudioBodyTs - closingLastVideoBodyTs) : Long.MIN_VALUE;
-        long lastVideoDispatchedTs = closingLastVideoBodyTs >= 0 ? closingLastVideoBodyTs + closingTimeStart : -1L;
-        long lastAudioDispatchedTs = closingLastAudioBodyTs >= 0 ? closingLastAudioBodyTs + closingTimeStart : -1L;
+        long lastVideoDispatchedTs = closingLastVideoBodyTs >= 0 ? closingLastVideoDispatchedTs : -1L;
+        long lastAudioDispatchedTs = closingLastAudioBodyTs >= 0 ? closingLastAudioDispatchedTs : -1L;
         long maxLastDispatchedTs = Math.max(lastVideoDispatchedTs, lastAudioDispatchedTs);
         long wallClockGapMs = maxLastDispatchedTs >= 0 ? (currentTimestamp - maxLastDispatchedTs) : Long.MIN_VALUE;
-        log.debug("Pod boundary closingIdx={} closingFile={} oldTimeStart={} currentTimestamp={} newTimeStart={} closingLastVideoBodyTs={} closingLastAudioBodyTs={} lastVideoDispatchedTs={} lastAudioDispatchedTs={} avSkewMs={} wallClockGapMs={} -> opening file {}/{}: {}", closingIndex, closingFile, closingTimeStart, currentTimestamp, timeStart, closingLastVideoBodyTs, closingLastAudioBodyTs, lastVideoDispatchedTs,
-                lastAudioDispatchedTs, avSkewMs == Long.MIN_VALUE ? "n/a" : avSkewMs, wallClockGapMs == Long.MIN_VALUE ? "n/a" : wallClockGapMs, currentFileIndex + 1, fileNames.size(), fileName);
+        log.debug("Pod boundary closingIdx={} closingFile={} oldTimeStartVideo={} oldTimeStartAudio={} currentTimestamp={} newTimeStartVideo={} newTimeStartAudio={} closingLastVideoBodyTs={} closingLastAudioBodyTs={} lastVideoDispatchedTs={} lastAudioDispatchedTs={} avSkewMs={} wallClockGapMs={} -> opening file {}/{}: {}", closingIndex, closingFile, closingTimeStartVideo, closingTimeStartAudio, currentTimestamp,
+                timeStartVideo, timeStartAudio, closingLastVideoBodyTs, closingLastAudioBodyTs, lastVideoDispatchedTs, lastAudioDispatchedTs, avSkewMs == Long.MIN_VALUE ? "n/a" : avSkewMs, wallClockGapMs == Long.MIN_VALUE ? "n/a" : wallClockGapMs, currentFileIndex + 1, fileNames.size(), fileName);
         return true;
+    }
+
+    /**
+     * Pick the per-stream anchor to use when stamping {@code body} for the dispatched timeline.
+     * Audio uses {@link #timeStartAudio}; everything else (Video, Notify) uses {@link #timeStartVideo}
+     * so non-A/V bodies track the dominant clock alongside their adjacent video tags.
+     */
+    private long timeStartFor(IRTMPEvent body) {
+        return (body instanceof AudioData) ? timeStartAudio : timeStartVideo;
     }
 
     /**
      * Drift diagnostics helper: records the most recent intrinsic body timestamp by type so the
      * pod-boundary log in {@link #advanceToNextPodFile} can report A/V skew at file end. {@code rawTs}
-     * is the pre-{@code timeStart}-offset value pulled from the FLV reader (i.e. file-intrinsic).
+     * is the pre-anchor value pulled from the FLV reader (i.e. file-intrinsic).
      * No-op for non-A/V events (Notify/metadata) since those don't contribute to A/V alignment.
      */
     private void recordLastBodyTs(IRTMPEvent body, long rawTs) {
@@ -389,16 +411,16 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
      * Drift-violation detector: logs WARN if a re-stamped FLV body's dispatched timestamp ever
      * exceeds the current live-clock timestamp passed into {@link #process}. The pending /
      * pull-cutoff guard should make this impossible — if it fires, either the cutoff math drifted
-     * or {@code timeStart} was set ahead of the live clock at a pod boundary. Use this signal to
-     * pinpoint downstream nonmonotonic-DTS reports back to the FLV interstitial.
+     * or a per-stream anchor was set ahead of the live clock at a pod boundary. Use this signal
+     * to pinpoint downstream nonmonotonic-DTS reports back to the FLV interstitial.
      *
-     * @param stampedTs    the dispatched timestamp the body is about to carry (raw + timeStart)
+     * @param stampedTs    the dispatched timestamp the body is about to carry (raw + anchor)
      * @param liveTs       the engine's live-clock timestamp for this {@code process()} call
      * @param origin       short tag identifying the dispatch site ("pending" / "pull") for the log
      */
     private void warnIfOvershootsLive(long stampedTs, long liveTs, String origin) {
         if (stampedTs > liveTs) {
-            log.warn("FLV interstitial overshoot ({}): stampedTs={} liveTs={} delta={}ms file={} timeStart={}", origin, stampedTs, liveTs, stampedTs - liveTs, fileName, timeStart);
+            log.warn("FLV interstitial overshoot ({}): stampedTs={} liveTs={} delta={}ms file={} timeStartVideo={} timeStartAudio={}", origin, stampedTs, liveTs, stampedTs - liveTs, fileName, timeStartVideo, timeStartAudio);
         }
     }
 
