@@ -8,6 +8,12 @@ import org.red5.server.net.rtmp.event.IRTMPEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is a container for multiple interstitial sessions. It will queue
+ * and process each session in order until all sessions have been processed.
+ *
+ * @author Paul Gregoire
+ */
 public class MultiSessionPod extends InterstitialSession {
 
     private static Logger log = LoggerFactory.getLogger(MultiSessionPod.class);
