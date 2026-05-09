@@ -379,7 +379,7 @@ public class FLVInterstitialTest {
         sources.put("a.flv", file1);
         sources.put("b.flv", file2);
 
-        FLVInterstitial fi = buildPodSession(List.of("a.flv", "b.flv"), sources, LIVE_START, 60_000);
+        PlaylistInterstitial fi = buildPodSession(List.of("a.flv", "b.flv"), sources, LIVE_START, 60_000);
         CapturingStream output = new CapturingStream();
 
         for (int i = 0; i < LIVE_TICK_COUNT; i++) {
@@ -461,8 +461,8 @@ public class FLVInterstitialTest {
      * resolve {@link #fileName} against {@code sources} instead of using the live VOD provider, so
      * advance-to-next-pod-file works in unit tests without an {@code IScope}.
      */
-    private static FLVInterstitial buildPodSession(List<String> fileNames, Map<String, List<IMessage>> sources, long start, long duration) {
-        FLVInterstitial fi = new FLVInterstitial(null, fileNames, true, true) {
+    private static PlaylistInterstitial buildPodSession(List<String> fileNames, Map<String, List<IMessage>> sources, long start, long duration) {
+        PlaylistInterstitial fi = new PlaylistInterstitial(null, fileNames, true, true) {
             @Override
             public void open() {
                 if (this.io != null) {
