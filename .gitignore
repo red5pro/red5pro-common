@@ -20,6 +20,9 @@ gen
 .recommenders
 .vscode/
 *.code-workspace
+.claude/
+CLAUDE.md
+.graphify-out/
 
 # file created by maven shade plugin
 dependency-reduced-pom.xml

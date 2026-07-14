@@ -28,6 +28,7 @@ package com.red5pro.server.stream.webrtc;
 import org.red5.server.api.IConnection;
 import org.red5.server.api.scope.IScope;
 
+import com.red5pro.io.WireMessage;
 import com.red5pro.media.sdp.SDPUserAgent;
 import com.red5pro.server.ConnectionAttributeKey;
 import com.red5pro.server.SignalingChannel;
@@ -82,6 +83,17 @@ public interface IRTCCapableConnection extends IConnection {
     void writeMessage(String message);
 
     /**
+     * Write a wire message to the connection output.
+     *
+     * @param message
+     */
+    default void writeMessage(WireMessage message) {
+        if (!message.isBinary()) {
+            writeMessage(message.getStringMessage());
+        }
+    }
+
+    /**
      * Set an attribute on the connection.
      *
      * @param key
@@ -131,19 +143,13 @@ public interface IRTCCapableConnection extends IConnection {
      */
     SDPUserAgent getUserAgentEnum();
 
-    /**
-     * Returns the user-agents version string.
-     *
-     * @return userAgentVersion
-     */
-    String getUAVersion();
+    void setLocalSDP(String sdp);
 
-    boolean isChrome();
+    String getLocalSDP();
 
-    boolean isEdge();
+    void sendRemb(int ssrc, int bitrate);
 
-    boolean isFirefox();
-
-    boolean isSafari();
+    // TODO(paul) add this to the interface next release
+    //boolean isLocalNetwork();
 
 }

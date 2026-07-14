@@ -34,6 +34,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -53,6 +56,8 @@ import com.red5pro.cluster.streams.Restrictions;
  * @author Paul Gregoire
  */
 public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserializer<Provision> {
+
+    private static final Logger log = LoggerFactory.getLogger(ProvisionAdapter.class);
 
     @Override
     public JsonElement serialize(final Provision provision, final Type type, final JsonSerializationContext context) {
@@ -106,7 +111,7 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
         // handle aliases
         if (provision.getStreamNameAlias() != null) {
             // publisher alias
-            result.addProperty("nameAlias", provision.getStreamNameAlias());
+            result.addProperty("streamAlias", provision.getStreamNameAlias());
         }
         if (provision.getAliases() != null) {
             // subscribe aliases
@@ -114,7 +119,10 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
             provision.getAliases().forEach(alias -> {
                 aliases.add(alias);
             });
-            result.add("aliases", aliases);
+            result.add("playAliases", aliases);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("serialize: {}", result);
         }
         return result;
     }
@@ -163,18 +171,37 @@ public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserial
             provision.setSecondaries(secondaries);
         }
         // publisher alias
-        if (provObj.has("nameAlias")) {
-            String streamNameAlias = provObj.get("nameAlias").getAsString();
+        if (provObj.has("streamAlias")) {
+            String streamNameAlias = provObj.get("streamAlias").getAsString();
             provision.setStreamNameAlias(streamNameAlias);
         }
         // subscribing aliases
+        if (provObj.has("playAliases")) {
+            Set<String> aliases = new HashSet<>();
+            JsonArray aliasArr = provObj.get("playAliases").getAsJsonArray();
+            for (JsonElement alias : aliasArr) {
+                aliases.add(alias.getAsString());
+            }
+            provision.setAliases(aliases);
+        }
+        // publisher alias (previous key; deprecate)
+        if (provObj.has("nameAlias")) {
+            log.warn("nameAlias is deprecated, please use streamAlias");
+            String streamNameAlias = provObj.get("nameAlias").getAsString();
+            provision.setStreamNameAlias(streamNameAlias);
+        }
+        // subscribing aliases (previous key; deprecate)
         if (provObj.has("aliases")) {
+            log.warn("aliases is deprecated, please use playAliases");
             Set<String> aliases = new HashSet<>();
             JsonArray aliasArr = provObj.get("aliases").getAsJsonArray();
             for (JsonElement alias : aliasArr) {
                 aliases.add(alias.getAsString());
             }
             provision.setAliases(aliases);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("deserialize: {}", provision);
         }
         return provision;
     }

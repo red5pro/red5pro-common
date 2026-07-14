@@ -175,8 +175,11 @@ public interface IProStream extends IClientBroadcastStream {
      *            processor class. Use null for default.
      * @param params
      *            processor parameters. Use null for default.
+     * @deprecated
      */
-    void usePreprocessor(String clazz, Map<String, Object> params);
+
+    default void usePreprocessor(String clazz, Map<String, Object> params) {
+    };
 
     /**
      * Return the number of subscribers for the given sidestream by id, or return
@@ -189,6 +192,12 @@ public interface IProStream extends IClientBroadcastStream {
      *         etc.
      */
     Integer getSideStreamSubscriberCount(String id);
+
+    /**
+     * Flag indicates that "published" webhook call will be deferred (don't make this call as usual)
+     * @return
+     */
+    boolean isPublishedWebhookEnabled();
 
     /**
      * Return the total number of subscribers for the all sidestreams.

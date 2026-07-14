@@ -1,8 +1,12 @@
 package com.red5pro.interstitial.api;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import org.apache.mina.core.buffer.IoBuffer;
+import org.red5.codec.VideoFrameType;
+import org.red5.io.IoConstants;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.stream.IBroadcastStream;
 import org.red5.server.api.stream.IStreamListener;
@@ -11,7 +15,6 @@ import org.red5.server.net.rtmp.event.AudioData;
 import org.red5.server.net.rtmp.event.IRTMPEvent;
 import org.red5.server.net.rtmp.event.Notify;
 import org.red5.server.net.rtmp.event.VideoData;
-import org.red5.server.net.rtmp.event.VideoData.FrameType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +32,21 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
     private static Logger log = LoggerFactory.getLogger(LiveInterstitial.class);
 
     private int timeDelta;
+
+    /** True once timeDelta has been computed from real RTMP anchor samples. */
+    private volatile boolean anchored;
+
+    /** Live-stream RTMP timestamp captured at activation; -1 until set. */
+    private long liveAnchorTs = -1L;
+
+    /** Packets received from newStream before the live anchor was established. */
+    private final Deque<IStreamPacket> preAnchorBuffer = new ArrayDeque<>();
+
+    /** Maximum buffered pre-anchor packets before the session is failed. */
+    private static final int MAX_PRE_ANCHOR_BUFFER = 64;
+
+    /** Lock guarding anchor-setup state. Steady state is lock-free via volatile anchored. */
+    private final Object anchorLock = new Object();
 
     private boolean hasKeyFrame;
 
@@ -54,59 +72,89 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
      */
     public LiveInterstitial(IInterstitialStream liveStream, IInterstitialStream newStream, boolean isInterstitialAudio, boolean isInterstitialVideo) {
         super(isInterstitialAudio, isInterstitialVideo);
-
-        log.trace("LiveInterstitial ctor. isForwardVideo: {}, isForwardAudio: {}", isInterstitialVideo, isInterstitialAudio);
+        log.trace("LiveInterstitial ctor. target: {}, int'tial: {},  isForwardVideo: {}, isForwardAudio: {}", liveStream, newStream, isInterstitialVideo, isInterstitialAudio);
         this.liveStream = liveStream;
         this.newStream = newStream;
         newStream.addTerminationEventListener(this);
         liveStream.addTerminationEventListener(this);
-        this.timeDelta = (int) (liveStream.getCreationTime() - newStream.getCreationTime());
-        // log.trace("TIMEDELTA: {} (from liveStream: {}, newStream: {})", timeDelta,
-        // liveStream.getCreationTime(), newStream.getCreationTime());
+        this.fileName = newStream.getBroadcastStreamPublishName();
+        // timeDelta is computed lazily at activation from RTMP anchor samples,
+        // not from wall-clock creation times — see process() and packetReceived() below.
     }
 
     @Override
     public void packetReceived(IBroadcastStream stream, IStreamPacket packet) {
         if (isDeadStream) {
-            // do nothing;
             return;
         }
 
-        if (packet instanceof VideoData) {
-            if (!isVideoPrimed && isForwardVideo()) {// send codec configs if present.
+        if (!anchored) {
+            synchronized (anchorLock) {
+                if (!anchored) {
+                    if (liveAnchorTs == -1L) {
+                        if (preAnchorBuffer.size() >= MAX_PRE_ANCHOR_BUFFER) {
+                            log.warn("LiveInterstitial pre-anchor buffer full ({} packets); failing session", MAX_PRE_ANCHOR_BUFFER);
+                            isDeadStream = true;
+                            preAnchorBuffer.clear();
+                            return;
+                        }
+                        preAnchorBuffer.add(packet);
+                        return;
+                    }
+                    long newAnchorTs = packet.getTimestamp();
+                    timeDelta = (int) (newAnchorTs - liveAnchorTs);
+                    anchored = true;
+                }
+            }
+        }
+
+        dispatchNewStreamPacket(packet);
+    }
+
+    /**
+     * Dispatch a single packet from newStream onto liveStream, applying timeDelta.
+     * Caller must ensure {@code anchored} is true before calling. Used by both the
+     * steady-state packetReceived() path and the buffer-drain path in process().
+     */
+    private void dispatchNewStreamPacket(IStreamPacket packet) {
+        final byte dataType = packet.getDataType();
+        if (IoConstants.TYPE_VIDEO == dataType) {
+            if (!isVideoPrimed && isForwardVideo()) {
                 isVideoPrimed = true;
-                if (newStream.getCodecInfo().getVideoCodec() != null && newStream.getCodecInfo().getVideoCodec().getDecoderConfiguration() != null) {
+                if (newStream.getCodecInfo() != null && newStream.getCodecInfo().getVideoCodec() != null && newStream.getCodecInfo().getVideoCodec().getDecoderConfiguration() != null) {
                     VideoData privateConfig = new VideoData(newStream.getCodecInfo().getVideoCodec().getDecoderConfiguration());
                     privateConfig.setTimestamp(packet.getTimestamp() - timeDelta);
                     liveStream.dispatchInterstitial(privateConfig);
-                    // Send last key frame if present. This wont count for 'hasKeyFrame'
                     IoBuffer buff = newStream.getCodecInfo().getVideoCodec().getKeyframe();
                     if (buff != null) {
                         VideoData keyFrame = new VideoData(buff);
                         keyFrame.setTimestamp(packet.getTimestamp() - timeDelta);
                         liveStream.dispatchInterstitial(keyFrame);
                     }
-                } // else forthcoming, no worries.
+                }
             }
-
-            // check for live key frame. we need one to proceed.
-            if (!hasKeyFrame && ((VideoData) packet).getFrameType() == FrameType.KEYFRAME) {
+            if (!hasKeyFrame && ((VideoData) packet).getFrameType() == VideoFrameType.KEYFRAME) {
                 hasKeyFrame = true;
             }
-
-            if (!hasKeyFrame) {// can't do nothin' with new vid yet.
+            if (!hasKeyFrame) {
                 return;
             }
-        } else if (isForwardAudio() && !hasAudio && packet instanceof AudioData) {
-            // Check for codec private data.
-            if (newStream.getCodecInfo().getAudioCodec() != null && newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration() != null) {
-                AudioData privateConfig = new AudioData(newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration());
-                privateConfig.setTimestamp(packet.getTimestamp() - timeDelta);
-                liveStream.dispatchInterstitial(privateConfig);
-            } // else forthcoming
+        } else if (isForwardAudio() && !hasAudio && IoConstants.TYPE_AUDIO == dataType) {
+            if (codec == InterstitialSession.AAC_AUDIO) {
+                if (newStream.getCodecInfo() != null && newStream.getCodecInfo().getAudioCodec() != null && newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration() != null) {
+                    AudioData privateConfig = new AudioData(newStream.getCodecInfo().getAudioCodec().getDecoderConfiguration());
+                    AudioInfo info = parseAudioParams(privateConfig);
+                    audioCompatibility = info.matchesStream;
+                    if (info.matchesStream == AudioCompatibility.YES) {
+                        hasAudio = true;
+                    }
+                }
+            }
+        }
 
-            hasAudio = true;
-        } // audio could flow right away.
+        if (audioCompatibility != AudioCompatibility.YES) {
+            return;
+        }
 
         try {
             IStreamPacket packetCopy = null;
@@ -117,13 +165,11 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
             } else if (packet instanceof Notify) {
                 packetCopy = ((Notify) packet).duplicate();
             }
-
             if (packetCopy != null) {
                 ((IRTMPEvent) packetCopy).setTimestamp(packet.getTimestamp() - timeDelta);
             } else {
                 packetCopy = packet;
             }
-
             dispatchEvent((IEvent) packetCopy, false, liveStream);
         } catch (ClassNotFoundException | IOException e) {
             log.error("", e);
@@ -147,9 +193,30 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
 
     @Override
     public void process(long timestamp, IRTMPEvent event, IInterstitialStream output) throws IOException {
-        if (isDeadStream) { // signal to owner.
-            throw new IOException("Overide stream terminated"); // Owner will switch back, or switch to next
-                                                                // interstitial.
+        if (isDeadStream) {
+            throw new IOException("Overide stream terminated");
+        } else if (audioCompatibility == AudioCompatibility.NO) {
+            log.error("Incompatible audio in live interstitial");
+            throw new IOException("Audio not compatible");
+        }
+
+        if (!anchored) {
+            synchronized (anchorLock) {
+                if (!anchored) {
+                    if (liveAnchorTs == -1L) {
+                        liveAnchorTs = timestamp;
+                    }
+                    if (!preAnchorBuffer.isEmpty()) {
+                        long newAnchorTs = preAnchorBuffer.peekFirst().getTimestamp();
+                        timeDelta = (int) (newAnchorTs - liveAnchorTs);
+                        anchored = true;
+                        IStreamPacket buffered;
+                        while ((buffered = preAnchorBuffer.pollFirst()) != null) {
+                            dispatchNewStreamPacket(buffered);
+                        }
+                    }
+                }
+            }
         }
 
         dispatchEvent(event, true, liveStream);
@@ -158,6 +225,13 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
     @Override
     public void dispose() {
         newStream.removeStreamListener(this);
+        synchronized (anchorLock) {
+            anchored = false;
+            liveAnchorTs = -1L;
+            preAnchorBuffer.clear();
+            timeDelta = 0;
+        }
+        fireDisposedCallbackOnce();
     }
 
     @Override
@@ -167,5 +241,8 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
         isDeadStream = true;
         // halt override consumer.
         newStream.removeStreamListener(this);
+        synchronized (anchorLock) {
+            preAnchorBuffer.clear();
+        }
     }
 }

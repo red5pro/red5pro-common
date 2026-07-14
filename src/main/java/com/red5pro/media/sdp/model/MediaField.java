@@ -381,6 +381,22 @@ public class MediaField implements Comparable<MediaField> {
         }
     }
 
+    // XXX(paul) this is not thread-safe
+    public void removeAttributeField(AttributeKey key) {
+        List<AttributeField> attrs = List.of(attributes);
+        if (!attrs.isEmpty()) {
+            for (AttributeField attr : attrs) {
+                if (attr != null && attr.getAttribute().equals(key)) {
+                    // remove it
+                    attrs.remove(attr);
+                    // reset attributes
+                    setAttributes(attrs.toArray(new AttributeField[0]));
+                    break;
+                }
+            }
+        }
+    }
+
     public AttributeField[] getAttributes(AttributeKey key) {
         List<AttributeField> subset = new ArrayList<>(1);
         if (attributes != null && attributes.length > 0) {
@@ -427,6 +443,28 @@ public class MediaField implements Comparable<MediaField> {
         this.mediaId = mediaId;
     }
 
+    /**
+     * Sets whether or not the media is active.
+     *
+     * @param active
+     */
+    public void setActive(boolean active) {
+        if (active) {
+            removeAttributeField(AttributeKey.inactive);
+        } else {
+            addAttributeField(new AttributeField(AttributeKey.inactive, null));
+        }
+    }
+
+    /**
+     * Whether or not the media is active.
+     *
+     * @return true if active and false if inactive
+     */
+    public boolean isActive() {
+        return attributes == null || !hasAttribute(AttributeKey.inactive);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -456,6 +494,7 @@ public class MediaField implements Comparable<MediaField> {
     }
 
     // order of sections m, i, c, b, k, a
+    @SuppressWarnings("incomplete-switch")
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("m=");
@@ -496,15 +535,39 @@ public class MediaField implements Comparable<MediaField> {
         // next line(s) attributes
         if (attributes != null) {
             for (AttributeField attribute : attributes) {
-                switch (attribute.getAttribute()) {
-                    case fmtp:
-                    case rtpmap:
-                    case rtcpfb:
-                        if (Arrays.binarySearch(formats, Integer.valueOf(attribute.getValue().split("\\s")[0])) == -1) {
-                            break;
-                        }
-                    default:
-                        sb.append(attribute);
+                final AttributeKey attrKey = attribute.getAttribute();
+                // only include all attributes if the media is active
+                if (isActive()) {
+                    switch (attrKey) {
+                        case fmtp:
+                        case rtpmap:
+                        case rtcpfb:
+                            if (Arrays.binarySearch(formats, Integer.valueOf(attribute.getValue().split("\\s")[0])) == -1) {
+                                break;
+                            }
+                        default:
+                            sb.append(attribute);
+                    }
+                } else {
+                    // only include certain attributes if the media is inactive
+                    switch (attrKey) {
+                        case rtpmap:
+                            if (Arrays.binarySearch(formats, Integer.valueOf(attribute.getValue().split("\\s")[0])) == -1) {
+                                break;
+                            }
+                        case mid:
+                        case iceufrag:
+                        case icepwd:
+                        case fingerprint:
+                        case setup:
+                        case sendonly:
+                        case recvonly:
+                        case rtcpmux:
+                        case inactive:
+                        case candidate:
+                        case endofcandidates:
+                            sb.append(attribute);
+                    }
                 }
             }
         }

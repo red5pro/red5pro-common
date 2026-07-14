@@ -50,7 +50,4 @@ public interface IPeerConnectionCapable extends IConnection {
 
     void writeMessage(String format);
 
-    @Deprecated
-    boolean isEdge(); // remove traces of this once we stop supporting Edge
-
 }

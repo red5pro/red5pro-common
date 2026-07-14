@@ -39,9 +39,23 @@ public enum RTPCodecEnum {
     // Chrome is using id 107 for h264 pmode 1 and Firefox uses 126
 
     // audio
-    OPUS(111, "opus", "Opus", 48000, 2), PCMU(0, "PCMU", "PCM ulaw", 8000, 1), PCMA(8, "PCMA", "PCM alaw", 8000, 1), SPEEX(97, "speex", "Speex", 16000, 2), AAC_48K(96, "aac", "AAC", 48000, 2), AAC_41K(96, "aac", "AAC", 41000, 2),
+    OPUS(111, "opus", "Opus", 48000, 2), // std identifier for opus
+    PCM(0, "PCMU", "PCM ulaw", 8000, 1), // generic PCM
+    PCMU(0, "PCMU", "PCM ulaw", 8000, 1), // std identifier for pcm ulaw
+    PCMA(8, "PCMA", "PCM alaw", 8000, 1), // std identifier for pcm alaw
+    SPEEX(97, "speex", "Speex", 16000, 2), // std identifier for speex
+    AAC(96, "aac", "AAC", 48000, 2), // simplified identifier for aac 48k stereo
+    AAC_48K(96, "aac", "AAC", 48000, 2), // std identifier for aac 48k stereo
+    AAC_41K(96, "aac", "AAC", 41000, 2), // std identifier for aac 41k stereo
+    L16(97, "L16", "L16", 8000, 1), // L16 mono
+    MP3(97, "mp3", "mp3", 48000, 2),
     // video
-    H264_PMODE1(126, "H264", "h.264", 90000), H264_PMODE0(97, "H264", "h.264", 90000), VP8(100, "VP8", "VP8", 90000), VP9(101, "VP9", "VP9", 90000), AV1(103, "AV1", "AV1", 90000), HEVC(104, "H265", "h.265", 90000),
+    H264(96, "H264", "h.264", 90000), // simplified identifier for h.264
+    VP8(100, "VP8", "VP8", 90000), // std identifier for vp8
+    VP9(101, "VP9", "VP9", 90000), // std identifier for vp9
+    AV1(103, "AV1", "AV1", 90000), // std identifier for av1
+    // h.265
+    H265(104, "H265", "h.265", 90000), // simplified identifier for h.265
     // other
     RED(116, "red", "Redundant", 90000), ULPFEC(117, "ulpfec", "Generic Forward Error Correction", 90000),
     // special identifiers for something working with any codec or payload type
@@ -111,14 +125,6 @@ public enum RTPCodecEnum {
      */
     public static RTPCodecEnum getByEncodingName(String encodingName) {
         // System.err.printf("getByEncodingName: %s\n", encodingName);
-        // specially handle h264 mode 0 or mode 1 (default)
-        if ("H264M0".equals(encodingName)) {
-            // System.err.println("Mode 0!!");
-            return H264_PMODE0;
-        } else if ("H264M1".equals(encodingName)) {
-            // System.err.println("Mode 1!!");
-            return H264_PMODE1;
-        }
         for (RTPCodecEnum rce : RTPCodecEnum.values()) {
             if (rce.getEncodingName().equalsIgnoreCase(encodingName)) {
                 // System.err.printf("Codec: %s\n", String.valueOf(rce));
@@ -145,7 +151,7 @@ public enum RTPCodecEnum {
      * @return array of payload type ids
      */
     public static int[] getVideoPayloadTypesAsArray() {
-        int[] types = new int[] { H264_PMODE1.payloadType, H264_PMODE0.payloadType, VP8.payloadType, VP9.payloadType, AV1.payloadType, HEVC.payloadType };
+        int[] types = new int[] { H264.payloadType, VP8.payloadType, VP9.payloadType, AV1.payloadType, H265.payloadType };
         return types;
     }
 
@@ -155,7 +161,7 @@ public enum RTPCodecEnum {
      * @return array of encoding names
      */
     public static String[] getAudioEncodingNamesAsArray() {
-        String[] encodings = new String[] { OPUS.encodingName, PCMU.encodingName, PCMA.encodingName, SPEEX.encodingName };
+        String[] encodings = new String[] { OPUS.encodingName, PCMU.encodingName, PCMA.encodingName, SPEEX.encodingName, AAC.encodingName, L16.encodingName };
         return encodings;
     }
 
@@ -165,7 +171,7 @@ public enum RTPCodecEnum {
      * @return array of encoding names
      */
     public static String[] getVideoEncodingNamesAsArray() {
-        String[] encodings = new String[] { H264_PMODE1.encodingName, H264_PMODE0.encodingName, VP8.encodingName, VP9.encodingName, AV1.encodingName, HEVC.encodingName };
+        String[] encodings = new String[] { H264.encodingName, VP8.encodingName, VP9.encodingName, AV1.encodingName, H265.encodingName };
         return encodings;
     }
 

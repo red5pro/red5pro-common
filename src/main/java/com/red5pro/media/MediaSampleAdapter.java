@@ -126,8 +126,8 @@ public class MediaSampleAdapter implements IMediaSample {
     }
 
     @Override
-    public FourCC getFourCC() {
-        return null;
+    public int getFourCC() {
+        return 0;
     }
 
     @Override

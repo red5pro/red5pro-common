@@ -62,4 +62,11 @@ public interface IInterstitialStream {
      * @return the stream's IInterstitialEngine
      */
     public IInterstitialEngine getInterstitialEngine();
+
+    /**
+     *
+     * @return the stream's published name.
+     */
+    public String getBroadcastStreamPublishName();
+
 }

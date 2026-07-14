@@ -36,9 +36,9 @@ public class CompositeMediaSample extends MediaSampleAdapter {
      * @param fourCC
      * @return MediaSample or null if not found
      */
-    public IMediaSample get(FourCC fourCC) {
+    public IMediaSample get(int fourCC) {
         for (IMediaSample sample : samples) {
-            if (sample.getFourCC().equals(fourCC)) {
+            if (sample.getFourCC() == fourCC) {
                 return sample;
             }
         }
