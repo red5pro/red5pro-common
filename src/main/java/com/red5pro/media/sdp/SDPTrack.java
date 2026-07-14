@@ -233,7 +233,7 @@ public class SDPTrack {
         AttributeField codecAttr = session.getMediaDescription(mediaType).getAttribute(AttributeKey.rtpmap);
         if (codecAttr != null) {
             String[] parts = codecAttr.getValue().split("[\\s|/]");
-            if (parts.length > 2) {
+            if (parts.length > 3) {
                 channels = parts[3];
             }
         }

@@ -231,6 +231,7 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
             preAnchorBuffer.clear();
             timeDelta = 0;
         }
+        fireDisposedCallbackOnce();
     }
 
     @Override

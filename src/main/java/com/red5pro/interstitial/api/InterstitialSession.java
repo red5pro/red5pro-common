@@ -1,6 +1,7 @@
 package com.red5pro.interstitial.api;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.red5.codec.AACAudio;
@@ -9,6 +10,8 @@ import org.red5.server.messaging.IMessageInput;
 import org.red5.server.net.rtmp.event.AudioData;
 import org.red5.server.net.rtmp.event.IRTMPEvent;
 import org.red5.server.net.rtmp.event.VideoData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An InterstitialSession describes an interstitial insertion operation to the
@@ -22,6 +25,8 @@ import org.red5.server.net.rtmp.event.VideoData;
  * @author Nate Roe
  */
 public abstract class InterstitialSession implements Comparable<InterstitialSession> {
+
+    private static final Logger log = LoggerFactory.getLogger(InterstitialSession.class);
 
     public static final int AAC_AUDIO = 'A' | ('A' << 8) | ('A' << 16) | (' ' << 24);
 
@@ -68,9 +73,60 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
 
     private boolean isInterstitialVideo;
 
+    /** Optional one-shot callback fired the first time {@link #dispose()} runs. {@code null} unless the caller registered one via {@link #setOnDisposed}. */
+    private volatile Runnable onDisposed;
+
+    /** Latches the {@link #onDisposed} callback so it fires exactly once even if {@code dispose()} is invoked twice. */
+    private final AtomicBoolean disposedCallbackFired = new AtomicBoolean(false);
+
     public InterstitialSession(boolean isInterstitialAudio, boolean isInterstitialVideo) {
         this.isInterstitialAudio = isInterstitialAudio;
         this.isInterstitialVideo = isInterstitialVideo;
+    }
+
+    /**
+     * Register a one-shot callback that fires the first time this session is disposed. Useful for
+     * "session is done" hooks: pod completion, AdStorm impression dispatch, metrics, releasing
+     * per-stream gates, etc.
+     *
+     * <p>The callback runs synchronously on whichever thread invokes {@code dispose()} —
+     * typically the engine packet-processing thread — so keep the work light or hand off to your
+     * own executor inside the {@code Runnable}.
+     *
+     * <p>The callback fires regardless of why dispose was triggered: PTS window expired, FLV
+     * source exhausted, or the session was force-cancelled by an immediate insert. It does
+     * <b>not</b> fire on FLV loop iterations (those don't dispose).
+     *
+     * <p>Subclass contract: implementations of {@link #dispose()} must call
+     * {@link #fireDisposedCallbackOnce()} at the end of their teardown to deliver this
+     * callback. Built-in subclasses ({@link FLVInterstitial}, {@link LiveInterstitial}) do this.
+     *
+     * @param onDisposed the callback, or {@code null} to clear an existing registration
+     */
+    public void setOnDisposed(Runnable onDisposed) {
+        this.onDisposed = onDisposed;
+    }
+
+    /**
+     * Fires the {@link #setOnDisposed registered} callback if any, exactly once. Safe to call
+     * multiple times — subsequent calls are no-ops. Exceptions thrown by the callback are
+     * caught and logged so they don't propagate into the engine.
+     *
+     * <p>Subclasses must invoke this at the end of their {@link #dispose()} implementation.
+     */
+    protected final void fireDisposedCallbackOnce() {
+        if (!disposedCallbackFired.compareAndSet(false, true)) {
+            return;
+        }
+        Runnable cb = this.onDisposed;
+        if (cb == null) {
+            return;
+        }
+        try {
+            cb.run();
+        } catch (RuntimeException e) {
+            log.warn("InterstitialSession onDisposed callback threw; swallowing", e);
+        }
     }
 
     /**
@@ -119,7 +175,9 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
     public abstract void process(long timestamp, IRTMPEvent event, IInterstitialStream output) throws IOException;
 
     /**
-     * Release stream resources and end the stream lifecycle.
+     * Release stream resources and end the stream lifecycle. Implementations must call
+     * {@link #fireDisposedCallbackOnce()} at the end of their teardown so any registered
+     * {@link #setOnDisposed onDisposed} callback fires.
      */
     public abstract void dispose();
 

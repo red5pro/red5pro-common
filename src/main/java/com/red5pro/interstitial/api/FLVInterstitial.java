@@ -3,6 +3,7 @@ package com.red5pro.interstitial.api;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.LinkedTransferQueue;
 
 import org.red5.server.api.IContext;
 import org.red5.server.api.scope.IScope;
@@ -12,9 +13,8 @@ import org.red5.server.messaging.IMessageComponent;
 import org.red5.server.messaging.IPipe;
 import org.red5.server.messaging.OOBControlMessage;
 import org.red5.server.net.rtmp.event.AudioData;
+import org.red5.server.net.rtmp.event.BaseEvent;
 import org.red5.server.net.rtmp.event.IRTMPEvent;
-import org.red5.server.net.rtmp.event.Notify;
-import org.red5.server.net.rtmp.event.VideoData;
 import org.red5.server.stream.IProviderService;
 import org.red5.server.stream.ISeekableProvider;
 import org.red5.server.stream.message.RTMPMessage;
@@ -22,8 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class provides interstitial source from FLV files from within a given
- * scope.
+ * This class provides interstitial source from a single FLV file within a given scope.
  *
  * @author Andy
  */
@@ -33,19 +32,17 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
 
     private IScope appScope;
 
-    private boolean firstTimestamp;
+    private long timeStart = -1;
 
-    private long timeStart;
+    /**
+     * Tags pulled from io but whose timestamps are past the current dispatchTo cutoff. Held for the next process() call so we don't overshoot the live clock.
+     */
+    private LinkedTransferQueue<IRTMPEvent> pendingEvents = new LinkedTransferQueue<>();
 
     private boolean hasPackets;
 
-    /** Tag pulled from io but whose timestamp is past the current dispatchTo cutoff.
-     *  Held for the next process() call so we don't overshoot the live clock. */
-    private IRTMPEvent pending;
-
     public FLVInterstitial(IScope appScope, String fileName, boolean isForwardAudio, boolean isForwardVideo) {
         super(isForwardAudio, isForwardVideo);
-
         this.appScope = appScope;
         this.fileName = fileName;
     }
@@ -61,9 +58,9 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
             io.unsubscribe(this);
             io = null;// affirm.
         }
-        // in case we get abruptly reopened.
+        // in case we get abruptly reopened
+        pendingEvents.clear();
         hasPackets = false;
-        pending = null;
         IContext context = appScope.getContext();
         IProviderService providerService = (IProviderService) context.getBean(IProviderService.BEAN_NAME);
         io = providerService.getVODProviderInput(appScope, fileName);
@@ -81,88 +78,110 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
     @Override
     public void process(long timestamp, IRTMPEvent event, IInterstitialStream output) throws IOException {
         if (io == null) {
-            throw new IOException();
+            throw new IOException("FLV not found");
         }
-        if (!firstTimestamp) {
-            // log.debug("setting first ts {}", timestamp);
-            firstTimestamp = true;
+        // The first timestamp we see in the file becomes the anchor for the stream. We use the first A/V tag to set
+        // the anchor for its respective stream, but if the first tag is not A/V, we set both anchors to that timestamp
+        // so they track together.
+        if (timeStart == -1) {
+            log.debug("Setting first timestamp: {}", timestamp);
+            // anchor timestamp so a/v track together
             timeStart = timestamp;
+            if (log.isDebugEnabled()) {
+                log.debug("First tag timestamp: {}", event.getTimestamp());
+                byte dataType = event.getDataType();
+                if (dataType == BaseEvent.TYPE_AUDIO_DATA) {
+                    log.debug("First tag is audio");
+                } else if (dataType == BaseEvent.TYPE_VIDEO_DATA) {
+                    log.debug("First tag is video");
+                }
+            }
         }
-        long dispatchTo = timestamp - timeStart;
 
         if (codec == 0 && (width == 0 || height == 0)) {
+            log.warn("FLV has no video and no audio");
             return;
         }
 
         // Drain any tag held over from the previous call first.
-        if (pending != null) {
+        if (!pendingEvents.isEmpty()) {
+            IRTMPEvent pending = pendingEvents.peek();
             long pNow = pending.getTimestamp();
-            if (pNow > dispatchTo) {
+            long pDispatchTo = timestamp - timeStart;
+            if (pNow <= pDispatchTo) {
+                // This pending tag is past cutoff — dispatch it and loop back to check if the next one is also past cutoff.
+                long pStamped = pNow + timeStart;
+                warnIfOvershootsLive(pStamped, timestamp, "pending");
+                pending.setTimestamp((int) pStamped);
+                log.debug("Dispatching pending tag with timestamp: {}", pending.getTimestamp());
+                dispatchEvent(pending, false, output);
+                // remove the one we just dispatched, and loop back to check if the next one is also ready for dispatch.
+                pendingEvents.poll();
+            } else {
                 // Still past cutoff — keep holding, dispatch the live event and return.
                 dispatchEvent(event, true, output);
                 return;
             }
-            pending.setTimestamp((int) (pNow + timeStart));
-            dispatchEvent(pending, false, output);
-            pending = null;
         }
 
-        // We will dispatch IRTMPEvent 'event' after we dispatch all the FLV tags with timestamps less than 'dispatchTo'
         IMessage message;
         while ((message = io.pullMessage()) != null) {
-            hasPackets = true;
-            // log.debug("insert message {}",message);
-            if (!(message instanceof RTMPMessage)) {
-                continue;
-            }
-            IRTMPEvent body = ((RTMPMessage) message).getBody();
-            if (body == null) {
-                continue;
-            }
-            // Packet unused if:
-            if (body instanceof Notify && !includeMetaData) {
-                continue;// we dont want insert's meta
-            } else if (body instanceof AudioData) {
-                if (codec == 0) {
-                    continue; // live stream has no Audio
-                }
-                switch (audioCompatibility) {
-                    case YES:
-                        break;
-
-                    case UNKNOWN:
-                        AudioInfo info = parseAudioParams((AudioData) body);
-                        audioCompatibility = info.matchesStream;
-                        if (audioCompatibility == AudioCompatibility.YES) {
-                            break;
-                        } else if (isForwardAudio() && audioCompatibility == AudioCompatibility.NO) {
-                            log.error("FLV has incompatible audio. rate: {}  Channels: {}", info.audioSampleRate, info.audioChannels);
-                            throw new IOException();
+            if (message instanceof RTMPMessage) {
+                IRTMPEvent body = ((RTMPMessage) message).getBody();
+                if (body != null) {
+                    hasPackets = true;
+                    log.debug("Pulled tag timestamp: {}", body.getTimestamp());
+                    byte dataType = body.getDataType();
+                    if (dataType == BaseEvent.TYPE_AUDIO_DATA) {
+                        log.debug("Pulled tag is audio");
+                        if (codec != 0) {
+                            switch (audioCompatibility) {
+                                case YES:
+                                    break;
+                                case UNKNOWN:
+                                    AudioInfo info = parseAudioParams((AudioData) body);
+                                    audioCompatibility = info.matchesStream;
+                                    if (audioCompatibility == AudioCompatibility.YES) {
+                                        break;
+                                    } else if (isForwardAudio() && audioCompatibility == AudioCompatibility.NO) {
+                                        log.error("FLV has incompatible audio. rate: {}  Channels: {}", info.audioSampleRate, info.audioChannels);
+                                        throw new IOException("FLV has incompatible audio");
+                                    }
+                                case NO:
+                                    continue;
+                            }
                         }
-
-                    case NO://not forwarding audio or file audio properties are unknown.
-                        continue;
+                    } else if (dataType == BaseEvent.TYPE_VIDEO_DATA) {
+                        log.debug("Pulled tag is video");
+                        if (width == 0 || height == 0) {
+                            continue;
+                        }
+                    } else if (dataType == BaseEvent.TYPE_NOTIFY) {
+                        log.debug("Pulled tag is notify / metadata");
+                        if (!includeMetaData) {
+                            continue;
+                        }
+                    }
+                    long now = body.getTimestamp();
+                    long bDispatchTo = timestamp - timeStart;
+                    if (now <= bDispatchTo) {
+                        long stamped = now + timeStart;
+                        warnIfOvershootsLive(stamped, timestamp, "pull");
+                        body.setTimestamp((int) stamped);
+                        log.debug("Dispatching tag with timestamp: {}", body.getTimestamp());
+                        dispatchEvent(body, false, output);
+                    } else {
+                        // Past cutoff — hold for the next call, loop back to check if the next one is also past cutoff, and dispatch the live event before returning.
+                        pendingEvents.offer(body);
+                        dispatchEvent(event, true, output);
+                        return;
+                    }
+                } else {
+                    log.debug("Pulled message body is null");
                 }
-
-            } else if (body instanceof VideoData && (width == 0 || height == 0)) {
-                continue;// live stream has no video.
+            } else {
+                log.debug("Pulled message is not RTMPMessage");
             }
-
-            long now = body.getTimestamp();
-            if (now > dispatchTo) {
-                // Hold this tag for the next process() call instead of overshooting.
-                // Invariant: pending stores the *raw* FLV timestamp (pre-timeStart);
-                // do not call body.setTimestamp(...) before this assignment.
-                pending = body;
-                dispatchEvent(event, true, output);
-                // log.debug("segment done {} {} ", now,dispatchTo);
-                return;
-            }
-            body.setTimestamp((int) (now + timeStart));
-            // log.debug("dispatchInterstitial {} {} {}", timestamp, now,now+timeStart);
-
-            // this may dispatch the tag or filter it out based on if we are forwarding audio/video or not.
-            dispatchEvent(body, false, output);
         }
 
         // We got here because dispatchTo limiter has not run out,
@@ -192,13 +211,29 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
                 open();
             }
             //Reset timestamp delta.
-            firstTimestamp = false;
-            pending = null; // any held tag is from the pre-loop run; discard
+            timeStart = -1;
+            pendingEvents.clear(); // any held tag is from the pre-loop run; discard
         } else {
-            log.debug("interstitial complete  {}", timestamp);
+            log.debug("Interstitial complete, timestamp: {}", timestamp);
             dispose();
             this.sessionControl.resumeProgram();
+        }
+    }
 
+    /**
+     * Drift-violation detector: logs WARN if a re-stamped FLV body's dispatched timestamp ever
+     * exceeds the current live-clock timestamp passed into {@link #process}. The pending /
+     * pull-cutoff guard should make this impossible — if it fires, either the cutoff math drifted
+     * or a per-stream anchor was set ahead of the live clock at a pod boundary. Use this signal
+     * to pinpoint downstream nonmonotonic-DTS reports back to the FLV interstitial.
+     *
+     * @param stampedTs    the dispatched timestamp the body is about to carry (raw + anchor)
+     * @param liveTs       the engine's live-clock timestamp for this {@code process()} call
+     * @param origin       short tag identifying the dispatch site ("pending" / "pull") for the log
+     */
+    private void warnIfOvershootsLive(long stampedTs, long liveTs, String origin) {
+        if (stampedTs > liveTs) {
+            log.warn("FLV interstitial overshoot ({}): stampedTs={} liveTs={} delta={}ms file={} timeStart={}", origin, stampedTs, liveTs, stampedTs - liveTs, fileName, timeStart);
         }
     }
 
@@ -211,7 +246,8 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
         }
         hasPackets = false;
         fileName = null;
-        pending = null;
+        pendingEvents.clear();
+        fireDisposedCallbackOnce();
     }
 
     @Override

@@ -5,7 +5,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.junit.Test;
@@ -13,6 +15,7 @@ import org.red5.codec.IStreamCodecInfo;
 import org.red5.server.api.event.IEvent;
 import org.red5.server.api.stream.IStreamListener;
 import org.red5.server.messaging.IMessage;
+import org.red5.server.net.rtmp.event.AudioData;
 import org.red5.server.net.rtmp.event.IRTMPEvent;
 import org.red5.server.net.rtmp.event.VideoData;
 import org.red5.server.stream.message.RTMPMessage;
@@ -328,5 +331,155 @@ public class FLVInterstitialTest {
 
         int dispatchedMax = output.maxInterstitialTs();
         assertTrue("last FLV ts " + dispatchedMax + " exceeds last live ts " + lastLiveTs, dispatchedMax <= lastLiveTs);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Test 5: pod file boundary preserves per-stream A/V offset
+    // ---------------------------------------------------------------------------
+
+    /**
+     * Multi-file pod where the closing file ends with V_last_intrinsic > A_last_intrinsic. With a
+     * single shared {@code timeStart} re-anchor, the new file's first audio tag (raw 0) was
+     * stamped to {@code closingMaxDispatchedTs + 1}, which equals {@code V_last_dispatched + 1}
+     * — leaving an audio gap of {@code (V_last - A_last) + 1} ms on the dispatched timeline at
+     * every pod boundary. With per-stream anchors that gap collapses to a single 1 ms inter-file
+     * separator and the per-file V/A skew is preserved across the boundary.
+     *
+     * <p>This test wires a 2-file pod where file 1 ends at intrinsic V=5000, A=4977 (V leads by
+     * 23 ms). After exhausting file 1 it asserts that the first dispatched audio tag from file 2
+     * lands within {@code AAC_FRAME_MS} of the closing file's last dispatched audio tag — i.e. it
+     * picks up where file-1 audio left off, not 23 ms later.
+     */
+    @Test
+    public void podBoundary_preservesPerStreamAvOffset() throws IOException {
+        final int VIDEO_STEP = 33; // ~30 fps
+        final int AUDIO_STEP = 23; // ~AAC frame at 44.1 kHz, rounded to int ms
+        // Closing-file dispatch ends at the largest step-multiple <= the cap. With
+        // VIDEO_STEP=33, AUDIO_STEP=23, and caps 5000/4977, the last frames land at:
+        //   V last raw = 33 * 151 = 4983
+        //   A last raw = 23 * 216 = 4968   (V leads A by 15 ms in file 1)
+        final int FILE1_VIDEO_CAP = 5000;
+        final int FILE1_AUDIO_CAP = 4977;
+        final int FILE1_VIDEO_LAST = (FILE1_VIDEO_CAP / VIDEO_STEP) * VIDEO_STEP;
+        final int FILE1_AUDIO_LAST = (FILE1_AUDIO_CAP / AUDIO_STEP) * AUDIO_STEP;
+        // File 2 over-provisioned so the live-tick loop does not exhaust it (which would dispose
+        // the session and make the next process() call throw on io == null).
+        final int FILE2_VIDEO_CAP = 30_000;
+        final int FILE2_AUDIO_CAP = 30_000;
+        final int LIVE_START = 1000;
+        final int LIVE_TICK_STEP = VIDEO_STEP;
+        // Enough ticks to comfortably cross the file 1 → file 2 boundary and get a few file-2
+        // audio tags dispatched, but not so many that file 2 runs dry.
+        final int LIVE_TICK_COUNT = 250;
+
+        final List<IMessage> file1 = buildAvFrames(0, VIDEO_STEP, FILE1_VIDEO_CAP, AUDIO_STEP, FILE1_AUDIO_CAP);
+        final List<IMessage> file2 = buildAvFrames(0, VIDEO_STEP, FILE2_VIDEO_CAP, AUDIO_STEP, FILE2_AUDIO_CAP);
+
+        Map<String, List<IMessage>> sources = new HashMap<>();
+        sources.put("a.flv", file1);
+        sources.put("b.flv", file2);
+
+        PlaylistInterstitial fi = buildPodSession(List.of("a.flv", "b.flv"), sources, LIVE_START, 60_000);
+        CapturingStream output = new CapturingStream();
+
+        for (int i = 0; i < LIVE_TICK_COUNT; i++) {
+            int ts = LIVE_START + i * LIVE_TICK_STEP;
+            fi.process(ts, liveTick(ts), output);
+        }
+
+        // Identify the boundary on the dispatched audio timeline. Anything <= file 1's
+        // last-audio dispatch came from file 1; the next A in dispatch order came from file 2.
+        long closingFileLastAudioDispatched = -1;
+        long openingFileFirstAudioDispatched = -1;
+        long fileOneAudioBoundary = (long) FILE1_AUDIO_LAST + LIVE_START;
+        for (IRTMPEvent e : output.dispatched) {
+            if (!(e instanceof AudioData)) {
+                continue;
+            }
+            int ts = e.getTimestamp();
+            if (ts <= fileOneAudioBoundary) {
+                if (ts > closingFileLastAudioDispatched) {
+                    closingFileLastAudioDispatched = ts;
+                }
+            } else if (openingFileFirstAudioDispatched < 0 || ts < openingFileFirstAudioDispatched) {
+                openingFileFirstAudioDispatched = ts;
+            }
+        }
+
+        assertTrue("expected at least one audio tag dispatched from file 1; saw none", closingFileLastAudioDispatched >= 0);
+        assertTrue("expected at least one audio tag dispatched from file 2; saw none", openingFileFirstAudioDispatched >= 0);
+
+        long audioBoundaryGap = openingFileFirstAudioDispatched - closingFileLastAudioDispatched;
+
+        // Per-stream re-anchor: file 2's first A is stamped at A_last_dispatched + 1, so the gap
+        // is exactly 1 ms regardless of the closing file's V/A skew. Pre-fix (single shared
+        // timeStart anchored to V) this gap would be (V_last - A_last) + 1 = 16 ms.
+        assertEquals("audio timeline at pod boundary gapped by " + audioBoundaryGap + " ms (expected 1 ms) — per-stream A anchor not honored", 1L, audioBoundaryGap);
+
+        // Sanity: closing audio is exactly where we put it — anchored at LIVE_START on first call.
+        assertEquals("closing-file last A dispatched at unexpected ts", fileOneAudioBoundary, closingFileLastAudioDispatched);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Helpers for the multi-file boundary test
+    // ---------------------------------------------------------------------------
+
+    /**
+     * Build interleaved video + audio FLV messages. Video keyframes step by {@code videoStep}
+     * starting at 0 and ending at {@code videoEnd}; audio frames step by {@code audioStep} ending
+     * at {@code audioEnd}. The first audio frame is an AAC sequence header with stereo / 44.1 kHz
+     * config so the session's {@link InterstitialSession#parseAudioParams parseAudioParams}
+     * accepts the stream as compatible.
+     */
+    private static List<IMessage> buildAvFrames(int startMs, int videoStep, int videoEnd, int audioStep, int audioEnd) {
+        List<IMessage> out = new ArrayList<>();
+        // AAC sequence header: codec=10 (AF nibble), packetType=0 (config), AudioSpecificConfig
+        // for AAC-LC stereo @ 44.1 kHz: 0x12 0x10. parseAudioParams matches against
+        // (channels=2, rate=44100) configured via setAudioParams below.
+        AudioData cfg = new AudioData(IoBuffer.wrap(new byte[] { (byte) 0xAF, 0x00, 0x12, 0x10 }));
+        cfg.setTimestamp(startMs);
+        out.add(RTMPMessage.build(cfg));
+        // Subsequent AAC raw frames. Body bytes don't matter — only header (0xAF 0x01) is parsed.
+        // Audio frames at audioStep, 2*audioStep, ... up to and including audioEnd.
+        for (int t = audioStep; t <= audioEnd; t += audioStep) {
+            AudioData ad = new AudioData(IoBuffer.wrap(new byte[] { (byte) 0xAF, 0x01, 0x42 }));
+            ad.setTimestamp(startMs + t);
+            out.add(RTMPMessage.build(ad));
+        }
+        // Video keyframes at 0, videoStep, ... up to and including videoEnd.
+        for (int t = 0; t <= videoEnd; t += videoStep) {
+            VideoData vd = new VideoData(IoBuffer.wrap(new byte[] { 0x17, 1, 0, 0, 0 }));
+            vd.setTimestamp(startMs + t);
+            out.add(RTMPMessage.build(vd));
+        }
+        return out;
+    }
+
+    /**
+     * Build a multi-file pod session. The session is wired with audio params (AAC stereo / 44.1 kHz)
+     * matching {@link #buildAvFrames}, both A and V forwarded. {@code open()} is overridden to
+     * resolve {@link #fileName} against {@code sources} instead of using the live VOD provider, so
+     * advance-to-next-pod-file works in unit tests without an {@code IScope}.
+     */
+    private static PlaylistInterstitial buildPodSession(List<String> fileNames, Map<String, List<IMessage>> sources, long start, long duration) {
+        PlaylistInterstitial fi = new PlaylistInterstitial(null, fileNames, true, true) {
+            @Override
+            public void open() {
+                if (this.io != null) {
+                    this.io.unsubscribe(this);
+                    this.io = null;
+                }
+                List<IMessage> frames = sources.get(this.fileName);
+                if (frames != null) {
+                    this.io = new FakeMessageInput(frames);
+                }
+            }
+        };
+        fi.io = new FakeMessageInput(sources.get(fileNames.get(0)));
+        fi.setVideoParams(640, 480);
+        fi.setAudioParams(InterstitialSession.AAC_AUDIO, 2, 44100);
+        InterstitialDurationControl ctrl = new InterstitialDurationControl(InterstitialDurationControlType.STREAM_CLOCK, duration, start);
+        fi.sessionControl = ctrl;
+        return fi;
     }
 }
