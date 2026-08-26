@@ -52,6 +52,8 @@ public enum AttributeKey {
     etag, charset, xgoogleflag("x-google-flag"), extmapallowmixed, extmapallowmixedDASHED("extmap-allow-mixed"), // Determines allowance of mix one- and two-byte header extensions within the same stream
     rid, // RTP stream identifier for simulcast eg a=rid:0 send
     simulcast, // simulcast eg a=simulcast:send 0;1;2
+    rtcpxr("rtcp-xr"), // RFC3611
+    sctpinit("sctp-init"), // WebRTC SNAP
     filter; // pro custom feature
 
     // used when the "name" has a dash char in it, since a dash isnt valid for an enum
