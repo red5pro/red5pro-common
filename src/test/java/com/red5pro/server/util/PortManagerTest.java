@@ -289,4 +289,53 @@ public class PortManagerTest {
         log.info("Random hits: {} misses: {} total allocated: {} total average time: {}s", hit.get(), miss.get(), PortManager.getCount(), ((elapsedTime.get() / max) / 1000L));
     }
 
+    @Test
+    public void testParkedPortIsRecoveredOnceFree() throws Exception {
+        log.info("\n testParkedPortIsRecoveredOnceFree");
+        PortManager.setRtpPortBase(unavailablePort);
+        PortManager.setRtpPortCeiling(unavailablePort + 1);
+        // the bound port is skipped and parked as bound-elsewhere, the next one is handed out
+        int first = PortManager.getRTPServerPort(true);
+        assertEquals(unavailablePort + 1, first);
+        assertEquals(2, PortManager.getCount());
+        PortManager.clearRTPServerPort(first);
+        assertEquals(1, PortManager.getCount());
+        // release the external binding: the parked port must come back into rotation
+        socket.close();
+        socket = null;
+        int recovered = 0;
+        for (int i = 0; i < 2 && recovered == 0; i++) {
+            int port = PortManager.getRTPServerPort(true);
+            if (port == unavailablePort) {
+                recovered = port;
+            }
+            PortManager.clearRTPServerPort(port);
+        }
+        assertEquals(unavailablePort, recovered);
+        assertEquals(0, PortManager.getCount());
+    }
+
+    @Test
+    public void testRandomAllocatorParksUnavailablePortInsteadOfLeakingIt() throws Exception {
+        log.info("\n testRandomAllocatorParksUnavailablePortInsteadOfLeakingIt");
+        PortManager.setRtpPortBase(unavailablePort);
+        PortManager.setRtpPortCeiling(unavailablePort + 1);
+        // enough draws to hit the unavailable base port with overwhelming probability
+        for (int i = 0; i < 20; i++) {
+            PortManager.clearRTPServerPort(PortManager.getRTPServerPortRandom());
+        }
+        socket.close();
+        socket = null;
+        // once free, the sequential allocator must be able to hand the port out again
+        int recovered = 0;
+        for (int i = 0; i < 2 && recovered == 0; i++) {
+            int port = PortManager.getRTPServerPort(true);
+            if (port == unavailablePort) {
+                recovered = port;
+            }
+            PortManager.clearRTPServerPort(port);
+        }
+        assertEquals(unavailablePort, recovered);
+    }
+
 }

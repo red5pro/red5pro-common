@@ -138,10 +138,15 @@ public class PortManager {
             }
             // check the other list first
             if (otherAllocatedPorts.contains(serverPort)) {
-                // port is not available
-                log.info("Port is bound elsewhere {}", serverPort);
-                serverPort = 0; // Do not let thread escape with 'otherAllocatedPort' number
-                continue;
+                // a port parked here because its previous binding had not been released yet may be free by now
+                if (checkAvailable(serverPort, !udp)) {
+                    otherAllocatedPorts.remove(serverPort);
+                    log.info("Port {} recovered from the bound-elsewhere list", serverPort);
+                } else {
+                    log.info("Port is bound elsewhere {}", serverPort);
+                    serverPort = 0; // Do not let thread escape with 'otherAllocatedPort' number
+                    continue;
+                }
             }
             // add only works if its not already allocated
             if (allocatedPorts.add(serverPort)) {
@@ -212,6 +217,9 @@ public class PortManager {
                 if (!checkAvailable(serverPort)) {
                     // port is not available
                     log.warn("Unallocated port is already bound {}", serverPort);
+                    if (allocatedPorts.remove(serverPort)) {
+                        otherAllocatedPorts.add(serverPort);
+                    }
                     continue;
                 }
                 // break out with currently available port
