@@ -76,7 +76,7 @@ public class PortManager {
             }
         }
         if (otherAllocatedPorts.remove(rtpPort)) {
-            log.debug("Port {} was recovered for use {}", rtpPort);
+            log.debug("Port {} was recovered for use", rtpPort);
         }
     }
 
@@ -138,10 +138,15 @@ public class PortManager {
             }
             // check the other list first
             if (otherAllocatedPorts.contains(serverPort)) {
-                // port is not available
-                log.info("Port is bound elsewhere {}", serverPort);
-                serverPort = 0; // Do not let thread escape with 'otherAllocatedPort' number
-                continue;
+                // a port parked here because its previous binding had not been released yet may be free by now
+                if (checkAvailable(serverPort, !udp, false)) {
+                    otherAllocatedPorts.remove(serverPort);
+                    log.info("Port {} recovered from the bound-elsewhere list", serverPort);
+                } else {
+                    log.info("Port is bound elsewhere {}", serverPort);
+                    serverPort = 0; // Do not let thread escape with 'otherAllocatedPort' number
+                    continue;
+                }
             }
             // add only works if its not already allocated
             if (allocatedPorts.add(serverPort)) {
@@ -212,11 +217,18 @@ public class PortManager {
                 if (!checkAvailable(serverPort)) {
                     // port is not available
                     log.warn("Unallocated port is already bound {}", serverPort);
+                    if (allocatedPorts.remove(serverPort)) {
+                        otherAllocatedPorts.add(serverPort);
+                    }
                     continue;
                 }
+                otherAllocatedPorts.remove(serverPort);
                 // break out with currently available port
                 break;
             }
+        }
+        if (serverPort > rtpPortCeiling) {
+            serverPort = 0;
         }
         if (isDebug) {
             log.debug("Port allocated {}", serverPort);
@@ -231,6 +243,10 @@ public class PortManager {
      * @return true if port is available and false otherwise
      */
     public static boolean checkAvailable(int port) {
+        return checkAvailableUdp(port, true);
+    }
+
+    private static boolean checkAvailableUdp(int port, boolean logFailure) {
         // dont allow port 0 (any available port) to be checked here
         if (port == 0) {
             return false;
@@ -251,7 +267,11 @@ public class PortManager {
             }
             return true;
         } catch (Throwable t) {
-            log.warn("Exception checking port: {}", port, t);
+            if (logFailure) {
+                log.warn("Exception checking port: {}", port, t);
+            } else {
+                log.debug("Port {} still unavailable", port);
+            }
         }
         return false;
     }
@@ -264,6 +284,10 @@ public class PortManager {
      * @return true if port is available and false otherwise
      */
     public static boolean checkAvailable(int port, boolean tcp) {
+        return checkAvailable(port, tcp, true);
+    }
+
+    private static boolean checkAvailable(int port, boolean tcp, boolean logFailure) {
         if (tcp) {
             try (ServerSocket socket = new ServerSocket(port)) {
                 socket.setReuseAddress(true);
@@ -280,11 +304,15 @@ public class PortManager {
                 }
                 return true;
             } catch (Throwable t) {
-                log.warn("Exception checking port: {}", port, t);
+                if (logFailure) {
+                    log.warn("Exception checking port: {}", port, t);
+                } else {
+                    log.debug("Port {} still unavailable", port);
+                }
             }
             return false;
         } else {
-            return checkAvailable(port);
+            return checkAvailableUdp(port, logFailure);
         }
     }
 
