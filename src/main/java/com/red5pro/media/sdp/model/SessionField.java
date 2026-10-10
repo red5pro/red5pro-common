@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * and only one "s=" field per session description.
  *
  * <pre>
-      s=<session name>
+      s=&lt;session name&gt;
  * </pre>
  *
  * @author Paul Gregoire

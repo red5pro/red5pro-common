@@ -27,7 +27,8 @@ package com.red5pro.cluster.streams;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 
-/**
+/** Resolves a stream's relative bitrate profile from its name.
+ *
  * @author Andy Shaules
  */
 public interface ProfileLevelResolver {

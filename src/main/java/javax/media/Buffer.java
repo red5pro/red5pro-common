@@ -19,6 +19,10 @@ import com.red5pro.media.rtp.RTPCodecEnum;
  */
 public class Buffer {
 
+    /** Creates an empty media buffer. */
+    public Buffer() {
+    }
+
     /**
      * The time stamp of the data held in this <pre>Buffer</pre>, in nanoseconds. The
      * time stamp marks the time when presentation of this <pre>Buffer</pre> is to
@@ -27,6 +31,7 @@ public class Buffer {
      */
     protected long timeStamp = TIME_UNKNOWN;
 
+    /** Timestamp in milliseconds. */
     protected long milliseconds = 0;
 
     private double seconds = 0.0;
@@ -529,14 +534,21 @@ public class Buffer {
         }
     }
 
+    /** Returns whether the buffer contains configuration data.
+     * @return true if the buffer contains configuration data
+     */
     public boolean isConfig() {
         return criticalFrame;
     }
 
+    /** Marks the buffer as configuration data. */
     public void setConfig() {
         criticalFrame = true;
     }
 
+    /** Returns whether the RTP marker bit is set.
+     * @return true if this is the last packet
+     */
     public boolean isLastPacket() {
         return (flags & FLAG_RTP_MARKER) != 0;
     }
@@ -588,18 +600,30 @@ public class Buffer {
         return (flags & FLAG_EOM) != 0;
     }
 
+    /** Returns whether this buffer must not be dropped.
+     * @return true if dropping is disallowed
+     */
     public boolean isNoDrop() {
         return (flags & FLAG_NO_DROP) != 0;
     }
 
+    /** Returns whether this buffer must not be synchronized.
+     * @return true if synchronization is disabled
+     */
     public boolean isNoSync() {
         return (flags & FLAG_NO_SYNC) != 0;
     }
 
+    /** Returns whether processing should avoid waiting for this buffer.
+     * @return true if waiting is disabled
+     */
     public boolean isNoWait() {
         return (flags & FLAG_NO_WAIT) != 0;
     }
 
+    /** Returns whether the timestamp uses the RTP clock.
+     * @return true if the RTP clock is used
+     */
     public boolean isRTPTime() {
         return (flags & FLAG_RTP_TIME) != 0;
     }
@@ -713,6 +737,10 @@ public class Buffer {
         }
     }
 
+    /** Sets the format and codec for this buffer.
+     * @param format media format
+     * @param codec RTP codec
+     */
     public void setFormat(Format format, RTPCodecEnum codec) {
         this.format = format;
         this.codec = codec;
@@ -808,28 +836,46 @@ public class Buffer {
         this.timeStamp = timeStamp;
     }
 
+    /** Returns the timestamp in milliseconds.
+     * @return timestamp in milliseconds
+     */
     public long getMilliseconds() {
         return milliseconds;
     }
 
+    /** Sets the timestamp in milliseconds.
+     * @param milliseconds timestamp in milliseconds
+     */
     public void setMilliseconds(long milliseconds) {
         this.milliseconds = milliseconds;
         seconds = milliseconds / 1000.0;
     }
 
+    /** Returns the timestamp in seconds.
+     * @return timestamp in seconds
+     */
     public double getSeconds() {
         return seconds;
     }
 
+    /** Sets the timestamp in seconds.
+     * @param seconds timestamp in seconds
+     */
     public void setSeconds(double seconds) {
         this.seconds = seconds;
         this.milliseconds = (long) (seconds * 1000);
     }
 
+    /** Sets the sample clock rate.
+     * @param clockRate samples per second
+     */
     public void setClockRate(int clockRate) {
         this.sampleClockRate = clockRate;
     }
 
+    /** Returns the sample clock rate.
+     * @return samples per second
+     */
     public int getClockRate() {
         return sampleClockRate;
     }
@@ -853,16 +899,25 @@ public class Buffer {
         this.headerExtension = headerExtension;
     }
 
+    /** Stores an exception associated with this buffer.
+     * @param e exception to store
+     */
     public void setException(IOException e) {
         exception = new WeakReference<>(e);
     }
 
+    /** Returns and clears the stored exception.
+     * @return stored exception, or null if none is available
+     */
     public IOException getException() {
         IOException ioe = exception.get();
         exception = null;
         return ioe;
     }
 
+    /** Returns whether an exception is stored.
+     * @return true if an exception is stored
+     */
     public boolean hasException() {
         return exception != null;
     }
@@ -941,19 +996,31 @@ public class Buffer {
         }
     }
 
+    /** Sets the stream creation time relative to the RTCP base age.
+     * @param rtcpBaseAge stream creation time
+     */
     public void setStreamCreation(long rtcpBaseAge) {
         this.rtcpBaseAge = rtcpBaseAge;
 
     }
 
+    /** Returns the stream creation time.
+     * @return stream creation time
+     */
     public long getStreamCreation() {
         return rtcpBaseAge;
     }
 
+    /** Returns the RTP codec.
+     * @return RTP codec
+     */
     public RTPCodecEnum getCodec() {
         return codec;
     }
 
+    /** Sets the RTP codec.
+     * @param codec RTP codec
+     */
     public void setCodec(RTPCodecEnum codec) {
         this.codec = codec;
     }

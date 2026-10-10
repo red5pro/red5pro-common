@@ -27,7 +27,7 @@ public interface IMediaSample {
     /**
      * Sets the internal buffer.
      *
-     * @param buffer
+     * @param buffer sample payload
      */
     void setBuffer(Object buffer);
 
@@ -55,7 +55,7 @@ public interface IMediaSample {
     /**
      * Sets the decoded state.
      *
-     * @param decoded
+     * @param decoded whether the payload is decoded
      */
     void setDecoded(boolean decoded);
 
@@ -69,7 +69,7 @@ public interface IMediaSample {
     /**
      * Sets the encoding identifier.
      *
-     * @param encoding
+     * @param encoding encoding identifier
      */
     void setEncoding(String encoding);
 
@@ -83,7 +83,7 @@ public interface IMediaSample {
     /**
      * Sets the flags for this sample.
      *
-     * @param flags
+     * @param flags sample flags
      */
     void setFlags(int flags);
 
@@ -101,12 +101,15 @@ public interface IMediaSample {
      */
     boolean isKeyframe();
 
+    /** Returns the source name, if available.
+     * @return source name, or null if unavailable
+     */
     String getSourceName();
 
     /**
      * Sets the sequence number.
      *
-     * @param sequenceNumber
+     * @param sequenceNumber sample sequence number
      */
     void setSequenceNumber(long sequenceNumber);
 
@@ -120,7 +123,7 @@ public interface IMediaSample {
     /**
      * Sets the start time; in most cases this will only be called if resampled.
      *
-     * @param startTime
+     * @param startTime sample timestamp
      */
     void setTimestamp(long startTime);
 
@@ -162,12 +165,13 @@ public interface IMediaSample {
     short[] bufferAsShorts();
 
     /**
+     * Returns the track identifier.
      *
-     * @return track id
+     * @return track identifier
      */
     int getTrackNum();
 
-    /**
+    /** Sets the track identifier.
      *
      * @param id
      *            track id
@@ -176,14 +180,16 @@ public interface IMediaSample {
     void setTrackNum(int id);
 
     /**
+     * Returns the media FourCC when known.
      *
-     * @return fourcc of media if known.
+     * @return media FourCC, or zero if unknown
      */
     int getFourCC();
 
     /**
+     * Returns the container format when available.
      *
-     * @return container format, if any.
+     * @return container format, or null if unavailable
      */
     FourCC getContainer();
 

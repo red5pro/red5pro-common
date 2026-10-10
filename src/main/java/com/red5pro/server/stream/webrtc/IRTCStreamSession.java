@@ -134,7 +134,7 @@ public interface IRTCStreamSession {
     /**
      * Returns whether or not its a webview.
      *
-     * @see https://developer.chrome.com/multidevice/user-agent
+     * @see <a href="https://developer.chrome.com/multidevice/user-agent">Chrome User-Agent reference</a>
      *
      * @return true if WebView and false otherwise
      */

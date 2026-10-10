@@ -53,10 +53,10 @@ public class ConferenceScope extends Scope implements IGroupCore {
     /**
      * Creates scope via parameters.
      *
-     * @param parent
-     * @param type
-     * @param name
-     * @param persistent
+     * @param parent parent scope
+     * @param type scope type
+     * @param name scope name
+     * @param persistent whether the scope persists
      */
     public ConferenceScope(IScope parent, ScopeType type, String name, boolean persistent) {
         super(parent, type, name, persistent);
@@ -103,12 +103,14 @@ public class ConferenceScope extends Scope implements IGroupCore {
         return participants.size();// plus mixer program + anecdotal shared objects/etc
     }
 
+    /** Returns the active connection count. */
     public int getActiveConncetions() {
         int k = super.getActiveConnections();
         log.debug("Active connections {}", k);
         return k;// plus mixer program + anecdotal shared objects/etc
     }
 
+    /** Sets the provision represented by this scope. */
     public void setProvision(Provision provision) {
         this.provision = provision;
     }

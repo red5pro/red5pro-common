@@ -29,24 +29,35 @@ package com.red5pro.media;
  * Central location for Audio constants.
  */
 public class AudioConstants {
+    /** Creates an audio constants instance. */
+    public AudioConstants() {
+    }
+
     /**
      * The <pre>/rtp</pre> constant. Introduced in order to achieve consistency in the
      * casing of the String.
      */
     public static final String _RTP = "/rtp";
 
+    /** Linear PCM encoding name. */
     public static final String LINEAR = "LINEAR";
 
+    /** G.711 mu-law encoding name. */
     public static final String ULAW = "ULAW";
 
+    /** G.711 A-law encoding name. */
     public static final String ALAW = "alaw";
 
+    /** MPEG Layer III encoding name. */
     public static final String MPEGLAYER3 = "mpeglayer3";
 
+    /** MPEG audio encoding name. */
     public static final String MPEG = "mpegaudio";
 
+    /** MPEG audio RTP encoding name. */
     public static final String MPEG_RTP = "mpegaudio" + _RTP;
 
+    /** iLBC RTP encoding name. */
     public static final String ILBC_RTP = "ilbc" + _RTP;
 
     /**
@@ -69,6 +80,7 @@ public class AudioConstants {
      */
     public static final String OPUS_RTP = OPUS + _RTP;
 
+    /** Opus RTMP encoding name. */
     public static final String OPUS_RTMP = OPUS + "/rtmp";
 
     /**
@@ -81,14 +93,19 @@ public class AudioConstants {
      */
     public static final String SPEEX_RTP = SPEEX + _RTP;
 
+    /** AAC encoding name. */
     public static final String AAC = "aac";
 
+    /** Raw AAC encoding name. */
     public static final String AAC_RAW = AAC + "/raw";
 
+    /** AAC RTMP encoding name. */
     public static final String AAC_RTMP = AAC + "/rtmp";
 
+    /** AAC FMTP mode parameter name. */
     public static final String AAC_MODE_FMTP = "mode";
 
+    /** AAC FMTP profile-level parameter name. */
     public static final String AAC_PROFILE_LEVEL_ID_FMTP = "profile-level-id";
 
     /**

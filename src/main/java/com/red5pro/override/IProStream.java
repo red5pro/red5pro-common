@@ -185,7 +185,6 @@ public interface IProStream extends IClientBroadcastStream {
      * Return the number of subscribers for the given sidestream by id, or return
      * null.
      *
-     * @see ProStream.getSideStream(String)
      * @param id
      *            the sidestream ID
      * @return the number of subscribers, or null if no stream, wrong stream type,

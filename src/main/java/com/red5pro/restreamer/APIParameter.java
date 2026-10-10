@@ -32,6 +32,67 @@ package com.red5pro.restreamer;
  */
 public enum APIParameter {
 
-    type, action, create, update, kill, list, block, timestamp, signature, contextpath, scopename, name, outputname, ip, host, port, cast, id, guid, meta, recording, authtype, username, password, token, persist, remoteContextPath, remoteStreamName, streamname, state, info;
+    /** API parameter for the request type. */
+    type,
+    /** API parameter for the requested action. */
+    action,
+    /** Create action. */
+    create,
+    /** Update action. */
+    update,
+    /** Terminate action. */
+    kill,
+    /** List action. */
+    list,
+    /** Block action. */
+    block,
+    /** Request timestamp. */
+    timestamp,
+    /** Request signature. */
+    signature,
+    /** Context path. */
+    contextpath,
+    /** Scope name. */
+    scopename,
+    /** Stream or resource name. */
+    name,
+    /** Output stream name. */
+    outputname,
+    /** IP address. */
+    ip,
+    /** Host name. */
+    host,
+    /** Port number. */
+    port,
+    /** Cast or conversion option. */
+    cast,
+    /** Resource ID. */
+    id,
+    /** Globally unique ID. */
+    guid,
+    /** Metadata. */
+    meta,
+    /** Recording option. */
+    recording,
+    /** Authentication type. */
+    authtype,
+    /** User name. */
+    username,
+    /** Password. */
+    password,
+    /** Authentication token. */
+    token,
+    /** Persistence option. */
+    persist,
+    /** Remote context path. */
+    remoteContextPath,
+    /** Remote stream name. */
+    remoteStreamName,
+    /** Stream name. */
+    streamname,
+    /** Resource state. */
+    state,
+    /** Response information. */
+    info;
 
 }

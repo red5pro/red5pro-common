@@ -98,13 +98,7 @@ public class CorsFilter implements Filter {
         this.filterConfig = filterConfig;
     }
 
-    /**
-     * Initialize the filter; not be confused with the servlet init method. This method fires on the first request.
-     * Otherwise we're at the mercy of the server loading the filter on startup and being configurable via the Red5ProPlugin.
-     *
-     * @param filterConfig
-     * @throws ServletException
-     */
+    /** Initializes filter settings on the first request. */
     public void doInit() throws ServletException {
         log.debug("Initializing");
         try {

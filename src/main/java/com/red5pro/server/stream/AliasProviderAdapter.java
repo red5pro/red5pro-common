@@ -10,6 +10,10 @@ import org.red5.server.api.IConnection;
  */
 public class AliasProviderAdapter implements IAliasProvider {
 
+    /** Creates an adapter whose methods return no aliases. */
+    public AliasProviderAdapter() {
+    }
+
     @Override
     public boolean isAlias(String alias) {
         return false;

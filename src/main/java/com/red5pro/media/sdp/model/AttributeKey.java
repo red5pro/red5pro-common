@@ -6,55 +6,131 @@ package com.red5pro.media.sdp.model;
  * @author Paul Gregoire
  */
 public enum AttributeKey {
-    bundleonly, bundleonlyDASHED("bundle-only"), // bundle only marker
-    candidate, // ICE candidate
-    endofcandidates("end-of-candidates"), // end of ICE candidates marker
-    group, // Grouping
-    msidsemantic("msid-semantic"), rtcp, // RTCP connection information
-    iceufrag("ice-ufrag"), // ICE user fragment
-    icepwd("ice-pwd"), // ICE password
-    iceoptions("ice-options"), // Indication of trickle support
-    icelite("ice-lite"), // Indication of ice lite support
-    fingerprint, // Hash and fingerprint
-    setup, // DTLS configuration
-    mid, // Media id
-    extmap, // Format extension
-    sendrecv, // Send and receive flag
-    sendonly, // Send-only flag
-    recvonly, // Receive-only flag
-    inactive, // inactive media stream
-    rtcpmux("rtcp-mux"), // RTCP mux flag
-    rtcpfb("rtcp-fb"), rtpmap, // RTP codec mapping
-    rtcprsize("rtcp-rsize"), // RTCP reduced-size (non-compound)
-    fmtp, // Format parameter
-    ptime, // Packet time
-    maxptime, // Maximum packet time
-    metadata, // Metadata
-    tsrefclk, // Source of the Network Clock
-    mediaclk, // RFC-7273
-    type, //
-    orient, // orientation
-    msid, // MST id
-    ssrc, //
-    ssrcgroup("ssrc-group"), control, // a=control:trackID=1 (from RFC) or a=control:streamid=0 (from ffmpeg)
-    range, // a=range:npt=0.000000-
-    framerate, // a=framerate:15.0
-    transform, // a=transform:-1,0,0;0,-1,0;0,0,1
-    tool, // a=tool:libavformat 57.83.100
-    sdplang, // expect en for English is most cases
-    crypto, // SRTP for Mobile SDK
-    maxprate, // max packet rate?
-    mimetype, // mime type
-    framesize, //
-    imageattr, // image attributes / dimensions
-    width, height, Width, Height, // capitalized versions are for legacy support
-    sctpmap, sctpport("sctp-port"), maxmessagesize("max-message-size"), // sctp / datachannel / application
-    etag, charset, xgoogleflag("x-google-flag"), extmapallowmixed, extmapallowmixedDASHED("extmap-allow-mixed"), // Determines allowance of mix one- and two-byte header extensions within the same stream
-    rid, // RTP stream identifier for simulcast eg a=rid:0 send
-    simulcast, // simulcast eg a=simulcast:send 0;1;2
-    rtcpxr("rtcp-xr"), // RFC3611
-    sctpinit("sctp-init"), // WebRTC SNAP
-    filter; // pro custom feature
+
+    /** SDP attribute key bundleonly. */
+    bundleonly,
+    /** SDP attribute key bundleonlyDASHED. */
+    bundleonlyDASHED("bundle-only"),
+    /** SDP attribute key candidate. */
+    candidate,
+    /** SDP attribute key endofcandidates. */
+    endofcandidates("end-of-candidates"),
+    /** SDP attribute key group. */
+    group,
+    /** SDP attribute key msidsemantic. */
+    msidsemantic("msid-semantic"),
+    /** SDP attribute key rtcp. */
+    rtcp,
+    /** SDP attribute key iceufrag. */
+    iceufrag("ice-ufrag"),
+    /** SDP attribute key icepwd. */
+    icepwd("ice-pwd"),
+    /** SDP attribute key iceoptions. */
+    iceoptions("ice-options"),
+    /** SDP attribute key icelite. */
+    icelite("ice-lite"),
+    /** SDP attribute key fingerprint. */
+    fingerprint,
+    /** SDP attribute key setup. */
+    setup,
+    /** SDP attribute key mid. */
+    mid,
+    /** SDP attribute key extmap. */
+    extmap,
+    /** SDP attribute key sendrecv. */
+    sendrecv,
+    /** SDP attribute key sendonly. */
+    sendonly,
+    /** SDP attribute key recvonly. */
+    recvonly,
+    /** SDP attribute key inactive. */
+    inactive,
+    /** SDP attribute key rtcpmux. */
+    rtcpmux("rtcp-mux"),
+    /** SDP attribute key rtcpfb. */
+    rtcpfb("rtcp-fb"),
+    /** SDP attribute key rtpmap. */
+    rtpmap,
+    /** SDP attribute key rtcprsize. */
+    rtcprsize("rtcp-rsize"),
+    /** SDP attribute key fmtp. */
+    fmtp,
+    /** SDP attribute key ptime. */
+    ptime,
+    /** SDP attribute key maxptime. */
+    maxptime,
+    /** SDP attribute key metadata. */
+    metadata,
+    /** SDP attribute key tsrefclk. */
+    tsrefclk,
+    /** SDP attribute key mediaclk. */
+    mediaclk,
+    /** SDP attribute key type. */
+    type,
+    /** SDP attribute key orient. */
+    orient,
+    /** SDP attribute key msid. */
+    msid,
+    /** SDP attribute key ssrc. */
+    ssrc,
+    /** SDP attribute key ssrcgroup. */
+    ssrcgroup("ssrc-group"),
+    /** SDP attribute key control. */
+    control,
+    /** SDP attribute key range. */
+    range,
+    /** SDP attribute key framerate. */
+    framerate,
+    /** SDP attribute key transform. */
+    transform,
+    /** SDP attribute key tool. */
+    tool,
+    /** SDP attribute key sdplang. */
+    sdplang,
+    /** SDP attribute key crypto. */
+    crypto,
+    /** SDP attribute key maxprate. */
+    maxprate,
+    /** SDP attribute key mimetype. */
+    mimetype,
+    /** SDP attribute key framesize. */
+    framesize,
+    /** SDP attribute key imageattr. */
+    imageattr,
+    /** SDP attribute key width. */
+    width,
+    /** SDP attribute key height. */
+    height,
+    /** SDP attribute key Width. */
+    Width,
+    /** SDP attribute key Height. */
+    Height,
+    /** SDP attribute key sctpmap. */
+    sctpmap,
+    /** SDP attribute key sctpport. */
+    sctpport("sctp-port"),
+    /** SDP attribute key maxmessagesize. */
+    maxmessagesize("max-message-size"),
+    /** SDP attribute key etag. */
+    etag,
+    /** SDP attribute key charset. */
+    charset,
+    /** SDP attribute key xgoogleflag. */
+    xgoogleflag("x-google-flag"),
+    /** SDP attribute key extmapallowmixed. */
+    extmapallowmixed,
+    /** SDP attribute key extmapallowmixedDASHED. */
+    extmapallowmixedDASHED("extmap-allow-mixed"),
+    /** SDP attribute key rid. */
+    rid,
+    /** SDP attribute key simulcast. */
+    simulcast,
+    /** SDP attribute key rtcpxr. */
+    rtcpxr("rtcp-xr"),
+    /** SDP attribute key sctpinit. */
+    sctpinit("sctp-init"),
+    /** SDP attribute key filter. */
+    filter;
 
     // used when the "name" has a dash char in it, since a dash isnt valid for an enum
     private String nameOverride;

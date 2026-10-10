@@ -18,6 +18,10 @@ import com.red5pro.util.IdGenerator;
  */
 public abstract class ConferenceParticipant implements IParticipant {
 
+    /** Creates a participant with a generated identifier. */
+    public ConferenceParticipant() {
+    }
+
     // unique identifier for this participant.
     private final String id = Long.toHexString(IdGenerator.generateId(24)); // 192 bits
 
@@ -36,21 +40,25 @@ public abstract class ConferenceParticipant implements IParticipant {
 
     protected ExpressionCompositor compositor;
 
+    /** {@inheritDoc} */
     @Override
     public String getId() {
         return id;
     }
 
+    /** {@inheritDoc} */
     @Override
     public long getCreationTime() {
         return created;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isPublisher() {
         return publisher;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean isSubscriber() {
         return subscriber;
@@ -59,7 +67,7 @@ public abstract class ConferenceParticipant implements IParticipant {
     /**
      * Add an id for exclusion.
      *
-     * @param exclude
+     * @param exclude publisher ID to exclude
      */
     public void addExclude(String exclude) {
         excludes.add(exclude);
@@ -68,29 +76,33 @@ public abstract class ConferenceParticipant implements IParticipant {
     /**
      * Remove an id exclusion.
      *
-     * @param exclude
+     * @param exclude publisher ID to allow again
      */
     public void removeExclude(String exclude) {
         excludes.remove(exclude);
     }
 
+    /** {@inheritDoc} */
     @Override
     public String[] getExcludes() {
         return excludes.toArray(new String[0]);
     }
 
     /**
-     * Media output to send to end point.
+     * Sends media output to the endpoint.
+     * @param sample sample to send
      */
     public abstract void consumeMediaSample(IMediaSample sample);
 
     /**
-     * Application and Notify events.
+     * Handles application and notify events.
+     * @param event event to handle
      */
     public abstract void doExpressionEvent(GroupEvent event);
 
     /**
-     * Application data.
+     * Handles an application event.
+     * @param event event to handle
      */
     @Override
     public void notifyEvent(IEvent event) {
@@ -116,11 +128,13 @@ public abstract class ConferenceParticipant implements IParticipant {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setCompositor(ExpressionCompositor compositor) {
         this.compositor = compositor;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void setPublisherId(String publisherId) {
         publisher = publisherId != null;
@@ -128,6 +142,7 @@ public abstract class ConferenceParticipant implements IParticipant {
     }
 
     @Override
+    /** {@inheritDoc} */
     public String getPublisherId() {
         return publisherId;
     }

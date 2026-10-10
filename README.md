@@ -11,10 +11,11 @@ Classes to support networking are as follows:
 * NetworkManager - provides a public and local / private IP address for the instance
 * PortManager - maintains a given port range and supplies available ports to callers
 
-The NetworkManager uses topology modes to determine the logic to utilize when locating IP addresses. Topology modes currently consist of
-* DEFAULT - uses the checkip service from Amazon for the public IP and Google dns for the local IP 
-* PROPERTIES - uses environment property of `PUBLIC_IP` first, system property of `public.ip`, and the `network.properties` file the public IP. For local IP the environment property is `LOCAL_IP`, system property is `local.ip`, and the same goes for the file.
-* AWS - uses the instance local calls for meta-data
+`NetworkManager` selects its address lookup behavior through a topology mode:
+
+* `DEFAULT` - gets the public IP from `https://checkip.amazonaws.com` (overridable with the `ip.check.uri` system property). It infers the local address by opening a UDP socket to Google DNS (`8.8.8.8`).
+* `PROPERTIES` - checks `PUBLIC_IP` and `LOCAL_IP` environment variables first, then the `public.ip` and `local.ip` JVM system properties, then the `force.public.ip` and `force.local.ip` values in `network.properties`.
+* `AWS` - reads public and local addresses from the EC2 instance metadata service. If a public address lookup returns no value, it falls back to the configured IP check service.
 
 ### Maven
 
@@ -24,7 +25,7 @@ Including in your maven pom is as easy as adding this xml to your dependencies
 <dependency>
     <groupId>com.red5pro</groupId>
     <artifactId>red5pro-common</artifactId>
-    <version>11.0.0</version>
+    <version>16.3.0.0</version>
     <scope>provided</scope>
 </dependency>
 ```

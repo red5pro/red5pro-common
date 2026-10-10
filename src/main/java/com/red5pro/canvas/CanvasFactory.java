@@ -1,5 +1,6 @@
 package com.red5pro.canvas;
 
+/** Creates canvases for media composition. */
 public interface CanvasFactory {
     /**
      * Create a canvas.

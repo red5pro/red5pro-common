@@ -20,28 +20,32 @@ public interface IParticipant extends IEventListener {
     public static final String ID = "participant";
 
     /**
-     * Returns the channel unique instance identifier for java hash sets and
-     * sessions.
+     * Returns the channel identifier used by sets and sessions.
+     * @return unique participant identifier
      */
     String getId();
 
     /**
      * Sets the mixing bus channel input stream name.
+     * @param publisherId input stream name
      */
     void setPublisherId(String publisherId);
 
     /**
      * Returns the mixing bus channel input stream name.
+     * @return input stream name, or null if unset
      */
     String getPublisherId();
 
     /**
      * Whether or not this channel has input capabilities.
+     * @return true if this participant publishes media
      */
     boolean isPublisher();
 
     /**
      * Whether or not this channel has output capabilities.
+     * @return true if this participant subscribes to media
      */
     boolean isSubscriber();
 
@@ -62,11 +66,12 @@ public interface IParticipant extends IEventListener {
     /**
      * If channel has output capabilities, sends media to be consumed.
      *
-     * @param mediaSample
+     * @param mediaSample sample to consume
      */
     void consumeMediaSample(IMediaSample mediaSample);
 
     /**
+     * Delivers an application event to this participant.
      *
      * @param event
      *            application data events.
@@ -74,6 +79,7 @@ public interface IParticipant extends IEventListener {
     void doExpressionEvent(GroupEvent event);
 
     /**
+     * Sets the compositor associated with this participant.
      *
      * @param compositor
      *            the group handler;
@@ -81,6 +87,7 @@ public interface IParticipant extends IEventListener {
     void setCompositor(ExpressionCompositor compositor);
 
     /**
+     * Returns the participant creation time.
      *
      * @return Wall clock of time channel was created.
      */
