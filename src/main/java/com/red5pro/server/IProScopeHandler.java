@@ -37,7 +37,7 @@ public interface IProScopeHandler {
     /**
      * Sets the stream name alias provider for this scope.
      *
-     * @return provider
+     * @param provider alias provider for this scope
      */
     void setStreamNameAliasProvider(IAliasProvider provider);
 

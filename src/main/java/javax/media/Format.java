@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  * A <pre>Format</pre> abstracts an exact media format. It carries no
  * encoding-specific parameters or timing information global to the
  * presentation. <br>
- * <h3>Comparing different formats</h3> Not all of the attributes in a
+ * <h2>Comparing different formats</h2> Not all of the attributes in a
  * <pre>Format</pre> object have to be specified. This enables selected attributes
  * to be specified, making it possible to locate a supported <pre>Format</pre>
  * that meets certain requirements without needing to find an exact match. <br>

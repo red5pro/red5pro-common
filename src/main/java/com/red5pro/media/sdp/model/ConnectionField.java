@@ -12,7 +12,7 @@ import com.red5pro.server.util.NetworkManager;
  * settings for the respective media.
  *
  * <pre>
-      c=<nettype> <addrtype> <connection-address>
+      c=&lt;nettype&gt; &lt;addrtype&gt; &lt;connection-address&gt;
  * </pre>
  *
  * @author Paul Gregoire

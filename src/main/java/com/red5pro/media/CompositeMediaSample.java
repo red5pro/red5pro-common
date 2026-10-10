@@ -11,18 +11,25 @@ import com.red5pro.group.IParticipant;
  */
 public class CompositeMediaSample extends MediaSampleAdapter {
 
+    /** Creates an empty composite sample. */
+    public CompositeMediaSample() {
+    }
+
     private IMediaSample[] samples;
 
     private int trackNum;
 
+    /** Returns the contained samples. */
     public IMediaSample[] getSamples() {
         return samples;
     }
 
+    /** Sets the contained samples. */
     public void setSamples(IMediaSample[] samples) {
         this.samples = samples;
     }
 
+    /** Returns the number of contained samples. */
     public int size() {
         return samples.length;
     }
@@ -33,7 +40,7 @@ public class CompositeMediaSample extends MediaSampleAdapter {
      * Returns a MediaSample matching the FourCC given or null if not found; this
      * does not remove the sample.
      *
-     * @param fourCC
+     * @param fourCC media FourCC identifier
      * @return MediaSample or null if not found
      */
     public IMediaSample get(int fourCC) {
@@ -46,24 +53,29 @@ public class CompositeMediaSample extends MediaSampleAdapter {
     }
 
     @Override
+    /** {@inheritDoc} */
     public boolean isComposite() {
         return true;
     }
 
     @Override
+    /** {@inheritDoc} */
     public int getTrackNum() {
         return trackNum;
     }
 
     @Override
+    /** {@inheritDoc} */
     public void setTrackNum(int id) {
         trackNum = id;
     }
 
+    /** Returns the source participant. */
     public IParticipant getSource() {
         return source;
     }
 
+    /** Sets the source participant. */
     public void setSource(IParticipant source) {
         this.source = source;
     }

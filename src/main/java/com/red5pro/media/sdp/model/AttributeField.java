@@ -15,14 +15,15 @@ import java.util.regex.Pattern;
  * individual media.
  *
  * <pre>
-      a=<attribute>
-      a=<attribute>:<value>
+      a=&lt;attribute&gt;
+      a=&lt;attribute&gt;:&lt;value&gt;
  * </pre>
  *
  * @author Paul Gregoire
  */
 public class AttributeField {
 
+    /** Matches an SDP attribute name and optional value. */
     public final static Pattern PATTERN = Pattern.compile("([\\w|-]+)(:(.*)){0,1}");
 
     // indication that this is a binary attribute (ie. no ':')
@@ -32,6 +33,10 @@ public class AttributeField {
 
     private String value;
 
+    /** Creates an attribute, treating a null value as a binary flag.
+     * @param attribute SDP attribute key
+     * @param value attribute value, or null for a binary flag
+     */
     public AttributeField(AttributeKey attribute, String value) {
         this.attribute = attribute;
         if (value == null) {
@@ -41,26 +46,44 @@ public class AttributeField {
         }
     }
 
+    /** Returns whether this attribute has no value.
+     * @return true when this is a binary flag
+     */
     public boolean isBinary() {
         return binary;
     }
 
+    /** Sets whether this attribute has no value.
+     * @param binary true for a binary flag
+     */
     public void setBinary(boolean binary) {
         this.binary = binary;
     }
 
+    /** Returns the attribute key.
+     * @return attribute key
+     */
     public AttributeKey getAttribute() {
         return attribute;
     }
 
+    /** Sets the attribute key.
+     * @param attribute attribute key
+     */
     public void setAttribute(AttributeKey attribute) {
         this.attribute = attribute;
     }
 
+    /** Returns the attribute value, or null for a binary flag.
+     * @return attribute value
+     */
     public String getValue() {
         return value;
     }
 
+    /** Sets the value; null marks this as a binary flag.
+     * @param value attribute value
+     */
     public void setValue(String value) {
         this.value = value;
     }

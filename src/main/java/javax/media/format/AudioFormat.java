@@ -13,26 +13,37 @@ public class AudioFormat extends Format {
 
     private static final long serialVersionUID = -9207570564778637264L;
 
+    /** Indicates most-significant-byte-first sample order. */
     public static final int BIG_ENDIAN = 1;
 
+    /** Indicates least-significant-byte-first sample order. */
     public static final int LITTLE_ENDIAN = 0;
 
+    /** Indicates signed samples. */
     public static final int SIGNED = 1;
 
+    /** Indicates unsigned samples. */
     public static final int UNSIGNED = 0;
 
+    /** Samples per second, or {@link #NOT_SPECIFIED}. */
     protected double sampleRate = NOT_SPECIFIED;
 
+    /** Bits per sample, or {@link #NOT_SPECIFIED}. */
     protected int sampleSizeInBits = NOT_SPECIFIED;
 
+    /** Number of audio channels, or {@link #NOT_SPECIFIED}. */
     protected int channels = NOT_SPECIFIED;
 
+    /** Sample byte order, or {@link #NOT_SPECIFIED}. */
     protected int endian = NOT_SPECIFIED;
 
+    /** Signedness flag, or {@link #NOT_SPECIFIED}. */
     protected int signed = NOT_SPECIFIED;
 
+    /** Audio frames per second, or {@link #NOT_SPECIFIED}. */
     protected double frameRate = NOT_SPECIFIED;
 
+    /** Bits per frame, or {@link #NOT_SPECIFIED}. */
     protected int frameSizeInBits = NOT_SPECIFIED;
 
     /**
@@ -93,8 +104,8 @@ public class AudioFormat extends Format {
      *            <pre>BIG_ENDIAN</pre> or <pre>LITTLE_ENDIAN</pre>.
      * @param signed
      *            Indicates whether the samples are stored in a signed or unsigned
-     *            format. Specify <CITE><pre>true</pre></CITE> if the
-     *            <pre>AudioFormat</pre> is signed, <pre>false</pre> if the
+     *            format. Specify <code>true</code> if the
+     *            <pre>AudioFormat</pre> is signed, <code>false</code> if the
      *            <pre>AudioFormat</pre> is unsigned.
      */
     public AudioFormat(String encoding, double sampleRate, int sampleSizeInBits, int channels, int endian, int signed) {
@@ -120,8 +131,8 @@ public class AudioFormat extends Format {
      *            <pre>BIG_ENDIAN</pre> or <pre>LITTLE_ENDIAN</pre>.
      * @param signed
      *            Indicates whether the samples are stored in a signed or unsigned
-     *            format. Specify <CITE><pre>true</pre></CITE> if the
-     *            <pre>AudioFormat</pre> is signed, <pre>false</pre> if the
+     *            format. Specify <code>true</code> if the
+     *            <pre>AudioFormat</pre> is signed, <code>false</code> if the
      *            <pre>AudioFormat</pre> is unsigned.
      * @param frameSizeInBits
      *            The frame size.

@@ -27,7 +27,7 @@ public interface ExpressionCompositor {
     /**
      * Compositor factory will set owner after creation.
      *
-     * @param owner
+     * @param owner owning group
      */
     void setOwner(IGroupCore owner);
 
@@ -115,7 +115,7 @@ public interface ExpressionCompositor {
     /**
      * End user api. Pass private context into composition.
      *
-     * @param user
+     * @param event event to pass to the compositor
      *            defined event.
      */
     void doExpressionEvent(GroupEvent event);

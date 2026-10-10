@@ -1,6 +1,7 @@
 package com.red5pro.validation;
 
-/**
+/** Reports a failed validation check.
+ *
  * @author Nate Roe
  */
 public class ValidationException extends Red5ProException {

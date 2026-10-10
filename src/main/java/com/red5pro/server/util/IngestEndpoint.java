@@ -7,6 +7,7 @@ import com.red5pro.media.SourceType;
 /**
  * Common interface for ingest end-point implementations.
  *
+ * @param <T> endpoint-specific stream type
  * @author Paul Gregoire
  */
 public interface IngestEndpoint<T> {

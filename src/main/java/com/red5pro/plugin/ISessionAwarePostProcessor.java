@@ -15,7 +15,7 @@ public interface ISessionAwarePostProcessor extends IPostProcessor {
      * This is just an id of the stream and NOT the name that is used at client side to subscribe to the stream.
      * A stream with a particular name can be published over and over. Each publish will have its own unique id/name.
      * {@link org.red5.server.api.stream.IStream#getName()}
-     * @param sessionId unique id from IStream.getName()
+     * @param iStreamName unique ID from {@code IStream.getName()}
      * @return true if implemented be the service.
      *
      */

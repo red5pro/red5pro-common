@@ -22,8 +22,7 @@ public interface ICompositorRegistry {
      * Call to register class alias in the registry to be instantiated as Compositor
      * implementation. Provision parameter 'group' = alias.
      *
-     * @param friendly
-     *            names such as "mymixer"
+     * @param alias name used to resolve the compositor
      * @param clazz
      *            definition of class.pacage.and.name.of.ExpressionCompositor
      *            implementation.

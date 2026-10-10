@@ -9,7 +9,7 @@ public class Validator {
     /**
      * Assert IS null: Throw ValidationException with message if notNullObject is not null.
      *
-     * @param notNullObject
+     * @param notNullObject value that must be null
      * @param message
      * @throws ValidationException
      */
@@ -23,8 +23,8 @@ public class Validator {
      * Assert IS null: Throw ValidationException with String.format(format, arguments) if notNullObject is not null.
      *
      * @param notNullObject
-     * @param format
-     * @param arguments
+     * @param format message format
+     * @param arguments format arguments
      * @throws ValidationException
      */
     public static void isNull(Object notNullObject, String format, Object... arguments) throws ValidationException {
@@ -36,7 +36,7 @@ public class Validator {
     /**
      * Assert NOT null: Throw ValidationException with message if notNullObject is null.
      *
-     * @param notNullObject
+     * @param notNullObject value that must not be null
      * @param message
      * @throws ValidationException
      */
@@ -50,8 +50,8 @@ public class Validator {
      * Assert NOT null: Throw ValidationException with String.format(format, arguments) if notNullObject is null.
      *
      * @param notNullObject
-     * @param format
-     * @param arguments
+     * @param format message format
+     * @param arguments format arguments
      * @throws ValidationException
      */
     public static void notNull(Object notNullObject, String format, Object... arguments) throws ValidationException {
@@ -63,7 +63,7 @@ public class Validator {
     /**
      * Assert is true: Throw ValidationException with message if not condition.
      *
-     * @param notNullObject
+     * @param condition condition that must be true
      * @param message
      * @throws ValidationException
      */
@@ -76,9 +76,9 @@ public class Validator {
     /**
      * Assert is true: Throw ValidationException with String.format(format, arguments) if not condition.
      *
-     * @param notNullObject
-     * @param format
-     * @param arguments
+     * @param condition condition that must be true
+     * @param format message format
+     * @param arguments format arguments
      * @throws ValidationException
      */
     public static void isTrue(boolean condition, String format, Object... arguments) throws ValidationException {

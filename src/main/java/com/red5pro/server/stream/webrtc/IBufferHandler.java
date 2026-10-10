@@ -12,7 +12,7 @@ public interface IBufferHandler {
     /**
      * Called by an audio encoder, supplying an encoded buffer data for output.
      *
-     * @param outBuf
+     * @param outBuffer encoded audio buffer
      *            encoded and often already packetized buffer
      */
     void audioBufferReceived(Buffer outBuffer);
@@ -20,7 +20,7 @@ public interface IBufferHandler {
     /**
      * Called by an video encoder, supplying an encoded buffer data for output.
      *
-     * @param outBuf
+     * @param outBuffer encoded video buffer
      *            encoded and often already packetized buffer
      */
     void videoBufferReceived(Buffer outBuffer);

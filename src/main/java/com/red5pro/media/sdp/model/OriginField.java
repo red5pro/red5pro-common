@@ -9,7 +9,7 @@ import com.red5pro.server.util.NetworkManager;
  * the address of the user's host) plus a session identifier and version.
  *
  * <pre>
-    o=<username> <sess-id> <sess-version> <nettype> <addrtype> <unicast-address>
+    o=&lt;username&gt; &lt;sess-id&gt; &lt;sess-version&gt; &lt;nettype&gt; &lt;addrtype&gt; &lt;unicast-address&gt;
  * </pre>
  *
  * @author Paul Gregoire

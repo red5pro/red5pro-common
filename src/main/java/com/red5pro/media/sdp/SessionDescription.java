@@ -20,7 +20,7 @@ import com.red5pro.media.sdp.model.TimingField;
 import com.red5pro.util.IdGenerator;
 
 /**
- * A session description, based on RFC4566 {@link https://tools.ietf.org/html/rfc4566}.
+ * A session description based on <a href="https://tools.ietf.org/html/rfc4566">RFC 4566</a>.
  *
  * @author Paul Gregoire
  */

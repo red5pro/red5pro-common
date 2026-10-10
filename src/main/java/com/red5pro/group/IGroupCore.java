@@ -80,7 +80,7 @@ public interface IGroupCore {
     /**
      * Sets the compositor.
      *
-     * @param compositor
+     * @param compositor compositor for this group
      */
     void setCompositor(ExpressionCompositor compositor);
 
@@ -94,7 +94,7 @@ public interface IGroupCore {
     /**
      * Adds a participant.
      *
-     * @param participant
+     * @param participant participant to add
      * @return true if added and false if compositor is stopped or participant is
      *         already added.
      */
@@ -128,7 +128,7 @@ public interface IGroupCore {
     /**
      * Set the provision.
      *
-     * @param provision
+     * @param provision provision configuration
      */
     void setProvision(Provision provision);
 
@@ -142,7 +142,7 @@ public interface IGroupCore {
     /**
      * Overrides Scope.handleEvent() for visibility in groups.
      *
-     * @param event
+     * @param event event to handle
      * @return true if event was handled and false otherwise
      */
     boolean handleEvent(IEvent event);

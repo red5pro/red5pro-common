@@ -18,7 +18,7 @@ import com.red5pro.media.rtp.RTPCodecEnum;
  * description.
  *
  * <pre>
-      m=<media> <port> <proto> <fmt> ...
+      m=&lt;media&gt; &lt;port&gt; &lt;proto&gt; &lt;fmt&gt; ...
 
       m=audio 49152 UDP/TLS/RTP/SAVPF 109
  * </pre>

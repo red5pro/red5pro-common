@@ -538,8 +538,8 @@ public class NetworkManager {
     /**
      * Validates a given IP address and port (optional) for binding.
      *
-     * @param ipAddress
-     * @param port
+     * @param ipAddress address to validate
+     * @param port port to validate
      * @return true if bindable and false otherwise
      */
     public static boolean validIPAddress(String ipAddress, int port) {
@@ -594,8 +594,8 @@ public class NetworkManager {
     /**
      * Validates a given IP address and port (optional) for binding.
      *
-     * @param ipAddress
-     * @param port
+     * @param groupName multicast group address
+     * @param groupPort multicast group port
      * @return true if bindable and false otherwise
      */
     public static boolean validMulticastIPAddress(String groupName, int groupPort) {

@@ -8,36 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class for registering KLV codec dictionaries.
- * Using a red5 plugin, Spring bean, or reflection, call static method 'addKLVDecoder' at server start up.
- * Reflection:
- * <pre>
- *  Class<?> clazz = Class.forName("com.red5pro.io.klv.KLVTagDecoder");
- *  Method m = clazz.getMethod("addKLVDecoder", String.class,Class.class);
- *  m.invoke(clazz, "060e2b34020b01010e01030101000000", SMPTE0601.class);
- * </pre><p>
- * Red5Plugin:
- * <pre>
- *  public void doStart(){ *
- *      KLVTagDecoder.addKLVDecoder("060e2b34020b01010e01030101000000", SMPTE0601.class);
- *  }
- * </pre><p>
- * Spring bean
- * <pre>{@code
- *  <!-- In red5-web.xml or other xml webcontext file, bean init-method references class method 'initialize()'
- *      where it adds itself to registry. -->
- *  <bean id="klvDecoder" class="com.red5pro.server.klv.SMPTE0601" init-method="initialize">
- *  </bean
- *  }
+ * Registers KLV decoders by universal label. Call {@link #addKLVDecoder(String, Class)} during startup.
  *
- *  ...
- *
- *  public void initialize(){
- *      KLVTagDecoder.addKLVDecoder("060e2b34020b01010e01030101000000", SMPTE0601.class);
- *  }
- * </pre>
  * @author Andy
- *
  */
 public abstract class KLVTagDecoder {
 
@@ -48,15 +21,17 @@ public abstract class KLVTagDecoder {
     protected final static Logger logger = LoggerFactory.getLogger(KLVTagDecoder.class);
 
     /**
-     * Register a class for decoding KLV streams from mpegts, zixi, or SRT input streams. Call at server startup.
-     * @param universalLabel
-     * @param decoder
+     * Registers a decoder for a KLV universal label.
+     *
+     * @param universalLabel decoder label
+     * @param decoder decoder implementation
      */
     public static void addKLVDecoder(String universalLabel, Class<? extends KLVTagDecoder> decoder) {
         logger.info("Adding KLV decoder: {} handler: {} ", universalLabel, decoder.getSimpleName());
         libraries.put(universalLabel, decoder);
     }
 
+    /** Returns a cached decoder for the label, creating one when registered. */
     public static KLVTagDecoder getDecoder(String label) {
         if (cache.containsKey(label)) {
             return cache.get(label);
@@ -74,46 +49,23 @@ public abstract class KLVTagDecoder {
         return null;
     }
 
-    /**
-     * Returns the universal label for the decoder's dictionary of tag key/value pairs.
-     * @return
-     */
+    /** Returns this decoder's universal label. */
     public abstract String getUniversalLabel();
 
     /**
-     * Returns the friendly name for a tag id.
-     * Example:
-     * <pre>
-     * private static String[] tagNames = new String[] { "", "checksum", "unix_time_stamp"};
+     * Returns the name associated with a tag ID.
      *
-     * public String getTagName(int tag) {
-     *     if (tag < tagNames.length) {
-     *           return tagNames[tag];
-     *     }
-     *     return "unknown_" + String.valueOf(tag);
-     * }
-     * </pre>
-     * @param val
-     * @return
+     * @param val tag ID
+     * @return tag name
      */
     public abstract String getTagName(int val);
 
     /**
-     * Return the decoded value, String, Number, Object.
-     * Example:
-     * <pre>
-     * //For tag id 2
-     * private Object unixTimestamp(byte[] data) {
-     *     long val = 0;
-     *     for (byte b : data) {
-     *         val = (val << 8) | (b & 0xFFL);
-     *     }
-     *     return Long.valueOf(val);
-     * }
-     * </pre>
-     * @param val Tag id
-     * @param data binary data
-     * @return decoded binary data.
+     * Decodes a tag value.
+     *
+     * @param val tag ID
+     * @param data encoded value
+     * @return decoded value
      */
     public abstract Object decodeTag(int val, byte[] data);
 }

@@ -10,7 +10,7 @@ package com.red5pro.media.sdp.model;
  * stop times of the repeat sequence.
  *
  * <pre>
-      t=<start-time> <stop-time>
+      t=&lt;start-time&gt; &lt;stop-time&gt;
  * </pre>
  *
  * @author Paul Gregoire
