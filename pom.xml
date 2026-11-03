@@ -6,18 +6,18 @@
     <packaging>jar</packaging>
     <name>red5pro-common</name>
     <!-- major, minor, release, build -->
-    <version>16.3.0.0</version>
+    <version>17.0.0.0</version>
     <url>https://github.com/red5pro/red5pro-common</url>
     <description>Red5Pro Common</description>
     <inceptionYear>2015</inceptionYear>
     <organization>
         <name>Red5Pro</name>
-        <url>http://red5pro.com/</url>
+        <url>https://red5.net/</url>
     </organization>
     <licenses>
         <license>
             <name>Infrared5, Inc</name>
-            <url>https://account.red5pro.com/assets/LICENSE.txt</url>
+            <url>https://account.red5.net/assets/LICENSE.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -33,7 +33,7 @@
     <developers>
         <developer>
             <id>Dominick Accattato</id>
-            <email>dominick@infrared5.com</email>
+            <email>dominick@red5.net</email>
         </developer>
         <developer>
             <id>Paul Gregoire</id>
@@ -45,7 +45,7 @@
         </developer>
         <developer>
             <id>Nate Roe</id>
-            <email>nate@red5pro.com</email>
+            <email>nate@red5.net</email>
         </developer>
     </developers>
     <properties>
@@ -57,12 +57,12 @@
         <!-- prevents built tests from running -->
         <skipTests>true</skipTests>
         <maven.compiler.verbose>false</maven.compiler.verbose>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
         <maven.build.timestamp.format>MM.dd.yyyy HH:mm</maven.build.timestamp.format>
         <timestamp>${maven.build.timestamp}</timestamp>
-        <red5.version>2.0.47</red5.version>
+        <red5.version>2.0.52</red5.version>
         <spring.version>6.2.19</spring.version>
-        <tomcat.version>11.0.25</tomcat.version>
+        <tomcat.version>11.0.27</tomcat.version>
         <mina.version>2.2.9</mina.version>
         <commons-text.version>1.12.0</commons-text.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
@@ -70,7 +70,7 @@
         <json.version>[2.4.1,)</json.version>
         <bc.version>1.85</bc.version>
         <junit.version>4.13.2</junit.version>
-        <red5pro-ice.version>1.2.17</red5pro-ice.version>
+        <red5pro-ice.version>1.2.19</red5pro-ice.version>
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.6.3</logback.version>
     </properties>
