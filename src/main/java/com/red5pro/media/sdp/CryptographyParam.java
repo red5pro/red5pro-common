@@ -14,14 +14,31 @@ public class CryptographyParam {
 
     private static Logger log = LoggerFactory.getLogger(CryptographyParam.class);
 
+    /** Stream cipher in use */
     public CryptoSuite streamCipherType = CryptoSuite.NONE;
 
+    /** Stream authentication algorithm in use */
     public CryptoSuite streamAuthType = CryptoSuite.NONE;
 
+    /** Decoded key material from the inline attribute */
     public byte[] rsaKeyHash;
 
+    /** Hash function named in the inline attribute */
     public CryptoSuite keyHashFunction = CryptoSuite.NONE;
 
+    /**
+     * Creates parameters with no cipher, authentication or hash selected.
+     */
+    public CryptographyParam() {
+    }
+
+    /**
+     * Parses an SDP crypto attribute line into this instance.
+     *
+     * @param line
+     *            attribute line, e.g. a=crypto:1 AES_CM_128_HMAC_SHA1_32 inline:hash|SHA1
+     * @return true if the line was parsed successfully, false otherwise
+     */
     public boolean parseSDPLine(String line) {
         // expecting: a=crypto:1 AES_CM_128_HMAC_SHA1_32 inline:<hash>|SHA1
         if (line != null) {

@@ -3,7 +3,11 @@ package com.red5pro.server.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.URL;
+import java.nio.file.Paths;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,7 +26,10 @@ public class NetworkManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        System.setProperty("red5.config_root", "/home/mondain/workspace/github-red5pro/common/red5pro-common/target/test-classes/conf");
+        // resolve the test conf directory from the classpath instead of a machine specific path
+        URL conf = getClass().getResource("/conf/network.properties");
+        assertNotNull("network.properties not found on test classpath", conf);
+        System.setProperty("red5.config_root", Paths.get(conf.toURI()).getParent().toString());
     }
 
     @After
@@ -71,14 +78,30 @@ public class NetworkManagerTest {
 
     @Test
     public void testGetAWSAddress() {
-        log.info("\n testGetWavelengthAddress");
+        log.info("\n testGetAWSAddress");
         NetworkManager.setTopologyMode(TopologyMode.AWS);
         String localIP = NetworkManager.getLocalAddress();
         log.info("Local IP: {}", localIP);
-        assertNull(localIP);
         String publicIP = NetworkManager.getPublicAddress();
         log.info("Public IP: {}", publicIP);
-        assertNull(publicIP);
+        if (isEc2MetadataReachable()) {
+            assertNotNull(localIP);
+            assertNotNull(publicIP);
+        } else {
+            // not on EC2: local address falls back to the nic / local host, public may be
+            // unavailable when there is no outbound access; neither may be the placeholder
+            assertNotEquals("no-ip", localIP);
+            assertNotEquals("no-ip", publicIP);
+        }
+    }
+
+    private static boolean isEc2MetadataReachable() {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress("169.254.169.254", 80), 500);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

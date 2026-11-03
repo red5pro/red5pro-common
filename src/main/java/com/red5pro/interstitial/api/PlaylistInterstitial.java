@@ -86,6 +86,11 @@ public class PlaylistInterstitial extends InterstitialSession implements IConsum
     /**
      * Single-file constructor — equivalent to a pod of size 1. Behaves exactly as the original
      * {@code PlaylistInterstitial(IScope, String, boolean, boolean)} contract for backwards compatibility.
+     *
+     * @param appScope        application scope (used to resolve the VOD provider)
+     * @param fileName        name of the file to play
+     * @param isForwardAudio  forward this session's audio packets to the output
+     * @param isForwardVideo  forward this session's video packets to the output
      */
     public PlaylistInterstitial(IScope appScope, String fileName, boolean isForwardAudio, boolean isForwardVideo) {
         this(appScope, Collections.singletonList(fileName), isForwardAudio, isForwardVideo);

@@ -8,6 +8,7 @@ package com.red5pro.override.cauldron;
  */
 public interface IProcess2 extends IProcess {
     /**
+     * Writes a media frame to the native processing layer.
      *
      * @param fourCC
      *            media type, 'PCM ' 'I420', 'RGB '.

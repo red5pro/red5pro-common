@@ -81,9 +81,7 @@ public class MediaTrackTest {
         // create CompositeMediaSample for holding an opus frame with its decoded pcm
         // bytes
         CompositeMediaSample cms = new CompositeMediaSample();
-        // TODO!
-        // cms.add(opus);
-        // cms.add(pcm);
+        cms.setSamples(new IMediaSample[] { opus, pcm });
         // create the audio group event
         GroupEvent age = GroupEvent.build(cms, FourCC.OPUS);
         events.add(age);

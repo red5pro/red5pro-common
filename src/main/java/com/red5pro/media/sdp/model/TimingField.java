@@ -17,22 +17,48 @@ package com.red5pro.media.sdp.model;
  */
 public class TimingField {
 
+    /**
+     * Creates a timing field with start and stop times of zero.
+     */
+    public TimingField() {
+    }
+
     private long start = 0l;
 
     private long stop = 0l;
 
+    /**
+     * Returns the session start time.
+     *
+     * @return start time, 0 if unbounded
+     */
     public long getStart() {
         return start;
     }
 
+    /**
+     * Sets the session start time.
+     *
+     * @param start start time
+     */
     public void setStart(long start) {
         this.start = start;
     }
 
+    /**
+     * Returns the session stop time.
+     *
+     * @return stop time, 0 if unbounded
+     */
     public long getStop() {
         return stop;
     }
 
+    /**
+     * Sets the session stop time.
+     *
+     * @param stop stop time
+     */
     public void setStop(long stop) {
         this.stop = stop;
     }

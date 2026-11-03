@@ -67,6 +67,12 @@ import com.red5pro.media.SourceType;
  */
 public class NetworkManager {
 
+    /**
+     * Creates a network manager; all functionality is exposed statically.
+     */
+    public NetworkManager() {
+    }
+
     private static Logger log = LoggerFactory.getLogger(NetworkManager.class);
 
     // default usable addresses
@@ -119,6 +125,9 @@ public class NetworkManager {
      * Network type.
      */
     public enum NetworkType {
+        /**
+         * Internet network type.
+         */
         IN; // internet
     }
 
@@ -126,7 +135,13 @@ public class NetworkManager {
      * Network address type.
      */
     public enum AddressType {
+        /**
+         * IPv4 address type.
+         */
         IP4, // IPv4
+        /**
+         * IPv6 address type.
+         */
         IP6; // IPv6
     }
 
@@ -135,6 +150,9 @@ public class NetworkManager {
      */
     public enum TopologyMode {
 
+        /**
+         * Finds the public address via the IP check service and infers the local address with a UDP socket.
+         */
         DEFAULT // uses aws service to find network properties
         {
 
@@ -201,6 +219,9 @@ public class NetworkManager {
             }
 
         },
+        /**
+         * Reads addresses from environment variables, JVM properties, then the network properties file.
+         */
         PROPERTIES // configured via properties system then file
         {
 
@@ -228,6 +249,9 @@ public class NetworkManager {
             }
 
         },
+        /**
+         * Reads addresses from the EC2 instance metadata service.
+         */
         AWS // uses aws services
         {
 
@@ -464,10 +488,20 @@ public class NetworkManager {
         return ipAddress;
     }
 
+    /**
+     * Returns the stored public IPv6 address.
+     *
+     * @return the public IPv6 address, or the no-ip placeholder if none is set
+     */
     public static String getPublicAddressV6() {
         return serverIpV6.get();
     }
 
+    /**
+     * Returns the stored local IPv6 address.
+     *
+     * @return the local IPv6 address, or the no-ip placeholder if none is set
+     */
     public static String getLocalAddressV6() {
         return serverLocalIpV6.get();
     }
@@ -482,19 +516,39 @@ public class NetworkManager {
         return NO_IP_ADDRESS.equals(ipAddress) ? false : ipAddress.contains(":");
     }
 
+    /**
+     * Returns if the local address is IPv6.
+     *
+     * @return true if IPv6, false if IPv4 or unset
+     */
     public static boolean isLocalAddressV6() {
         String ipAddress = serverLocalIp.get();
         return NO_IP_ADDRESS.equals(ipAddress) ? false : ipAddress.contains(":");
     }
 
+    /**
+     * Returns whether a public IPv6 address has been set.
+     *
+     * @return true if a public IPv6 address is set
+     */
     public static boolean hasPublicAddressV6() {
         return !NO_IP_ADDRESS.equals(serverIpV6.get());
     }
 
+    /**
+     * Returns whether a local IPv6 address has been set.
+     *
+     * @return true if a local IPv6 address is set
+     */
     public static boolean hasLocalAddressV6() {
         return !NO_IP_ADDRESS.equals(serverLocalIpV6.get());
     }
 
+    /**
+     * Sets the public IP address; null or blank values are ignored.
+     *
+     * @param ipAddress the public address
+     */
     public static void setServerIp(String ipAddress) {
         log.debug("setServerIp: {}", ipAddress);
         // disallow null or blank IP
@@ -504,6 +558,11 @@ public class NetworkManager {
         }
     }
 
+    /**
+     * Sets the local IP address; null or blank values are ignored.
+     *
+     * @param ipAddress the local address
+     */
     public static void setServerLocalIp(String ipAddress) {
         log.debug("setServerLocalIp: {}", ipAddress);
         // disallow null or blank IP
@@ -513,6 +572,11 @@ public class NetworkManager {
         }
     }
 
+    /**
+     * Sets the public IPv6 address; null or blank values are ignored.
+     *
+     * @param ipAddress the public IPv6 address
+     */
     public static void setServerIpV6(String ipAddress) {
         log.debug("setServerIpV6: {}", ipAddress);
         // disallow null or blank IP
@@ -522,6 +586,11 @@ public class NetworkManager {
         }
     }
 
+    /**
+     * Sets the local IPv6 address; null or blank values are ignored.
+     *
+     * @param ipAddress the local IPv6 address
+     */
     public static void setServerLocalIpV6(String ipAddress) {
         log.debug("setServerLocalIpV6: {}", ipAddress);
         // disallow null or blank IP
@@ -630,6 +699,7 @@ public class NetworkManager {
      * Returns an unmodifiable copy of the ingest end-points matching the source
      * type.
      *
+     * @param type the source type to match
      * @return ingestEndPoints
      */
     public static Map<String, IngestEndpoint<?>> getIngestEndPointsByType(SourceType type) {
@@ -642,7 +712,7 @@ public class NetworkManager {
     /**
      * Removes an end-point by its id.
      *
-     * @param endPointId
+     * @param endPointId the id of the end-point to remove
      * @return ingest end-point matching the id or null if no match exists
      */
     public static IngestEndpoint<?> disposeIngestEndpoint(String endPointId) {
@@ -873,32 +943,67 @@ public class NetworkManager {
         return NO_IP_ADDRESS;
     }
 
+    /**
+     * Returns the topology mode in use.
+     *
+     * @return the topology mode
+     */
     public static TopologyMode getTopologyMode() {
         return topologyMode;
     }
 
+    /**
+     * Sets the topology mode.
+     *
+     * @param topologyMode the topology mode
+     */
     public static void setTopologyMode(TopologyMode topologyMode) {
         NetworkManager.topologyMode = topologyMode;
     }
 
+    /**
+     * Sets the topology mode by name, case-insensitively; blank values are ignored.
+     *
+     * @param topologyMode the name of a TopologyMode constant
+     */
     public static void setTopologyMode(String topologyMode) {
         if (StringUtils.isNotBlank(topologyMode)) {
             NetworkManager.topologyMode = TopologyMode.valueOf(topologyMode.toUpperCase());
         }
     }
 
+    /**
+     * Returns the default ICE transport.
+     *
+     * @return the transport, udp unless configured otherwise
+     */
     public static String getDefaultTransport() {
         return defaultTransport;
     }
 
+    /**
+     * Returns the default STUN server address.
+     *
+     * @return the STUN address, may be null
+     */
     public static String getDefaultStunAddress() {
         return defaultStunAddress;
     }
 
+    /**
+     * Returns whether IPv6 is enabled for ICE.
+     *
+     * @return true if enabled
+     */
     public static boolean isIceIPv6Enabled() {
         return iceIPv6Enabled;
     }
 
+    /**
+     * Sets whether IPv6 is enabled for ICE.
+     *
+     * @param iceIPv6Enabled true to enable
+     */
     public static void setIceIPv6Enabled(boolean iceIPv6Enabled) {
         NetworkManager.iceIPv6Enabled = iceIPv6Enabled;
     }

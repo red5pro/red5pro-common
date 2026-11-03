@@ -16,6 +16,13 @@ import com.red5pro.media.sdp.model.AttributeKey;
  */
 public class RTPCodecFactory {
 
+    /**
+     * Creates a factory with the default codec lists and attributes.
+     */
+    public RTPCodecFactory() {
+    }
+
+    /** Logger. */
     protected static Logger log = LoggerFactory.getLogger(RTPCodecFactory.class);
 
     private static RTPCodecFactory instance = new RTPCodecFactory();
@@ -58,6 +65,11 @@ public class RTPCodecFactory {
         videoAttributes.put(RTPCodecEnum.H264, new AttributeField(AttributeKey.fmtp, String.format("%d profile-level-id=%s;packetization-mode=1", RTPCodecEnum.H264.payloadType, profile)));
     }
 
+    /**
+     * Returns the shared factory instance.
+     *
+     * @return the singleton factory
+     */
     public static RTPCodecFactory getInstance() {
         return instance;
     }
@@ -65,6 +77,7 @@ public class RTPCodecFactory {
     /**
      * Create a new instance of RTPCodec by codec name.
      *
+     * @param codecName the encoding name of the audio codec
      * @return codec associated with codecName
      */
     public RTPCodec getAudioCodec(String codecName) {
@@ -92,6 +105,7 @@ public class RTPCodecFactory {
     /**
      * Create a new instance of RTPCodec by codec name.
      *
+     * @param codecName the encoding name of the video codec
      * @return codec associated with codecName
      */
     public RTPCodec getVideoCodec(String codecName) {
@@ -170,6 +184,8 @@ public class RTPCodecFactory {
     }
 
     /**
+     * Returns the number of available audio codecs.
+     *
      * @return Count of available audio codecs
      */
     public int getAvailableAudioCodecsCount() {
@@ -177,24 +193,46 @@ public class RTPCodecFactory {
     }
 
     /**
+     * Returns the number of available video codecs.
+     *
      * @return Count of available video codecs
      */
     public int getAvailableVideoCodecsCount() {
         return availableVideoCodecs.length;
     }
 
+    /**
+     * Returns the media attributes added for audio codecs.
+     *
+     * @return audio attributes keyed by codec
+     */
     public Map<RTPCodecEnum, AttributeField> getAudioAttributes() {
         return audioAttributes;
     }
 
+    /**
+     * Sets the media attributes added for audio codecs.
+     *
+     * @param audioAttributes audio attributes keyed by codec
+     */
     public void setAudioAttributes(Map<RTPCodecEnum, AttributeField> audioAttributes) {
         this.audioAttributes = audioAttributes;
     }
 
+    /**
+     * Returns the media attributes added for video codecs.
+     *
+     * @return video attributes keyed by codec
+     */
     public Map<RTPCodecEnum, AttributeField> getVideoAttributes() {
         return videoAttributes;
     }
 
+    /**
+     * Sets the media attributes added for video codecs.
+     *
+     * @param videoAttributes video attributes keyed by codec
+     */
     public void setVideoAttributes(Map<RTPCodecEnum, AttributeField> videoAttributes) {
         this.videoAttributes = videoAttributes;
     }

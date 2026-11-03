@@ -39,40 +39,75 @@ public enum RTPCodecEnum {
     // Chrome is using id 107 for h264 pmode 1 and Firefox uses 126
 
     // audio
+    /** Opus audio. */
     OPUS(111, "opus", "Opus", 48000, 2), // std identifier for opus
+    /** Generic PCM (ulaw) audio. */
     PCM(0, "PCMU", "PCM ulaw", 8000, 1), // generic PCM
+    /** PCM ulaw audio. */
     PCMU(0, "PCMU", "PCM ulaw", 8000, 1), // std identifier for pcm ulaw
+    /** PCM alaw audio. */
     PCMA(8, "PCMA", "PCM alaw", 8000, 1), // std identifier for pcm alaw
+    /** Speex audio. */
     SPEEX(97, "speex", "Speex", 16000, 2), // std identifier for speex
+    /** AAC audio, 48k stereo. */
     AAC(96, "aac", "AAC", 48000, 2), // simplified identifier for aac 48k stereo
+    /** AAC audio, 48k stereo. */
     AAC_48K(96, "aac", "AAC", 48000, 2), // std identifier for aac 48k stereo
+    /** AAC audio, 41k stereo. */
     AAC_41K(96, "aac", "AAC", 41000, 2), // std identifier for aac 41k stereo
+    /** L16 mono audio. */
     L16(97, "L16", "L16", 8000, 1), // L16 mono
+    /** MP3 audio. */
     MP3(97, "mp3", "mp3", 48000, 2),
     // video
+    /** H.264 video. */
     H264(96, "H264", "h.264", 90000), // simplified identifier for h.264
+    /** VP8 video. */
     VP8(100, "VP8", "VP8", 90000), // std identifier for vp8
+    /** VP9 video. */
     VP9(101, "VP9", "VP9", 90000), // std identifier for vp9
+    /** AV1 video. */
     AV1(103, "AV1", "AV1", 90000), // std identifier for av1
     // h.265
+    /** H.265 video. */
     H265(104, "H265", "h.265", 90000), // simplified identifier for h.265
     // other
-    RED(116, "red", "Redundant", 90000), ULPFEC(117, "ulpfec", "Generic Forward Error Correction", 90000),
+    /** Redundant data. */
+    RED(116, "red", "Redundant", 90000),
+    /** Generic forward error correction. */
+    ULPFEC(117, "ulpfec", "Generic Forward Error Correction", 90000),
     // special identifiers for something working with any codec or payload type
-    ANY_AUDIO(-1, "ANY_AUDIO", "Any audio codec or payload", 0), ANY_VIDEO(-2, "ANY_VIDEO", "Any video codec or payload", 0),
+    /** Matches any audio codec or payload type. */
+    ANY_AUDIO(-1, "ANY_AUDIO", "Any audio codec or payload", 0),
+    /** Matches any video codec or payload type. */
+    ANY_VIDEO(-2, "ANY_VIDEO", "Any video codec or payload", 0),
     // no-codec as a means to turn-off audio or video
+    /** No codec selected, used to turn off audio or video. */
     NONE(-3, "NONE", "No codec selected", 0);
 
+    /** RTP payload type identifier. */
     public final int payloadType;
 
+    /** Encoding name as used in the rtpmap. */
     public final String encodingName;
 
+    /** Human readable description. */
     public final String description;
 
+    /** Clock rate in Hz. */
     public final int clockRate;
 
+    /** Number of audio channels, 0 for video or unspecified. */
     public final int channels;
 
+    /**
+     * Creates a codec without a channel count.
+     *
+     * @param payloadType RTP payload type
+     * @param encodingName encoding name
+     * @param description description
+     * @param clockRate clock rate in Hz
+     */
     RTPCodecEnum(int payloadType, String encodingName, String description, int clockRate) {
         this.payloadType = payloadType;
         this.encodingName = encodingName;
@@ -81,6 +116,15 @@ public enum RTPCodecEnum {
         this.channels = 0;
     }
 
+    /**
+     * Creates a codec with a channel count.
+     *
+     * @param payloadType RTP payload type
+     * @param encodingName encoding name
+     * @param description description
+     * @param clockRate clock rate in Hz
+     * @param channels number of channels
+     */
     RTPCodecEnum(int payloadType, String encodingName, String description, int clockRate, int channels) {
         this.payloadType = payloadType;
         this.encodingName = encodingName;
@@ -112,6 +156,12 @@ public enum RTPCodecEnum {
         }
     }
 
+    /**
+     * Returns the payload type of the given codec.
+     *
+     * @param codec the codec
+     * @return payload type id
+     */
     public static int getPayloadType(RTPCodecEnum codec) {
         return codec.payloadType;
     }
@@ -175,22 +225,47 @@ public enum RTPCodecEnum {
         return encodings;
     }
 
+    /**
+     * Returns the payload type.
+     *
+     * @return payload type id
+     */
     public int getPayloadType() {
         return payloadType;
     }
 
+    /**
+     * Returns the encoding name.
+     *
+     * @return encoding name
+     */
     public String getEncodingName() {
         return encodingName;
     }
 
+    /**
+     * Returns the human readable description.
+     *
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Returns the clock rate.
+     *
+     * @return clock rate in Hz
+     */
     public int getClockRate() {
         return clockRate;
     }
 
+    /**
+     * Returns the number of channels.
+     *
+     * @return channel count, 0 if unspecified
+     */
     public int getChannels() {
         return channels;
     }

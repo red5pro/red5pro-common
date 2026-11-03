@@ -26,18 +26,33 @@ public abstract class ConferenceParticipant implements IParticipant {
     private final String id = Long.toHexString(IdGenerator.generateId(24)); // 192 bits
 
     // publisher id / input stream name
+    /**
+     * Publisher id / input stream name; null until the participant publishes.
+     */
     protected String publisherId;
 
     // timestamp for when this participant was created
+    /**
+     * Time in milliseconds at which this participant was created.
+     */
     protected final long created = System.currentTimeMillis();
 
     // Publisher ids to exclude when outputting media to this participant.
+    /**
+     * Publisher ids to exclude when outputting media to this participant.
+     */
     protected Set<String> excludes = new CopyOnWriteArraySet<>();
 
     // determination of publisher or subscriber will be false until SDP's are
     // processed
+    /**
+     * Determination of publisher or subscriber status; both false until SDPs are processed.
+     */
     protected boolean publisher, subscriber;
 
+    /**
+     * The compositor this participant is attached to.
+     */
     protected ExpressionCompositor compositor;
 
     /** {@inheritDoc} */

@@ -55,8 +55,10 @@ public class RGBFormat extends VideoFormat {
     /** Endian ordering of the data where applicable */
     protected int endian = NOT_SPECIFIED;
 
+    /** Endian value indicating big-endian byte ordering */
     public static final int BIG_ENDIAN = 0;
 
+    /** Endian value indicating little-endian byte ordering */
     public static final int LITTLE_ENDIAN = 1;
 
     private static String ENCODING = VideoFormat.RGB;

@@ -47,45 +47,85 @@ public interface IRTCCapableConnection extends IConnection {
     /**
      * Allow a message to accompany a close call.
      *
-     * @param closeMessage
+     * @param closeMessage message to send with the close
      * @param close perform close immediately if true and later if false
      */
     void close(String closeMessage, boolean close);
 
+    /**
+     * Returns the scope this connection belongs to.
+     *
+     * @return the scope
+     */
     IScope getScope();
 
+    /**
+     * Returns the WebRTC stream session associated with this connection.
+     *
+     * @return the session
+     */
     IRTCStreamSession getSession();
 
+    /**
+     * Returns the connection session identifier.
+     *
+     * @return the session id
+     */
     String getSessionId();
 
+    /**
+     * Returns the signaling channel used by this connection.
+     *
+     * @return the signaling channel
+     */
     SignalingChannel getSignalChannel();
 
+    /**
+     * Returns the path of the stream handled by this connection.
+     *
+     * @return the stream path
+     */
     String getStreamPath();
 
+    /**
+     * Returns the table of remote party sources for this connection.
+     *
+     * @return the remote party table
+     */
     ISessionSourceTable getRemotePartyTable();
 
     /**
      * Allows tapping the session table.
      *
-     * @param ssrc
+     * @param ssrc the SSRC of the session to tap
      */
     void tapSession(int ssrc);
 
+    /**
+     * Returns whether the connection has been closed.
+     *
+     * @return true if closed
+     */
     boolean isClosed();
 
+    /**
+     * Returns whether the connection is currently connected.
+     *
+     * @return true if connected
+     */
     boolean isConnected();
 
     /**
      * Write a string message to the connection output.
      *
-     * @param message
+     * @param message the message to write
      */
     void writeMessage(String message);
 
     /**
-     * Write a wire message to the connection output.
+     * Write a wire message to the connection output; binary messages are ignored.
      *
-     * @param message
+     * @param message the message to write
      */
     default void writeMessage(WireMessage message) {
         if (!message.isBinary()) {
@@ -96,37 +136,52 @@ public interface IRTCCapableConnection extends IConnection {
     /**
      * Set an attribute on the connection.
      *
-     * @param key
-     * @param value
+     * @param key the attribute key
+     * @param value the attribute value
      */
     void setAttribute(ConnectionAttributeKey key, Object value);
 
     /**
      * Returns an attribute from the connection as a string.
      *
-     * @param key
+     * @param key the attribute key
      * @return attribute value
      */
     String getStringAttribute(ConnectionAttributeKey key);
 
+    /**
+     * Returns whether the stream is being recorded.
+     *
+     * @return true if recording
+     */
     boolean isRecord();
 
+    /**
+     * Applies a mute request to the connection.
+     *
+     * @param jsonObject the mute request details
+     */
     void mute(JSONObject jsonObject);
 
     /**
      * Update the last time at which a packet was received.
      *
-     * @param packetTimeMs
+     * @param packetTimeMs time of receipt in milliseconds
      */
     void updateReceivePacketTime(long packetTimeMs);
 
     /**
      * Update the last time at which a packet was sent.
      *
-     * @param packetTimeMs
+     * @param packetTimeMs time of sending in milliseconds
      */
     void updateSendPacketTime(long packetTimeMs);
 
+    /**
+     * Returns the connection identifier.
+     *
+     * @return the id
+     */
     int getId();
 
     /**
@@ -143,10 +198,26 @@ public interface IRTCCapableConnection extends IConnection {
      */
     SDPUserAgent getUserAgentEnum();
 
+    /**
+     * Sets the local session description.
+     *
+     * @param sdp the local SDP
+     */
     void setLocalSDP(String sdp);
 
+    /**
+     * Returns the local session description.
+     *
+     * @return the local SDP
+     */
     String getLocalSDP();
 
+    /**
+     * Sends a receiver estimated maximum bitrate (REMB) message.
+     *
+     * @param ssrc the SSRC the estimate applies to
+     * @param bitrate the estimated maximum bitrate
+     */
     void sendRemb(int ssrc, int bitrate);
 
     // TODO(paul) add this to the interface next release

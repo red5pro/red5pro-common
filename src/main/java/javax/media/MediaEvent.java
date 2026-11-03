@@ -12,6 +12,11 @@ public class MediaEvent extends java.util.EventObject {
 
     private static final long serialVersionUID = -1386410533246388334L;
 
+    /**
+     * Creates an event for the given source.
+     *
+     * @param source the object that generated the event
+     */
     public MediaEvent(Object source) {
         super(source);
     }

@@ -34,6 +34,9 @@ import com.red5pro.server.stream.IoSessionAware;
  */
 public interface IMPEGTSConnection extends IoSessionAware {
 
+    /**
+     * FourCC identifying this connection type ("hls ").
+     */
     public final static int fourCC = 'h' | ('l' << 8) | ('s' << 16) | (' ' << 24);
 
     /**

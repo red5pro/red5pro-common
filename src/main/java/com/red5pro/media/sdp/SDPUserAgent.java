@@ -7,6 +7,33 @@ package com.red5pro.media.sdp;
  */
 public enum SDPUserAgent {
 
-    undefined, chrome, firefox, mozilla, edge, opera, safari, android_chrome, android_firefox, red5pro, obs, app, ffmpeg, gstreamer;
+    /** User agent is not known. */
+    undefined,
+    /** Google Chrome. */
+    chrome,
+    /** Mozilla Firefox. */
+    firefox,
+    /** Generic Mozilla-based agent. */
+    mozilla,
+    /** Microsoft Edge. */
+    edge,
+    /** Opera. */
+    opera,
+    /** Apple Safari. */
+    safari,
+    /** Chrome on Android. */
+    android_chrome,
+    /** Firefox on Android. */
+    android_firefox,
+    /** Red5 Pro client. */
+    red5pro,
+    /** OBS Studio. */
+    obs,
+    /** Native application. */
+    app,
+    /** FFmpeg. */
+    ffmpeg,
+    /** GStreamer. */
+    gstreamer;
 
 }

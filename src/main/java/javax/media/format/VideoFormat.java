@@ -13,10 +13,19 @@ public class VideoFormat extends Format {
 
     private static final long serialVersionUID = 3595293544666171102L;
 
+    /**
+     * Size of a video frame, may be null.
+     */
     protected Dimension size;
 
+    /**
+     * Maximum length of a data chunk, or NOT_SPECIFIED.
+     */
     protected int maxDataLength = NOT_SPECIFIED;
 
+    /**
+     * Frame rate, or NOT_SPECIFIED.
+     */
     protected float frameRate = NOT_SPECIFIED;
 
     /** Raw RGB format. */

@@ -25,14 +25,35 @@
 //
 package com.red5pro.restreamer;
 
+/** Listener notified of restreamer operation outcomes and error conditions. */
 public interface ErrorListener {
 
+    /**
+     * Called when the restreamer operation has completed.
+     *
+     * @param errorHandler handler associated with the operation
+     */
     public void operationComplete(ErrorHandler errorHandler);
 
+    /**
+     * Called when the source was found to contain no valid media.
+     *
+     * @param errorHandler handler associated with the operation
+     */
     public void noValidMedia(ErrorHandler errorHandler);
 
+    /**
+     * Called when the host of the source could not be resolved.
+     *
+     * @param errorHandler handler associated with the operation
+     */
     public void unknownHostError(ErrorHandler errorHandler);
 
+    /**
+     * Called when a stream error occurred.
+     *
+     * @param errorHandler handler associated with the operation
+     */
     public void streamError(ErrorHandler errorHandler);
 
 }

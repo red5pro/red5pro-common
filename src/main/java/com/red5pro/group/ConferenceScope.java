@@ -103,7 +103,11 @@ public class ConferenceScope extends Scope implements IGroupCore {
         return participants.size();// plus mixer program + anecdotal shared objects/etc
     }
 
-    /** Returns the active connection count. */
+    /**
+     * Returns the active connection count.
+     *
+     * @return number of active connections
+     */
     public int getActiveConncetions() {
         int k = super.getActiveConnections();
         log.debug("Active connections {}", k);
@@ -153,6 +157,13 @@ public class ConferenceScope extends Scope implements IGroupCore {
         return null;
     }
 
+    /**
+     * Finds the participant with the given publisher id.
+     *
+     * @param publisherId
+     *            publisher id to match
+     * @return the matching participant or null if none is found
+     */
     public IParticipant getParticipantByPublisherId(String publisherId) {
         Optional<IParticipant> opt = participants.stream().filter(participant -> participant.getPublisherId().equals(publisherId)).findFirst();
         if (opt.isPresent()) {

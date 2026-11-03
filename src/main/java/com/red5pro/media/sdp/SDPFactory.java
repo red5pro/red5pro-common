@@ -33,6 +33,12 @@ import net.minidev.json.JSONObject;
  */
 public final class SDPFactory {
 
+    /**
+     * Creates the factory; all functionality is exposed statically.
+     */
+    public SDPFactory() {
+    }
+
     private static Logger log = LoggerFactory.getLogger(SDPFactory.class);
 
     private static boolean red;
@@ -74,6 +80,7 @@ public final class SDPFactory {
     /**
      * Instance an empty SessionDescription with a given User-Agent.
      *
+     * @param userAgent the user agent associated with the session
      * @return SessionDescription
      */
     public static SessionDescription createSessionDescription(SDPUserAgent userAgent) {
@@ -83,8 +90,8 @@ public final class SDPFactory {
     /**
      * Instance an empty SessionDescription with a given User-Agent.
      *
-     * @param userAgent
-     * @param rawSdp
+     * @param userAgent the user agent that produced or will consume the SDP
+     * @param rawSdp the raw SDP text
      * @return SessionDescription
      */
     public static SessionDescription createSessionDescription(SDPUserAgent userAgent, String rawSdp) {
@@ -99,7 +106,7 @@ public final class SDPFactory {
     /**
      * Instance a SessionDescription from raw SDP content.
      *
-     * @param rawSdp
+     * @param rawSdp the raw SDP text
      * @return SessionDescription
      */
     public static SessionDescription createSessionDescription(String rawSdp) {
@@ -114,8 +121,8 @@ public final class SDPFactory {
     /**
      * Create a SessionDescription given provided information.
      *
-     * @param userName
-     * @param address
+     * @param userName the username for the origin line
+     * @param address the connection or unicast address
      * @return SessionDescription
      */
     public static SessionDescription createSessionDescription(String userName, String address) {
@@ -135,12 +142,12 @@ public final class SDPFactory {
      * Create a SessionDescription given provided information. To exclude audio or
      * video media, pass -1 for the respective port.
      *
-     * @param userName
-     * @param address
-     * @param audioPort
-     * @param audioRTCPPort
-     * @param videoPort
-     * @param videoRTCPPort
+     * @param userName the username for the origin line
+     * @param address the connection or unicast address
+     * @param audioPort the audio RTP port, or -1 to exclude audio
+     * @param audioRTCPPort the audio RTCP port
+     * @param videoPort the video RTP port, or -1 to exclude video
+     * @param videoRTCPPort the video RTCP port
      * @return SessionDescription
      */
     public static SessionDescription createSessionDescription(String userName, String address, int audioPort, int audioRTCPPort, int videoPort, int videoRTCPPort) {
@@ -269,7 +276,7 @@ public final class SDPFactory {
     /**
      * Create offer sdp from ORTC sender capabilities parameters.
      *
-     * @param senderCaps
+     * @param senderCaps the ORTC sender capabilities
      * @return sdp
      */
     public static SessionDescription senderCapabilitiesToSdp(JSONObject senderCaps) {
@@ -384,7 +391,7 @@ public final class SDPFactory {
     /**
      * Create ORTC receiver capabilities parameters from an answer sdp.
      *
-     * @param sdp
+     * @param sdp the session description
      * @return receiver capabilities
      */
     public static String receiverCapabilitiesFromSdp(SessionDescription sdp) {
@@ -431,7 +438,7 @@ public final class SDPFactory {
     /**
      * Creates and returns an origin field given a raw session string from an sdp.
      *
-     * @param origin
+     * @param origin the origin line value
      * @return OriginField
      */
     public static OriginField createOriginField(String origin) {
@@ -452,7 +459,7 @@ public final class SDPFactory {
     /**
      * Creates and returns a session field given a raw session string from an sdp.
      *
-     * @param session
+     * @param session the owning session description
      * @return SessionField
      */
     public static SessionField createSessionField(String session) {
@@ -470,7 +477,7 @@ public final class SDPFactory {
      * Creates and returns a connection field given a raw bandwidth string from an
      * sdp.
      *
-     * @param connection
+     * @param connection the connection line value
      * @return ConnectionField
      */
     public static ConnectionField createConnectionField(String connection) {
@@ -487,7 +494,7 @@ public final class SDPFactory {
      * Creates and returns a bandwidth field given a raw bandwidth string from an
      * sdp.
      *
-     * @param bandwidth
+     * @param bandwidth the bandwidth value
      * @return BandwidthField
      */
     public static BandwidthField createBandwidthField(String bandwidth) {
@@ -506,7 +513,7 @@ public final class SDPFactory {
      * Creates and returns a attribute field given a raw attribute string from an
      * sdp.
      *
-     * @param attribute
+     * @param attribute the attribute to add or process
      * @return AttributeField
      */
     public static AttributeField createAttributeField(String attribute) {
@@ -534,8 +541,8 @@ public final class SDPFactory {
     /**
      * Creates and returns a attribute field.
      *
-     * @param key
-     * @param value
+     * @param key the attribute key
+     * @param value the attribute value
      * @return AttributeField
      */
     public static AttributeField createAttributeField(AttributeKey key, String value) {
@@ -545,9 +552,9 @@ public final class SDPFactory {
     /**
      * Creates and returns a attribute field.
      *
-     * @param key
-     * @param payloadId
-     * @param value
+     * @param key the attribute key
+     * @param payloadId the RTP payload type id
+     * @param value the attribute value
      * @return AttributeField
      */
     public static AttributeField createAttributeField(AttributeKey key, int payloadId, String value) {
@@ -557,10 +564,10 @@ public final class SDPFactory {
     /**
      * Creates and returns a attribute field.
      *
-     * @param key
-     * @param payloadId
-     * @param encoding
-     * @param clockRate
+     * @param key the attribute key
+     * @param payloadId the RTP payload type id
+     * @param encoding the codec encoding name
+     * @param clockRate the codec clock rate in Hz
      * @return AttributeField
      */
     public static AttributeField createAttributeField(AttributeKey key, int payloadId, String encoding, int clockRate) {
@@ -570,11 +577,11 @@ public final class SDPFactory {
     /**
      * Creates and returns a attribute field.
      *
-     * @param key
-     * @param payloadId
-     * @param encoding
-     * @param clockRate
-     * @param channels
+     * @param key the attribute key
+     * @param payloadId the RTP payload type id
+     * @param encoding the codec encoding name
+     * @param clockRate the codec clock rate in Hz
+     * @param channels the number of audio channels
      * @return AttributeField
      */
     public static AttributeField createAttributeField(AttributeKey key, int payloadId, String encoding, int clockRate, int channels) {
@@ -584,7 +591,7 @@ public final class SDPFactory {
     /**
      * Creates and returns a media field given a raw media string from an sdp.
      *
-     * @param media
+     * @param media the media line value
      * @return MediaField
      */
     public static MediaField createMediaField(String media) {
@@ -649,11 +656,11 @@ public final class SDPFactory {
     /**
      * Creates and adds an SDP track with associated fields.
      *
-     * @param sdp
-     * @param type
-     * @param port
-     * @param protocol
-     * @param payloadId
+     * @param sdp the session description
+     * @param type the media type name, such as audio or video
+     * @param port the media port
+     * @param protocol the transport protocol, such as RTP/AVP
+     * @param payloadId the RTP payload type id
      * @return SDPTrack
      */
     public static SDPTrack createTrack(SessionDescription sdp, String type, int port, String protocol, int payloadId) {
@@ -671,8 +678,8 @@ public final class SDPFactory {
     /**
      * Parse raw sdp content into the supplied SessionDescription instance.
      *
-     * @param sdp
-     * @param rawSdp
+     * @param sdp the session description
+     * @param rawSdp the raw SDP text
      */
     private static void parse(SessionDescription sdp, String rawSdp) {
         // holder for current media field / media description

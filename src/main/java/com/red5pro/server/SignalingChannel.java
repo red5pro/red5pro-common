@@ -16,7 +16,16 @@ public class SignalingChannel {
      * Implementation / transport type.
      */
     public static enum Type {
-        RAW, RTMP, WEBSOCKET, DATACHANNEL, RTP;
+        /** Unassigned or unrecognized channel. */
+        RAW,
+        /** RTMP connection. */
+        RTMP,
+        /** WebSocket connection. */
+        WEBSOCKET,
+        /** WebRTC data channel. */
+        DATACHANNEL,
+        /** RTP transport. */
+        RTP;
     };
 
     private final Type type;
@@ -25,11 +34,22 @@ public class SignalingChannel {
     // can't use a shared interface att
     private final Object signalingChannel;
 
+    /**
+     * Creates a signaling channel wrapper.
+     *
+     * @param type the channel implementation type
+     * @param signalingChannel the underlying channel object
+     */
     public SignalingChannel(Type type, Object signalingChannel) {
         this.type = type;
         this.signalingChannel = signalingChannel;
     }
 
+    /**
+     * Returns the number of bytes read from the underlying channel; 0 for types that do not report it.
+     *
+     * @return bytes read
+     */
     public long getReadBytes() {
         switch (type) {
             case WEBSOCKET:
@@ -44,6 +64,11 @@ public class SignalingChannel {
         return 0;
     }
 
+    /**
+     * Returns the number of bytes written to the underlying channel; 0 for types that do not report it.
+     *
+     * @return bytes written
+     */
     public long getWrittenBytes() {
         switch (type) {
             case WEBSOCKET:
@@ -76,10 +101,20 @@ public class SignalingChannel {
         }
     }
 
+    /**
+     * Returns the channel implementation type.
+     *
+     * @return the type
+     */
     public Type getType() {
         return type;
     }
 
+    /**
+     * Returns the underlying channel object.
+     *
+     * @return the channel, cast to the appropriate type for Type
+     */
     public Object getSignalingChannel() {
         return signalingChannel;
     }
@@ -107,7 +142,7 @@ public class SignalingChannel {
     /**
      * Builder for ease of use.
      *
-     * @param signalChannel
+     * @param signalChannel the underlying channel object; its type is inferred from its class
      * @return SignalingChannel
      */
     public final static SignalingChannel build(Object signalChannel) {

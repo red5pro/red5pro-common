@@ -25,6 +25,9 @@
 //
 package com.red5pro.restreamer;
 
+/**
+ * Marker interface for objects that carry or handle restreamer error state; passed to {@link ErrorListener} callbacks.
+ */
 public interface ErrorHandler {
 
 }

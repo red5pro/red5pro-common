@@ -16,14 +16,19 @@ public class IndexedColorFormat extends VideoFormat {
 
     private static final long serialVersionUID = 1122845796602684323L;
 
+    /** Number of bytes per line of the image. */
     protected int lineStride;
 
+    /** Red component of the color map. */
     protected byte[] redValues;
 
+    /** Green component of the color map. */
     protected byte[] greenValues;
 
+    /** Blue component of the color map. */
     protected byte[] blueValues;
 
+    /** Number of entries in the color map. */
     protected int mapSize;
 
     private static String ENCODING = IRGB;
@@ -31,6 +36,19 @@ public class IndexedColorFormat extends VideoFormat {
     static { // for Serializable compatibility.
     }
 
+    /**
+     * Creates an indexed color format.
+     *
+     * @param size frame dimensions
+     * @param maxDataLength maximum data length
+     * @param dataType class of the data
+     * @param frameRate frame rate
+     * @param lineStride number of bytes per line
+     * @param mapSize number of entries in the color map
+     * @param red red color map values
+     * @param green green color map values
+     * @param blue blue color map values
+     */
     public IndexedColorFormat(java.awt.Dimension size, int maxDataLength, Class<?> dataType, float frameRate, int lineStride, int mapSize, byte[] red, byte[] green, byte[] blue) {
         super(ENCODING, size, maxDataLength, dataType, frameRate);
         this.lineStride = lineStride;
@@ -79,22 +97,47 @@ public class IndexedColorFormat extends VideoFormat {
                 this.greenValues == oCast.greenValues && this.blueValues == oCast.blueValues;
     }
 
+    /**
+     * Returns the blue color map values.
+     *
+     * @return blue values
+     */
     public byte[] getBlueValues() {
         return blueValues;
     }
 
+    /**
+     * Returns the green color map values.
+     *
+     * @return green values
+     */
     public byte[] getGreenValues() {
         return greenValues;
     }
 
+    /**
+     * Returns the line stride.
+     *
+     * @return number of bytes per line
+     */
     public int getLineStride() {
         return lineStride;
     }
 
+    /**
+     * Returns the color map size.
+     *
+     * @return number of color map entries
+     */
     public int getMapSize() {
         return mapSize;
     }
 
+    /**
+     * Returns the red color map values.
+     *
+     * @return red values
+     */
     public byte[] getRedValues() {
         return redValues;
     }

@@ -42,12 +42,12 @@ public enum FourCC {
     OPUS('O', 'P', 'U', 'S'),
 
     /**
-     *
+     * Speex audio.
      */
     SPX('S', 'P', 'X', ' '),
 
     /**
-     *
+     * MPEG audio layer 3.
      */
     MP3('M', 'P', '3', ' '),
 
@@ -165,11 +165,11 @@ public enum FourCC {
     /**
      * Returns a FourCC enum based on the supplied characters.
      *
-     * @param a
-     * @param b
-     * @param c
-     * @param d
-     * @return FourCC
+     * @param a first character
+     * @param b second character
+     * @param c third character
+     * @param d fourth character
+     * @return matching FourCC or null if none matches
      */
     public static FourCC getFourCC(char a, char b, char c, char d) {
         int target = FourCC.fourCC(a, b, c, d);
@@ -182,14 +182,12 @@ public enum FourCC {
     }
 
     /**
-     * @param a
-     *            char
-     * @param b
-     *            char
-     * @param c
-     *            char
-     * @param d
-     *            char
+     * Packs four characters into a big-endian integer fourCC code.
+     *
+     * @param a first character
+     * @param b second character
+     * @param c third character
+     * @param d fourth character
      * @return integer fourCC
      */
     public static int fourCC(char a, char b, char c, char d) {
@@ -199,7 +197,7 @@ public enum FourCC {
     /**
      * Returns true if the target FourCC identifier is of audio type.
      *
-     * @param target
+     * @param target FourCC to test
      * @return true if audio and false otherwise
      */
     public static boolean isAudio(FourCC target) {
@@ -209,7 +207,7 @@ public enum FourCC {
     /**
      * Returns true if the target FourCC identifier is of video type.
      *
-     * @param target
+     * @param target FourCC to test
      * @return true if video and false otherwise
      */
     public static boolean isVideo(FourCC target) {

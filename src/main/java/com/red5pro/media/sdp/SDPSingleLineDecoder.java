@@ -21,6 +21,12 @@ import com.red5pro.media.sdp.model.SDPMediaType;
  */
 public class SDPSingleLineDecoder {
 
+    /**
+     * Creates a decoder with an empty session description.
+     */
+    public SDPSingleLineDecoder() {
+    }
+
     private static Logger log = LoggerFactory.getLogger(SDPSingleLineDecoder.class);
 
     // sdp
@@ -29,6 +35,11 @@ public class SDPSingleLineDecoder {
     // holder for current or last media field / media description
     private MediaField mediaField;
 
+    /**
+     * Decodes a single SDP line and applies it to the session description being built.
+     *
+     * @param in the SDP line, may be null or empty
+     */
     public void readLine(String in) {
         if (log.isDebugEnabled()) {
             log.debug("{}", in);
@@ -155,6 +166,11 @@ public class SDPSingleLineDecoder {
         }
     }
 
+    /**
+     * Completes decoding.
+     *
+     * @return the session description built from the lines read
+     */
     public SessionDescription doFinal() {
         return sdp;
     }

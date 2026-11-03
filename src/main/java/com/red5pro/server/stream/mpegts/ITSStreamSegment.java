@@ -5,6 +5,11 @@ package com.red5pro.server.stream.mpegts;
  */
 public interface ITSStreamSegment {
 
+    /**
+     * Returns the segment identifier.
+     *
+     * @return segment id
+     */
     int getId();
 
 }

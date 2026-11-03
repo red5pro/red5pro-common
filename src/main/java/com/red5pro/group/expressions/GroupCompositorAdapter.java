@@ -25,6 +25,13 @@ import com.red5pro.override.IProStream;
  */
 public class GroupCompositorAdapter implements ExpressionCompositor {
 
+    /**
+     * Creates a new compositor adapter.
+     */
+    public GroupCompositorAdapter() {
+    }
+
+    /** Logger, assigned by subclasses. */
     protected Logger log = null;// LoggerFactory.getLogger(GroupCompositorAdapter.class);
 
     /**
@@ -52,8 +59,10 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
      */
     protected WeakReference<Provision> provisionRef = new WeakReference<>(null);
 
+    /** Number of audio tracks, defaults to 3. */
     protected int audioTrackCount = 3;
 
+    /** Number of video tracks, defaults to 1. */
     protected int videoTrackCount = 1;
 
     /**
@@ -202,11 +211,19 @@ public class GroupCompositorAdapter implements ExpressionCompositor {
         this.owner = owner;
     }
 
+    /**
+     * Called when the main program stream, named after the provision stream name, goes live.
+     *
+     * @param stream the main program stream
+     */
     public void mainProgramStart(IProStream stream) {
         log.info("main start");
         hasMain = true;
     }
 
+    /**
+     * Called when the main program stream stops; releases this compositor from the registries if nothing else references it.
+     */
     public void mainProgramStop() {
         log.info("main stop");
         hasMain = false;

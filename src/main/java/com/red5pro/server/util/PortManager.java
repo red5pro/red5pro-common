@@ -19,6 +19,12 @@ import org.slf4j.LoggerFactory;
  */
 public class PortManager {
 
+    /**
+     * Creates a port manager; all functionality is exposed statically.
+     */
+    public PortManager() {
+    }
+
     private static Logger log = LoggerFactory.getLogger(PortManager.class);
 
     private static boolean isDebug = log.isDebugEnabled();
@@ -372,6 +378,11 @@ public class PortManager {
         portUpdater.set(instance, (rtpPortBase - 1));
     }
 
+    /**
+     * Sets the highest port number that can be allocated (inclusive); values above 65535 are reduced to 65535.
+     *
+     * @param rtpPortCeiling the highest port to allocate
+     */
     public static void setRtpPortCeiling(int rtpPortCeiling) {
         if (rtpPortCeiling > MAX_PORT) {
             log.warn("Invalid max port: {}; defaulting to {}", rtpPortCeiling, MAX_PORT);
@@ -383,7 +394,7 @@ public class PortManager {
     /**
      * Set the socket timeout for availability checks.
      *
-     * @param soTimeoutMs
+     * @param soTimeoutMs timeout in milliseconds
      */
     public static void setSoTimeout(int soTimeoutMs) {
         PortManager.soTimeoutMs = soTimeoutMs;
@@ -402,7 +413,7 @@ public class PortManager {
     /**
      * Allows for using system ports, which may exceed the port range specified.
      *
-     * @param allowSystemPorts
+     * @param allowSystemPorts true to allow ports outside the configured range
      */
     public static void setAllowSystemPorts(boolean allowSystemPorts) {
         PortManager.allowSystemPorts = allowSystemPorts;

@@ -8,43 +8,44 @@ package com.red5pro.service;
  */
 public interface IMessageDispatchService {
 
+    /** Bean name of the message service. */
     public static final String NAME = "messageService";
 
     /**
      * Send a message with the given identifier to the destination path.
      *
-     * @param sender
+     * @param sender identifier of the sender
      * @param destination where we're sending to
-     * @param message
+     * @param message the message text
      */
     void sendMessage(String sender, String destination, String message);
 
     /**
      * Send a message with the given identifier to the destination path.
      *
-     * @param sender
+     * @param sender identifier of the sender
      * @param destination where we're sending to
      * @param expirationTime time at which this expires
-     * @param message
+     * @param message the message text
      */
     void sendMessage(String sender, String destination, long expirationTime, String message);
 
     /**
      * Send a binary message with the given identifier to the destination path.
      *
-     * @param sender
+     * @param sender identifier of the sender
      * @param destination where we're sending to
-     * @param message
+     * @param message the binary message payload
      */
     void sendBinaryMessage(String sender, String destination, byte[] message);
 
     /**
      * Send a binary message with the given identifier to the destination path.
      *
-     * @param sender
+     * @param sender identifier of the sender
      * @param destination where we're sending to
      * @param expirationTime time at which this expires
-     * @param message
+     * @param message the binary message payload
      */
     void sendBinaryMessage(String sender, String destination, long expirationTime, byte[] message);
 

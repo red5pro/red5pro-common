@@ -17,6 +17,25 @@ Classes to support networking are as follows:
 * `PROPERTIES` - checks `PUBLIC_IP` and `LOCAL_IP` environment variables first, then the `public.ip` and `local.ip` JVM system properties, then the `force.public.ip` and `force.local.ip` values in `network.properties`.
 * `AWS` - reads public and local addresses from the EC2 instance metadata service. If a public address lookup returns no value, it falls back to the configured IP check service.
 
+### Requirements
+
+* JDK 25 or newer (the project compiles with `maven.compiler.release=25`)
+* Maven 3.9 or newer
+
+The build enforces both minimums. If a local `~/.mavenrc` sets `JAVA_HOME` to an older JDK, Maven will fail with `release version 25 not supported`; point it at a JDK 25 install or bypass it with `MAVEN_SKIP_RC=1`.
+
+### Building
+
+```sh
+# build the jar, sources and javadoc (tests are skipped by default)
+mvn clean package
+
+# build and run the tests
+mvn clean package -DskipTests=false
+```
+
+Some network tests read `src/test/resources/conf/network.properties`, and the AWS topology test adapts to whether the EC2 metadata service is reachable.
+
 ### Maven
 
 Including in your maven pom is as easy as adding this xml to your dependencies
@@ -25,7 +44,7 @@ Including in your maven pom is as easy as adding this xml to your dependencies
 <dependency>
     <groupId>com.red5pro</groupId>
     <artifactId>red5pro-common</artifactId>
-    <version>16.3.0.0</version>
+    <version>17.0.0.0</version>
     <scope>provided</scope>
 </dependency>
 ```

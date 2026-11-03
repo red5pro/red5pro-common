@@ -36,6 +36,13 @@ package com.red5pro.override.cauldron;
  * @author Andy Shaules
  */
 public class ProcessConfiguration {
+
+    /**
+     * Creates a configuration with default settings.
+     */
+    public ProcessConfiguration() {
+    }
+
     /**
      * Processor basic type
      *

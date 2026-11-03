@@ -21,24 +21,39 @@ public class WireMessage implements Serializable {
 
     private static final long serialVersionUID = 403903837133L;
 
-    // use for serialization in amf / notify with custom
-    public transient final static byte BINARY = 0x33, STRING = 0x34, JSON = 0x35;
+    /** Type markers used for serialization in amf / notify with custom: binary payload. */
+    public transient final static byte BINARY = 0x33;
 
-    protected String sender, destination, label;
+    /** Type marker for a string payload. */
+    public transient final static byte STRING = 0x34;
 
-    // can be byte[] or String or JsonElement
+    /** Type marker for a json payload. */
+    public transient final static byte JSON = 0x35;
+
+    /** Id of the content sender. */
+    protected String sender;
+
+    /** Locator used for routing. */
+    protected String destination;
+
+    /** Location within a destination. */
+    protected String label;
+
+    /** Message payload; can be byte[] or String or JsonElement. */
     protected Object message;
 
-    // whether or not message is binary
+    /** Whether or not the message is binary. */
     protected boolean binary;
 
-    // whther or not message is json
+    /** Whether or not the message is json. */
     protected boolean json;
 
-    // base hash code generated in ctor
+    /** Base hash code generated in the constructor. */
     protected transient int hashCode;
 
-    // default ctor for serialization
+    /**
+     * Default constructor, used for serialization.
+     */
     public WireMessage() {
     }
 
@@ -48,7 +63,7 @@ public class WireMessage implements Serializable {
      * @param sender id of the content sender
      * @param destination locator for routing
      * @param label location within a destination
-     * @param message
+     * @param message the binary payload
      */
     public WireMessage(String sender, String destination, String label, byte[] message) {
         this.sender = sender;
@@ -65,7 +80,7 @@ public class WireMessage implements Serializable {
      * @param sender id of the content sender
      * @param destination locator for routing
      * @param label location within a destination
-     * @param message
+     * @param message the text payload; treated as json if wrapped in braces
      */
     public WireMessage(String sender, String destination, String label, String message) {
         this.sender = sender;
@@ -88,7 +103,8 @@ public class WireMessage implements Serializable {
      * @param sender id of the content sender
      * @param destination locator for routing
      * @param label location within a destination
-     * @param message
+     * @param isBinary true if the message is a byte[] payload
+     * @param message the payload as byte[], JsonElement, or String
      */
     public WireMessage(boolean isBinary, String sender, String destination, String label, Object message) {
         this.sender = sender;
@@ -122,38 +138,83 @@ public class WireMessage implements Serializable {
         hashCode = 33 * hashCode + ((label == null) ? 0 : label.hashCode());
     }
 
+    /**
+     * Returns the id of the content sender.
+     *
+     * @return the sender
+     */
     public String getSender() {
         return sender;
     }
 
+    /**
+     * Returns the routing destination.
+     *
+     * @return the destination
+     */
     public String getDestination() {
         return destination;
     }
 
+    /**
+     * Returns the location within the destination.
+     *
+     * @return the label
+     */
     public String getLabel() {
         return label;
     }
 
+    /**
+     * Returns the raw message payload.
+     *
+     * @return a byte[], String, or JsonElement
+     */
     public Object getMessage() {
         return message;
     }
 
+    /**
+     * Indicates whether the payload is binary.
+     *
+     * @return true if binary
+     */
     public boolean isBinary() {
         return binary;
     }
 
+    /**
+     * Indicates whether the payload is json.
+     *
+     * @return true if json
+     */
     public boolean isJson() {
         return json;
     }
 
+    /**
+     * Returns the payload as binary.
+     *
+     * @return the payload bytes
+     */
     public byte[] getBinaryMessage() {
         return (byte[]) message;
     }
 
+    /**
+     * Returns the payload as a string.
+     *
+     * @return the payload string
+     */
     public String getStringMessage() {
         return (String) message;
     }
 
+    /**
+     * Returns the payload as a json object.
+     *
+     * @return the payload json object
+     */
     public JsonObject getJsonMessage() {
         return (JsonObject) message;
     }
@@ -207,7 +268,7 @@ public class WireMessage implements Serializable {
     /**
      * Wrap a wire message in an event.
      *
-     * @param wireMessage
+     * @param wireMessage the message to wrap
      * @return event containing the wire message
      */
     public static IEvent toEvent(WireMessage wireMessage) {
@@ -235,6 +296,12 @@ public class WireMessage implements Serializable {
         return event;
     }
 
+    /**
+     * Serializes this message to the given stream.
+     *
+     * @param out the output stream
+     * @throws IOException if writing fails
+     */
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeBoolean(binary);
         out.writeBoolean(json);
@@ -250,6 +317,13 @@ public class WireMessage implements Serializable {
         }
     }
 
+    /**
+     * Restores this message from the given stream.
+     *
+     * @param in the input stream
+     * @throws IOException if reading fails
+     * @throws ClassNotFoundException if a serialized class cannot be found
+     */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         // determine if the message is binary first
         binary = in.readBoolean();

@@ -13,6 +13,8 @@ import com.red5pro.override.IProStream;
  */
 public interface IRTCStreamSession {
     /**
+     * Returns the identifier of this session.
+     *
      * @return session Id
      */
     String getSessionId();
@@ -41,14 +43,41 @@ public interface IRTCStreamSession {
      */
     long getCreated();
 
+    /**
+     * Returns the WebRTC stream for this session.
+     *
+     * @return RTC stream
+     */
     IRTCStream getRtcStream();
 
+    /**
+     * Returns the pro stream associated with this session.
+     *
+     * @return pro stream
+     */
     IProStream getProStream();
 
+    /**
+     * Replaces the pro stream associated with this session.
+     *
+     * @param stream
+     *            new pro stream
+     */
     void updateProStream(IProStream stream);
 
+    /**
+     * Returns the future tracking asynchronous creation of the session.
+     *
+     * @return creation future
+     */
     Future<?> getCreationFuture();
 
+    /**
+     * Sets the future tracking asynchronous creation of the session.
+     *
+     * @param createFuture
+     *            creation future
+     */
     void setCreationFuture(Future<Boolean> createFuture);
 
     /**
@@ -150,11 +179,26 @@ public interface IRTCStreamSession {
      */
     boolean isFirefox();
 
+    /**
+     * Returns true if the client user agent is Microsoft Edge.
+     *
+     * @return true if Edge and false otherwise
+     */
     boolean isEdge();
 
     // http://useragentstring.com/pages/useragentstring.php?name=Safari
+    /**
+     * Returns true if the client user agent is Safari.
+     *
+     * @return true if Safari and false otherwise
+     */
     boolean isSafari();
 
+    /**
+     * Returns true if the client user agent is Postman.
+     *
+     * @return true if Postman and false otherwise
+     */
     boolean isPostman();
 
     /**
@@ -207,8 +251,19 @@ public interface IRTCStreamSession {
      */
     boolean isOkHttp();
 
+    /**
+     * Sets the time at which the session expires.
+     *
+     * @param expires
+     *            expiration time in milliseconds
+     */
     void setExpirationTime(long expires);
 
+    /**
+     * Returns the time at which the session expires.
+     *
+     * @return expiration time in milliseconds
+     */
     long getExpirationTime();
 
     /**

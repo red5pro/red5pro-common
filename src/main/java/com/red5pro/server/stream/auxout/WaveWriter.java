@@ -8,6 +8,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Auxiliary output that writes received PCM samples to a WAVE file on a background thread.
+ */
 public class WaveWriter implements AuxOut {
     /**
      * Format of decoded auxiliary out. Currently only pcm supported though aux
@@ -21,10 +24,13 @@ public class WaveWriter implements AuxOut {
 
     private static final long WAVE_FMT = 6287401410857104416l; // 'WAVEfmt '
 
+    /** WAVE format tag for uncompressed PCM. */
     public static final short WAVE_FORMAT_PCM = 0x0001;
 
+    /** WAVE format tag for A-law. */
     public static final short WAVE_FORMAT_ALAW = 0x0006;
 
+    /** WAVE format tag for mu-law. */
     public static final short WAVE_FORMAT_MULAW = 0x0007;
 
     private static final int DATA = 1684108385; // 'data'
@@ -107,6 +113,8 @@ public class WaveWriter implements AuxOut {
 
     /**
      * Receive decoded PCMs
+     *
+     * @param samples the decoded samples to queue for writing
      */
     public void packetReceived(WaveSamples samples) {
         if (this.channels == 0) {
@@ -172,6 +180,9 @@ public class WaveWriter implements AuxOut {
         }
     }
 
+    /**
+     * Stops the writer thread, waiting briefly for it to flush and finalize the file.
+     */
     public void stop() {
         this.doRun = false;
         try {
@@ -201,30 +212,65 @@ public class WaveWriter implements AuxOut {
         out.close();
     }
 
+    /**
+     * Returns the channel count.
+     *
+     * @return number of channels
+     */
     public int getChannels() {
         return channels;
     }
 
+    /**
+     * Sets the channel count.
+     *
+     * @param channels number of channels
+     */
     public void setChannels(int channels) {
         this.channels = channels;
     }
 
+    /**
+     * Returns the sample rate.
+     *
+     * @return sample rate
+     */
     public int getRate() {
         return rate;
     }
 
+    /**
+     * Sets the sample rate.
+     *
+     * @param rate sample rate
+     */
     public void setRate(int rate) {
         this.rate = rate;
     }
 
+    /**
+     * Returns the FourCC of the decoded auxiliary output format (PCM).
+     *
+     * @return format code
+     */
     public int getFormat() {
         return Format;
     }
 
+    /**
+     * Returns the bit depth.
+     *
+     * @return bits per sample
+     */
     public int getBitsPerSample() {
         return bitsPerSample;
     }
 
+    /**
+     * Returns the file size, including the 44 byte header.
+     *
+     * @return size in bytes
+     */
     public long getSize() {
         return bytesWritten + 44;
     }

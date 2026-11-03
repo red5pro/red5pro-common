@@ -35,28 +35,48 @@ import org.red5.server.api.IConnection;
  */
 public class ConnectionUtils {
 
+    /**
+     * Creates a new instance; this class primarily exposes static helpers.
+     */
+    public ConnectionUtils() {
+    }
+
+    /**
+     * Known connection types, each mapped to the canonical class name of its connection implementation.
+     */
     public enum ConnectionType {
         // fall-through for unknown or unimplemented connection type
+        /** Unknown or unimplemented connection type. */
         UNKNOWN("null"),
         // RTMP connection
+        /** RTMP connection. */
         RTMP("org.red5.server.net.rtmp.RTMPMinaConnection"),
         // RTMPT connection
+        /** RTMPT (tunneled RTMP) connection. */
         RTMPT("org.red5.server.net.rtmpt.RTMPTConnection"),
         // RTSP connection
+        /** RTSP connection. */
         RTSP("com.red5pro.server.stream.rtsp.RTSPMinaConnection"),
         // SecondScreen connection
+        /** Second screen connection. */
         SECOND_SCREEN_MULTI("com.red5pro.server.secondscreen.net.MultiscreenMinaConnection"),
         // SecondScreen via WebSocket connection
+        /** Second screen over WebSocket connection. */
         SECOND_SCREEN_WS("com.red5pro.server.html5.websockets.net.WebsocketsMinaConnection"),
         // WebRTC connection
+        /** WebRTC connection. */
         RTC("com.red5pro.webrtc.RTCConnection"),
         // WebRTC WHIP/WHEP connection
+        /** WebRTC WHIP/WHEP connection. */
         WHIP_WHEP("com.red5pro.whip.WHConnection"),
         // MPEG-TS connection
+        /** MPEG-TS connection. */
         MPEGTS("com.red5pro.mpegts.MPEGTSConnection"),
         // SRT
+        /** SRT connection. */
         SRT("com.red5pro.srt.SRTConnection"),
         // Shared Object connection
+        /** Shared object capable connection. */
         SHARED_OBJECT("com.red5pro.server.so.SharedObjectCapableConnection");
 
         final String className;
@@ -65,10 +85,21 @@ public class ConnectionUtils {
             this.className = className;
         }
 
+        /**
+         * Returns the canonical class name of the connection implementation for this type.
+         *
+         * @return the canonical class name
+         */
         public String getClassName() {
             return className;
         }
 
+        /**
+         * Finds the connection type whose class name matches the given name.
+         *
+         * @param canonicalName canonical class name of a connection implementation
+         * @return the matching type, or UNKNOWN if there is no match
+         */
         public static Enum<ConnectionType> findByClassName(String canonicalName) {
             for (ConnectionType type : ConnectionType.values()) {
                 if (type.getClassName().equals(canonicalName)) {

@@ -25,39 +25,74 @@ public class ConnectionField {
 
     private String address = "0.0.0.0";
 
+    /** Creates a connection field with the default IN IP4 0.0.0.0 values. */
     public ConnectionField() {
     }
 
+    /**
+     * Creates a connection field for the given address using the default IN IP4 types.
+     * @param address the connection address
+     */
     public ConnectionField(String address) {
         this.address = address;
     }
 
+    /**
+     * Creates a fully specified connection field.
+     * @param address the connection address
+     * @param networkType the network type
+     * @param addressType the address type
+     */
     public ConnectionField(String address, NetworkManager.NetworkType networkType, NetworkManager.AddressType addressType) {
         this.address = address;
         this.networkType = networkType;
         this.addressType = addressType;
     }
 
+    /**
+     * Returns the network type.
+     * @return the network type
+     */
     public NetworkManager.NetworkType getNetworkType() {
         return networkType;
     }
 
+    /**
+     * Sets the network type.
+     * @param networkType the network type
+     */
     public void setNetworkType(NetworkManager.NetworkType networkType) {
         this.networkType = networkType;
     }
 
+    /**
+     * Returns the address type.
+     * @return the address type
+     */
     public NetworkManager.AddressType getAddressType() {
         return addressType;
     }
 
+    /**
+     * Sets the address type.
+     * @param addressType the address type
+     */
     public void setAddressType(NetworkManager.AddressType addressType) {
         this.addressType = addressType;
     }
 
+    /**
+     * Returns the connection address.
+     * @return the address
+     */
     public String getAddress() {
         return address;
     }
 
+    /**
+     * Sets the connection address.
+     * @param address the address
+     */
     public void setAddress(String address) {
         this.address = address;
     }

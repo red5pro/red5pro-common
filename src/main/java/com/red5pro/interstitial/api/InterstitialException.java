@@ -9,6 +9,12 @@ package com.red5pro.interstitial.api;
 public class InterstitialException extends Exception {
     private static final long serialVersionUID = 4290284386325006776L;
 
+    /**
+     * Creates an exception with the given message.
+     *
+     * @param msg
+     *            error message
+     */
     public InterstitialException(String msg) {
         super(msg);
     }

@@ -34,7 +34,7 @@ public interface ExpressionCompositor {
     /**
      * Sets the local provision reference.
      *
-     * @param provision
+     * @param provision the provision to reference
      */
     void setProvision(Provision provision);
 
@@ -108,7 +108,7 @@ public interface ExpressionCompositor {
     /**
      * Push a group event into the compositor.
      *
-     * @param event
+     * @param event the event to push
      */
     void push(GroupEvent event);
 
@@ -121,29 +121,33 @@ public interface ExpressionCompositor {
     void doExpressionEvent(GroupEvent event);
 
     /**
+     * Adds a participant to this compositor.
      *
-     * @param participant
+     * @param participant the participant to add
      * @return true if added. False if compositor was stopped or is already added.
      */
     public boolean addParticipant(IParticipant participant);
 
     /**
+     * Removes a participant from this compositor.
      *
-     * @param id
-     * @return
+     * @param id the participant id
+     * @return true if the participant was removed
      */
     public boolean removeParticipant(String id);
 
     /**
+     * Returns a participant by id.
      *
-     * @param id
-     * @return
+     * @param id the participant id
+     * @return the participant or null if not found
      */
     public IParticipant getParticipant(String id);
 
     /**
+     * Returns the number of participants in this compositor.
      *
-     * @return
+     * @return participant count
      */
     public int getParticipantCount();
 
@@ -155,7 +159,7 @@ public interface ExpressionCompositor {
     /**
      * Stream with context and name matching this objects Provision has started.
      *
-     * @param stream
+     * @param stream the stream that started
      */
     public void mainProgramStart(IProStream stream);
 

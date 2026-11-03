@@ -18,6 +18,8 @@ public class InterstitialDurationControl {
     private boolean isPaused;
 
     /**
+     * Creates a duration control that starts out paused.
+     *
      * @param type
      *            duration control type
      * @param duration
@@ -97,6 +99,11 @@ public class InterstitialDurationControl {
         this.start = streamTimeStart;
     }
 
+    /**
+     * Returns how time is measured for this control.
+     *
+     * @return the clock type
+     */
     public InterstitialDurationControlType getLifeCycle() {
         return lifeCycle;
     }

@@ -43,12 +43,24 @@ import com.red5pro.util.ProvisionAdapter;
  */
 public class Provision {
 
+    /**
+     * Parameter key for the user name credential.
+     */
     public final static String Param_Username = "username";
 
+    /**
+     * Parameter key for the password credential.
+     */
     public final static String Param_Password = "password";
 
+    /**
+     * Parameter key for the authentication token.
+     */
     public final static String Param_Token = "token";
 
+    /**
+     * Parameter key for the quality of service setting.
+     */
     public final static String Param_QOS = "qos";
 
     /**
@@ -180,6 +192,9 @@ public class Provision {
      */
     public final static String Param_Dynamic = "dynamic";
 
+    /**
+     * Parameter key for strict processing mode.
+     */
     public final static String Param_Strict = "strict";
 
     /**
@@ -187,8 +202,14 @@ public class Provision {
      */
     public final static String Param_HardwareKey = "hardware";
 
+    /**
+     * Parameter key to enable debug output.
+     */
     public final static String Param_Debug = "debug";
 
+    /**
+     * Parameter key to enable encoder debug output.
+     */
     public final static String Param_Debug_Enc = "debug_enc";
 
     /**
@@ -249,58 +270,128 @@ public class Provision {
         this.parameters = parameters;
     }
 
+    /**
+     * Returns the unique identifier of this provision, derived from the context path and stream name.
+     *
+     * @return the guid
+     */
     public String getGuid() {
         return guid;
     }
 
+    /**
+     * Returns the application scope path of the stream.
+     *
+     * @return the context path
+     */
     public String getContextPath() {
         return contextPath;
     }
 
+    /**
+     * Returns the name of the stream.
+     *
+     * @return the stream name
+     */
     public String getStreamName() {
         return streamName;
     }
 
+    /**
+     * Returns the quality level of the stream; used to order variants of the same stream.
+     *
+     * @return the quality level
+     */
     public int getQualityLevel() {
         return qualityLevel;
     }
 
+    /**
+     * Returns the restrictions applied to the stream.
+     *
+     * @return the restrictions, may be null
+     */
     public Restrictions getRestrictions() {
         return restrictions;
     }
 
+    /**
+     * Returns the map of provision parameters keyed by the Param_ constants.
+     *
+     * @return the parameters
+     */
     public Map<String, Object> getParameters() {
         return parameters;
     }
 
+    /**
+     * Returns the primary ingest points for the stream.
+     *
+     * @return the primary ingests, may be null
+     */
     public List<Ingest> getPrimaries() {
         return primaries;
     }
 
+    /**
+     * Sets the primary ingest points for the stream.
+     *
+     * @param primaries the primary ingests
+     */
     public void setPrimaries(List<Ingest> primaries) {
         this.primaries = primaries;
     }
 
+    /**
+     * Returns the secondary ingest points for the stream.
+     *
+     * @return the secondary ingests, may be null
+     */
     public List<Ingest> getSecondaries() {
         return secondaries;
     }
 
+    /**
+     * Sets the secondary ingest points for the stream.
+     *
+     * @param secondaries the secondary ingests
+     */
     public void setSecondaries(List<Ingest> secondaries) {
         this.secondaries = secondaries;
     }
 
+    /**
+     * Returns the stream name alias used for publishing.
+     *
+     * @return the publish alias, may be null
+     */
     public String getStreamNameAlias() {
         return streamNameAlias;
     }
 
+    /**
+     * Sets the stream name alias used for publishing.
+     *
+     * @param streamNameAlias the publish alias
+     */
     public void setStreamNameAlias(String streamNameAlias) {
         this.streamNameAlias = streamNameAlias;
     }
 
+    /**
+     * Returns the stream name aliases usable for subscription.
+     *
+     * @return the subscription aliases, may be null
+     */
     public Set<String> getAliases() {
         return aliases;
     }
 
+    /**
+     * Sets the stream name aliases usable for subscription.
+     *
+     * @param aliases the subscription aliases
+     */
     public void setAliases(Set<String> aliases) {
         this.aliases = aliases;
     }
@@ -338,18 +429,54 @@ public class Provision {
         return gson;
     }
 
+    /**
+     * Creates a Provision from its JSON representation.
+     *
+     * @param json the JSON string
+     * @return the deserialized Provision
+     */
     public static Provision buildFromJson(String json) {
         return gson.fromJson(json, Provision.class);
     }
 
+    /**
+     * Creates a Provision with an explicit guid, no restrictions and empty parameters.
+     *
+     * @param guid the unique identifier
+     * @param contextPath the application scope path
+     * @param streamName the stream name
+     * @param qualityLevel the quality level
+     * @return the new Provision
+     */
     public static Provision build(String guid, String contextPath, String streamName, int qualityLevel) {
         return new Provision(guid, contextPath, streamName, qualityLevel, null, new HashMap<>());
     }
 
+    /**
+     * Creates a Provision with an explicit guid.
+     *
+     * @param guid the unique identifier
+     * @param contextPath the application scope path
+     * @param streamName the stream name
+     * @param qualityLevel the quality level
+     * @param restrictions the stream restrictions, may be null
+     * @param parameters the provision parameters
+     * @return the new Provision
+     */
     public static Provision build(String guid, String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
         return new Provision(guid, contextPath, streamName, qualityLevel, restrictions, parameters);
     }
 
+    /**
+     * Creates a Provision whose guid is derived from the context path and stream name.
+     *
+     * @param contextPath the application scope path
+     * @param streamName the stream name
+     * @param qualityLevel the quality level
+     * @param restrictions the stream restrictions, may be null
+     * @param parameters the provision parameters
+     * @return the new Provision
+     */
     public static Provision build(String contextPath, String streamName, int qualityLevel, Restrictions restrictions, Map<String, Object> parameters) {
         return new Provision(makeGuid(contextPath, streamName), contextPath, streamName, qualityLevel, restrictions, parameters);
     }

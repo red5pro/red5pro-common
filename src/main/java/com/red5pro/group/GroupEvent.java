@@ -97,6 +97,11 @@ public class GroupEvent implements IEvent {
         return source != null;
     }
 
+    /**
+     * Returns the FourCC designation of the event data (transport, container or media type).
+     *
+     * @return the FourCC
+     */
     public FourCC getFourCC() {
         return fourCC;
     }
@@ -113,6 +118,11 @@ public class GroupEvent implements IEvent {
     // return sourceId;
     // }
 
+    /**
+     * Returns the event timestamp.
+     *
+     * @return creation time in milliseconds, or the explicitly supplied timestamp
+     */
     public long getTimestamp() {
         return timestamp;
     }
@@ -150,38 +160,113 @@ public class GroupEvent implements IEvent {
         return "GroupEvent [type=" + type + ", fourCC=" + fourCC + ", timestamp=" + timestamp + ", source=" + source + ", data=" + data + "]";
     }
 
+    /**
+     * Builds an event with no source and undefined FourCC.
+     *
+     * @param type the event type
+     * @param data the event payload
+     * @return the new event
+     */
     public static GroupEvent build(Type type, Object data) {
         return new GroupEvent(type, null, data);
     }
 
+    /**
+     * Builds a STREAM_DATA event with no source.
+     *
+     * @param data the event payload
+     * @param fourCC the data FourCC
+     * @return the new event
+     */
     public static GroupEvent build(Object data, FourCC fourCC) {
         return new GroupEvent(Type.STREAM_DATA, null, data, fourCC);
     }
 
+    /**
+     * Builds a STREAM_DATA event with no source; the source id is currently not retained.
+     *
+     * @param data the event payload
+     * @param fourCC the data FourCC
+     * @param sourceId the id of the originating publisher
+     * @return the new event
+     */
     public static GroupEvent build(Object data, FourCC fourCC, String sourceId) {
         return new GroupEvent(Type.STREAM_DATA, data, fourCC, sourceId);
     }
 
+    /**
+     * Builds an event with the given source and undefined FourCC.
+     *
+     * @param type the event type
+     * @param source the originator of the event
+     * @param data the event payload
+     * @return the new event
+     */
     public static GroupEvent build(Type type, IEventListener source, Object data) {
         return new GroupEvent(type, source, data);
     }
 
+    /**
+     * Builds an event with the given source and FourCC.
+     *
+     * @param type the event type
+     * @param source the originator of the event
+     * @param data the event payload
+     * @param fourCC the data FourCC
+     * @return the new event
+     */
     public static GroupEvent build(Type type, IEventListener source, Object data, FourCC fourCC) {
         return new GroupEvent(type, source, data, fourCC);
     }
 
+    /**
+     * Builds a STREAM_DATA event with the given source.
+     *
+     * @param source the originator of the event
+     * @param data the event payload
+     * @param fourCC the data FourCC
+     * @return the new event
+     */
     public static GroupEvent build(IEventListener source, Object data, FourCC fourCC) {
         return new GroupEvent(Type.STREAM_DATA, source, data, fourCC);
     }
 
+    /**
+     * Builds an event with an explicit timestamp.
+     *
+     * @param type the event type
+     * @param source the originator of the event
+     * @param data the event payload
+     * @param fourCC the data FourCC
+     * @param timestamp the event timestamp in milliseconds
+     * @return the new event
+     */
     public static GroupEvent build(Type type, IEventListener source, Object data, FourCC fourCC, long timestamp) {
         return new GroupEvent(type, source, data, fourCC, timestamp);
     }
 
+    /**
+     * Builds a STREAM_DATA event with an explicit timestamp.
+     *
+     * @param source the originator of the event
+     * @param data the event payload
+     * @param fourCC the data FourCC
+     * @param timestamp the event timestamp in milliseconds
+     * @return the new event
+     */
     public static GroupEvent build(IEventListener source, Object data, FourCC fourCC, long timestamp) {
         return new GroupEvent(Type.STREAM_DATA, source, data, fourCC, timestamp);
     }
 
+    /**
+     * Builds a STREAM_DATA event with no source and an explicit timestamp; the source id is currently not retained.
+     *
+     * @param data the event payload
+     * @param fourCC the data FourCC
+     * @param timestamp the event timestamp in milliseconds
+     * @param sourceId the id of the originating publisher
+     * @return the new event
+     */
     public static GroupEvent build(Object data, FourCC fourCC, long timestamp, String sourceId) {
         return new GroupEvent(Type.STREAM_DATA, data, fourCC, timestamp, sourceId);
     }

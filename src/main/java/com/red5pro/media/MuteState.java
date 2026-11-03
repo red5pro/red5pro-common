@@ -13,6 +13,11 @@ package com.red5pro.media;
  */
 public enum MuteState {
 
-    UNDEFINED, NOT_MUTED, MUTED;
+    /** No mute state; represents anything else such as non-existence. */
+    UNDEFINED,
+    /** Not muted. */
+    NOT_MUTED,
+    /** Muted. */
+    MUTED;
 
 }

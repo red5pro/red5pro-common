@@ -23,11 +23,18 @@ import org.slf4j.LoggerFactory;
  */
 public class IdGenerator {
 
+    /**
+     * Creates an IdGenerator.
+     */
+    public IdGenerator() {
+    }
+
     private static Logger log = LoggerFactory.getLogger(IdGenerator.class);
 
     private static final DigestRandomGenerator random = new DigestRandomGenerator(new SHA1Digest());
 
     // random numeric string generator - thread safe and immutable
+    /** Generator of random strings of the digits 1 through 9 */
     public static RandomStringGenerator randomNumericStringGenerator = RandomStringGenerator.builder().withinRange('1', '9').get();
 
     private static MessageDigest md;
@@ -105,6 +112,7 @@ public class IdGenerator {
      * Generates a random numeric string with a given length.
      *
      * @param length
+     *            number of characters, capped at 1024
      * @return String
      */
     public static final String generateNumericStringId(int length) {

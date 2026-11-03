@@ -1,5 +1,8 @@
 package com.red5pro.canvas;
 
+/**
+ * Supplies the canvas engine with lifecycle notifications and with video and audio frames to render and mix.
+ */
 public interface FrameProvider {
     /**
      * Engine is starting.
@@ -10,6 +13,7 @@ public interface FrameProvider {
     void startCanvas(long startTime);
 
     /**
+     * Draws a video frame.
      *
      * @param video
      *            yu12 buffer. packed.
@@ -19,6 +23,7 @@ public interface FrameProvider {
     void drawVideo(byte[] video, long time);
 
     /**
+     * Supplies audio samples for a frame.
      *
      * @param audio
      *            sample buffer, 1024 samples per frame for AAC.

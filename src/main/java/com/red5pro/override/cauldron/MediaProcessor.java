@@ -39,6 +39,9 @@ import java.util.List;
  */
 public interface MediaProcessor {
 
+    /**
+     * Registered process listeners.
+     */
     static List<MediaProcessorAware> listeners = new ArrayList<>();
 
     /**

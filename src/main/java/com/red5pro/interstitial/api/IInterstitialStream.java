@@ -59,11 +59,14 @@ public interface IInterstitialStream {
     public void removeStreamListener(IStreamListener streamListener);
 
     /**
+     * Returns the interstitial engine of this stream.
+     *
      * @return the stream's IInterstitialEngine
      */
     public IInterstitialEngine getInterstitialEngine();
 
     /**
+     * Returns the name this stream is published under.
      *
      * @return the stream's published name.
      */

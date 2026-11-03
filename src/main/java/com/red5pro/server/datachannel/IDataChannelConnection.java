@@ -18,32 +18,32 @@ public interface IDataChannelConnection extends ICastingAttributeStore {
      *
      * @param data
      *            string / text data
-     * @throws UnsupportedEncodingException
+     * @throws UnsupportedEncodingException if the text cannot be encoded
      */
     void send(String data) throws UnsupportedEncodingException;
 
     /**
      * Sends binary data to the client.
      *
-     * @param buf
+     * @param buf data to send
      */
     void send(byte[] buf);
 
     /**
      * Sends a ping to the client.
      *
-     * @param buf
-     * @throws IOException
-     * @throws IllegalArgumentException
+     * @param buf ping payload
+     * @throws IOException if the ping cannot be written
+     * @throws IllegalArgumentException if the payload is not valid for a ping
      */
     void sendPing(byte[] buf) throws IllegalArgumentException, IOException;
 
     /**
      * Sends a pong to the client.
      *
-     * @param buf
-     * @throws IOException
-     * @throws IllegalArgumentException
+     * @param buf pong payload
+     * @throws IOException if the pong cannot be written
+     * @throws IllegalArgumentException if the payload is not valid for a pong
      */
     void sendPong(byte[] buf) throws IllegalArgumentException, IOException;
 
@@ -62,7 +62,7 @@ public interface IDataChannelConnection extends ICastingAttributeStore {
     /**
      * Updates the bytes read counter.
      *
-     * @param read
+     * @param read number of bytes read
      */
     void updateReadBytes(long read);
 

@@ -69,26 +69,56 @@ public class Ingest {
         this.level = level;
     }
 
+    /**
+     * Returns the ingest host.
+     *
+     * @return host name or address
+     */
     public String getHost() {
         return host;
     }
 
+    /**
+     * Returns the ingest port.
+     *
+     * @return port number
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * Returns the context path override.
+     *
+     * @return context path, or null to use the provision context path
+     */
     public String getContext() {
         return context;
     }
 
+    /**
+     * Returns the stream name override.
+     *
+     * @return stream name, or null to use the provision stream name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the ABR priority level; 0 is {@link #SBR} and 1 is {@link #MBR_MAIN}.
+     *
+     * @return level
+     */
     public int getLevel() {
         return level;
     }
 
+    /**
+     * Indicates whether this ingest is one of multiple bitrate variations.
+     *
+     * @return true if level is above {@link #SBR}
+     */
     public boolean isMBR() {
         return level > SBR;
     }
@@ -142,23 +172,25 @@ public class Ingest {
     }
 
     /**
+     * Builds an ingest using the provision context path and stream name.
      *
      * @param host required
      * @param port required
-     * @return
+     * @return new Ingest instance
      */
     public static Ingest build(String host, int port) {
         return new Ingest(host, port);
     }
 
     /**
+     * Builds an ingest with optional context path, stream name and ABR level overrides.
      *
      * @param host required
      * @param port required
      * @param context optional, overrides provision context path
      * @param name optional overrides provision stream name.
      * @param level optional sets ABR priority
-     * @return
+     * @return new Ingest instance
      */
     public static Ingest build(String host, int port, String context, String name, int level) {
         return new Ingest(host, port, context, name, level);

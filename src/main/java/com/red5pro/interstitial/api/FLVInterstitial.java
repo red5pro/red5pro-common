@@ -41,6 +41,14 @@ public class FLVInterstitial extends InterstitialSession implements IConsumer {
 
     private boolean hasPackets;
 
+    /**
+     * Creates an interstitial that plays a single FLV file from the given scope.
+     *
+     * @param appScope the application scope used to locate the file
+     * @param fileName name of the FLV file to play
+     * @param isForwardAudio true to forward audio tags
+     * @param isForwardVideo true to forward video tags
+     */
     public FLVInterstitial(IScope appScope, String fileName, boolean isForwardAudio, boolean isForwardVideo) {
         super(isForwardAudio, isForwardVideo);
         this.appScope = appScope;

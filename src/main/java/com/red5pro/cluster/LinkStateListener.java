@@ -35,17 +35,44 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public interface LinkStateListener {
 
+    /** Registered link state listeners. */
     public static final CopyOnWriteArraySet<LinkStateListener> linkListeners = new CopyOnWriteArraySet<>();
 
+    /**
+     * Called when an origin acknowledges a link.
+     * @param origin the origin host
+     */
     void originAck(String origin);
 
+    /**
+     * Called when a link to an origin closes.
+     * @param host the origin host
+     */
     void originClose(String host);
 
+    /**
+     * Called when an edge acknowledges a link.
+     * @param host the edge host
+     */
     void edgeAck(String host);
 
+    /**
+     * Called when a link to an edge closes.
+     * @param host the edge host
+     */
     void edgeClose(String host);
 
+    /**
+     * Called when demand for a stream begins.
+     * @param context the application context path
+     * @param name the stream name
+     */
     void streamDemandStart(String context, String name);
 
+    /**
+     * Called when demand for a stream ends.
+     * @param context the application context path
+     * @param name the stream name
+     */
     void streamDemandClose(String context, String name);
 }

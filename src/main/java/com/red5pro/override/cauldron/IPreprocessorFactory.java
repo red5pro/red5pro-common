@@ -29,8 +29,12 @@ import java.util.Map;
 
 import com.red5pro.override.IProStream;
 
+/**
+ * Factory that supplies configuration for a stream preprocessor.
+ */
 public interface IPreprocessorFactory {
 
+    /** Spring bean name under which the factory is registered */
     static final String BeanName = "ipreprocessorFactory";
 
     /**
@@ -42,6 +46,7 @@ public interface IPreprocessorFactory {
      *
      * @deprecated
      */
+    @Deprecated
     default void configure(IProStream stream) {
     };
 
