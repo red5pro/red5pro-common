@@ -25,8 +25,13 @@
 //
 package com.red5pro.override.cauldron;
 
+/**
+ * Native preprocessor that accepts annex-b NAL units and returns processed
+ * frames to an output handler.
+ */
 public interface MIRVPreprocessor {
     /**
+     * Initializes the preprocessor.
      *
      * @param path directory of modules.
      */
@@ -38,11 +43,14 @@ public interface MIRVPreprocessor {
      *
      * @param outputs
      *            number of outputs.
+     * @param type
+     *            preprocessor type
      * @return unique pointer value or zero if error.
      */
     public long open(int outputs, int type);
 
     /**
+     * Starts processing for an opened instance.
      *
      * @param id
      *            pointer
@@ -51,6 +59,7 @@ public interface MIRVPreprocessor {
     public long start(long id);
 
     /**
+     * Closes an instance and frees its memory.
      *
      * @param id
      *            pointer
@@ -76,6 +85,7 @@ public interface MIRVPreprocessor {
     public int write(Object outputHandler, long time, byte[] nals, long id);
 
     /**
+     * Applies a property to a module of the processor.
      *
      * @param index
      *            index of process.

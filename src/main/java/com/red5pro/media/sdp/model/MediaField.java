@@ -28,23 +28,50 @@ import com.red5pro.media.rtp.RTPCodecEnum;
 public class MediaField implements Comparable<MediaField> {
 
     // Java regex tester https://www.regexplanet.com/advanced/java/index.html
+    /**
+     * Pattern matching the media, port, protocol and format list of an m= line value.
+     */
     public final static Pattern PATTERN = Pattern.compile("([\\w]{4,11}) ([0-9]{1,5}) ([\\w|\\/]*)(((\\s[0-9]{1,4})+)|(\\swebrtc-datachannel))");
 
     // get first number at the start of a string
+    /**
+     * Pattern capturing the integer at the start of a string.
+     */
     public final static Pattern PATTERN_GET_FIRST_NUMBER = Pattern.compile("^(\\d+)");
 
+    /**
+     * Generic protocol: RTP/SAVPF.
+     */
     public final static String PROTOCOL_ANY = "RTP/SAVPF";
 
+    /**
+     * Protocol: UDP/TLS/RTP/SAVPF.
+     */
     public final static String PROTOCOL_UDP = "UDP/TLS/RTP/SAVPF";
 
+    /**
+     * Protocol: TCP/TLS/RTP/SAVPF.
+     */
     public final static String PROTOCOL_TCP = "TCP/TLS/RTP/SAVPF";
 
+    /**
+     * Protocol: RTP/AVP.
+     */
     public final static String PROTOCOL_AVP = "RTP/AVP";
 
+    /**
+     * Protocol: DTLS/SCTP.
+     */
     public final static String PROTOCOL_SCTP = "DTLS/SCTP";
 
+    /**
+     * Protocol: UDP/DTLS/SCTP.
+     */
     public final static String PROTOCOL_UDP_SCTP = "UDP/DTLS/SCTP";
 
+    /**
+     * Protocol: TCP/DTLS/SCTP.
+     */
     public final static String PROTOCOL_TCP_SCTP = "TCP/DTLS/SCTP";
 
     private SDPMediaType mediaType;
@@ -66,9 +93,19 @@ public class MediaField implements Comparable<MediaField> {
 
     private String mediaId;
 
+    /**
+     * Creates an empty media field with default port 9 and UDP/TLS/RTP/SAVPF protocol.
+     */
     public MediaField() {
     }
 
+    /**
+     * Creates a media field with the default protocol and an empty format list.
+     *
+     * @param mediaType media type
+     * @param port transport port
+     * @param codecCount number of formats to allocate
+     */
     public MediaField(SDPMediaType mediaType, int port, int codecCount) {
         this.mediaType = mediaType;
         // default the media id on creation so subscribe will work properly
@@ -77,6 +114,14 @@ public class MediaField implements Comparable<MediaField> {
         this.formats = new int[codecCount];
     }
 
+    /**
+     * Creates a media field with an empty format list.
+     *
+     * @param mediaType media type
+     * @param port transport port
+     * @param protocol transport protocol
+     * @param codecCount number of formats to allocate
+     */
     public MediaField(SDPMediaType mediaType, int port, String protocol, int codecCount) {
         this.mediaType = mediaType;
         // default the media id on creation so subscribe will work properly
@@ -86,6 +131,14 @@ public class MediaField implements Comparable<MediaField> {
         this.formats = new int[codecCount];
     }
 
+    /**
+     * Creates a media field with the given formats.
+     *
+     * @param mediaType media type
+     * @param port transport port
+     * @param protocol transport protocol
+     * @param formats payload type numbers
+     */
     public MediaField(SDPMediaType mediaType, int port, String protocol, int[] formats) {
         this.mediaType = mediaType;
         // default the media id on creation so subscribe will work properly
@@ -98,7 +151,7 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Returns true if a given attribute exists.
      *
-     * @param key
+     * @param key attribute key
      * @return true if found and false otherwise
      */
     public boolean hasAttribute(AttributeKey key) {
@@ -115,8 +168,8 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Returns true if a given attribute exists containing the given value.
      *
-     * @param key
-     * @param value
+     * @param key attribute key
+     * @param value text the attribute value must contain
      * @return true if found and false otherwise
      */
     public boolean hasAttributeWithValue(AttributeKey key, String value) {
@@ -133,7 +186,7 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Lookup attribute by its key.
      *
-     * @param key
+     * @param key attribute key
      * @return attribute if found and null otherwise
      */
     public AttributeField getAttribute(AttributeKey key) {
@@ -150,8 +203,8 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Lookup attribute by a given key and with a matching identifier.
      *
-     * @param key
-     * @param withId
+     * @param key attribute key
+     * @param withId identifier that the attribute value must contain
      * @return attribute if found and null otherwise
      */
     public AttributeField getAttribute(AttributeKey key, int withId) {
@@ -168,8 +221,8 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Lookup attribute by a given key containing a given string.
      *
-     * @param key
-     * @param withString
+     * @param key attribute key
+     * @param withString text that the attribute value must contain
      * @return attribute if found and null otherwise
      */
     public AttributeField getAttribute(AttributeKey key, String withString) {
@@ -187,9 +240,8 @@ public class MediaField implements Comparable<MediaField> {
      * Lookup attribute by a given key and with a matching codec encoding from a set
      * of codecs.
      *
-     * @param key
-     * @param codecs
-     *            set of codecs in-order of preference
+     * @param key attribute key
+     * @param codecs set of codecs in-order of preference
      * @return attribute if found and null otherwise
      */
     public AttributeField getAttribute(AttributeKey key, EnumSet<RTPCodecEnum> codecs) {
@@ -215,7 +267,7 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Returns an attributes first integer in the value.
      *
-     * @param attr
+     * @param attr attribute to read
      * @return number if found and -1 otherwise
      */
     public int getAttributeInt(AttributeField attr) {
@@ -232,7 +284,7 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Returns an attributes first integer in the value.
      *
-     * @param key
+     * @param key attribute key
      * @return number if found and -1 otherwise
      */
     public int getAttributeInt(AttributeKey key) {
@@ -254,7 +306,7 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Returns an attributes first long in the value.
      *
-     * @param attr
+     * @param attr attribute to read
      * @return number if found and -1 otherwise
      */
     public long getAttributeLong(AttributeField attr) {
@@ -271,7 +323,7 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Returns an attributes first long in the value.
      *
-     * @param key
+     * @param key attribute key
      * @return number if found and -1 otherwise
      */
     public long getAttributeLong(AttributeKey key) {
@@ -290,6 +342,13 @@ public class MediaField implements Comparable<MediaField> {
         return ret;
     }
 
+    /**
+     * Collects all non-binary attributes with the given key whose codec name matches one of the codecs, ignoring case.
+     *
+     * @param key attribute key
+     * @param codecs codecs to match, in order of preference
+     * @return matching attributes, possibly empty
+     */
     public List<AttributeField> getAttributeSelections(AttributeKey key, EnumSet<RTPCodecEnum> codecs) {
         List<AttributeField> ret = new ArrayList<>();
         for (RTPCodecEnum codec : codecs) {
@@ -313,30 +372,65 @@ public class MediaField implements Comparable<MediaField> {
         return ret;
     }
 
+    /**
+     * Returns the media type.
+     *
+     * @return media type
+     */
     public SDPMediaType getMediaType() {
         return mediaType;
     }
 
+    /**
+     * Sets the media type.
+     *
+     * @param mediaType media type
+     */
     public void setMediaType(SDPMediaType mediaType) {
         this.mediaType = mediaType;
     }
 
+    /**
+     * Returns the transport port.
+     *
+     * @return port
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * Sets the transport port.
+     *
+     * @param port port
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
+    /**
+     * Returns the transport protocol.
+     *
+     * @return protocol
+     */
     public String getProtocol() {
         return protocol;
     }
 
+    /**
+     * Sets the transport protocol.
+     *
+     * @param protocol protocol
+     */
     public void setProtocol(String protocol) {
         this.protocol = protocol;
     }
 
+    /**
+     * Appends a payload format to the format list.
+     *
+     * @param format payload type number
+     */
     public void addFormat(int format) {
         if (formats == null) {
             formats = new int[1];
@@ -349,23 +443,48 @@ public class MediaField implements Comparable<MediaField> {
         }
     }
 
+    /**
+     * Returns the payload formats.
+     *
+     * @return payload type numbers
+     */
     public int[] getFormats() {
         return formats;
     }
 
+    /**
+     * Sets the payload formats, copying the given array.
+     *
+     * @param formats payload type numbers
+     */
     public void setFormats(int[] formats) {
         this.formats = new int[formats.length];
         System.arraycopy(formats, 0, this.formats, 0, formats.length);
     }
 
+    /**
+     * Returns the media-level connection field.
+     *
+     * @return connection field, may be null
+     */
     public ConnectionField getConnection() {
         return connection;
     }
 
+    /**
+     * Sets the media-level connection field.
+     *
+     * @param connection connection field
+     */
     public void setConnection(ConnectionField connection) {
         this.connection = connection;
     }
 
+    /**
+     * Appends an attribute; a mid attribute also sets the media identifier.
+     *
+     * @param attr attribute to add
+     */
     public void addAttributeField(AttributeField attr) {
         if (AttributeKey.mid.equals(attr.getAttribute())) {
             mediaId = attr.getValue();
@@ -381,6 +500,11 @@ public class MediaField implements Comparable<MediaField> {
         }
     }
 
+    /**
+     * Removes the first attribute with the given key.
+     *
+     * @param key attribute key to remove
+     */
     // XXX(paul) this is not thread-safe
     public void removeAttributeField(AttributeKey key) {
         List<AttributeField> attrs = List.of(attributes);
@@ -397,6 +521,12 @@ public class MediaField implements Comparable<MediaField> {
         }
     }
 
+    /**
+     * Returns all attributes with the given key.
+     *
+     * @param key attribute key
+     * @return matching attributes, possibly empty
+     */
     public AttributeField[] getAttributes(AttributeKey key) {
         List<AttributeField> subset = new ArrayList<>(1);
         if (attributes != null && attributes.length > 0) {
@@ -409,18 +539,38 @@ public class MediaField implements Comparable<MediaField> {
         return subset.toArray(new AttributeField[0]);
     }
 
+    /**
+     * Returns all media-level attributes.
+     *
+     * @return attributes, may be null
+     */
     public AttributeField[] getAttributes() {
         return attributes;
     }
 
+    /**
+     * Sets the media-level attributes.
+     *
+     * @param attributes attributes
+     */
     public void setAttributes(AttributeField[] attributes) {
         this.attributes = attributes;
     }
 
+    /**
+     * Returns the media-level bandwidth field.
+     *
+     * @return bandwidth field, may be null
+     */
     public BandwidthField getBandwidth() {
         return bandwidth;
     }
 
+    /**
+     * Sets the media-level bandwidth field.
+     *
+     * @param bandwidth bandwidth field
+     */
     public void setBandwidth(BandwidthField bandwidth) {
         this.bandwidth = bandwidth;
     }
@@ -437,7 +587,7 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Sets the media identifier or mid.
      *
-     * @param mediaId
+     * @param mediaId media identifier
      */
     public void setMediaId(String mediaId) {
         this.mediaId = mediaId;
@@ -446,7 +596,7 @@ public class MediaField implements Comparable<MediaField> {
     /**
      * Sets whether or not the media is active.
      *
-     * @param active
+     * @param active true to activate, false to mark inactive
      */
     public void setActive(boolean active) {
         if (active) {

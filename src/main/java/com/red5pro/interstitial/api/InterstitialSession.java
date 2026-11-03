@@ -28,8 +28,10 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
 
     private static final Logger log = LoggerFactory.getLogger(InterstitialSession.class);
 
+    /** Audio codec identifier for AAC. */
     public static final int AAC_AUDIO = 'A' | ('A' << 8) | ('A' << 16) | (' ' << 24);
 
+    /** Audio codec identifier for Speex. */
     public static final int SPEX_AUDIO = 'S' | ('P' << 8) | ('E' << 16) | ('X' << 24);
 
     /**
@@ -52,16 +54,22 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
      */
     public InterstitialDurationControl sessionControl;
 
+    /** Number of audio channels. */
     public int audioChannels;
 
+    /** Audio sample rate in Hz. */
     public int audioSampleRate;
 
+    /** Video width in pixels. */
     public int width;
 
+    /** Video height in pixels. */
     public int height;
 
+    /** Whether the inserted audio is compatible with the live stream. */
     public AudioCompatibility audioCompatibility = AudioCompatibility.UNKNOWN;
 
+    /** True if the insert should start immediately. */
     public boolean immediate;
 
     /**
@@ -79,6 +87,12 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
     /** Latches the {@link #onDisposed} callback so it fires exactly once even if {@code dispose()} is invoked twice. */
     private final AtomicBoolean disposedCallbackFired = new AtomicBoolean(false);
 
+    /**
+     * Creates a session.
+     *
+     * @param isInterstitialAudio true to forward audio from the inserted stream
+     * @param isInterstitialVideo true to forward video from the inserted stream
+     */
     public InterstitialSession(boolean isInterstitialAudio, boolean isInterstitialVideo) {
         this.isInterstitialAudio = isInterstitialAudio;
         this.isInterstitialVideo = isInterstitialVideo;
@@ -135,12 +149,25 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
      */
     public boolean includeMetaData;
 
+    /**
+     * Sets the audio parameters of the stream being inserted into.
+     *
+     * @param codec audio codec identifier, such as {@link #AAC_AUDIO}
+     * @param audioChannels number of audio channels
+     * @param audioSampleRate audio sample rate in Hz
+     */
     public void setAudioParams(int codec, int audioChannels, int audioSampleRate) {
         this.codec = codec;
         this.audioChannels = audioChannels;
         this.audioSampleRate = audioSampleRate;
     }
 
+    /**
+     * Sets the video dimensions of the stream being inserted into.
+     *
+     * @param width video width in pixels
+     * @param height video height in pixels
+     */
     public void setVideoParams(int width, int height) {
         this.width = width;
         this.height = height;
@@ -235,6 +262,8 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
     }
 
     /**
+     * Indicates whether audio of the new stream is used.
+     *
      * @return true if we should use audio from the new stream insert
      */
     public boolean isForwardAudio() {
@@ -242,6 +271,8 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
     }
 
     /**
+     * Indicates whether video of the new stream is used.
+     *
      * @return true if we should use video from the new stream insert
      */
     public boolean isForwardVideo() {
@@ -275,6 +306,12 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
         }
     }
 
+    /**
+     * Parses the AAC decoder configuration of the given audio data and checks it against the audio parameters of this session.
+     *
+     * @param event audio data holding the decoder configuration
+     * @return the parsed audio parameters and whether they match the stream
+     */
     public AudioInfo parseAudioParams(AudioData event) {
         AudioInfo ret = new AudioInfo();
         IoBuffer audioData = event.getData();
@@ -323,17 +360,37 @@ public abstract class InterstitialSession implements Comparable<InterstitialSess
         return ret;
     }
 
+    /**
+     * Audio parameters parsed from the decoder configuration of an inserted stream.
+     */
     protected static class AudioInfo {
+
+        /** Creates an empty instance. */
+        public AudioInfo() {
+        }
+
+        /** Audio codec identifier. */
         public int codec;
 
+        /** Number of audio channels. */
         public int audioChannels;
 
+        /** Audio sample rate in Hz. */
         public int audioSampleRate;
 
+        /** Whether the parsed audio is compatible with the target stream. */
         public AudioCompatibility matchesStream = AudioCompatibility.UNKNOWN;
     }
 
+    /**
+     * Whether the audio of the inserted stream is compatible with the stream being inserted into.
+     */
     protected static enum AudioCompatibility {
-        UNKNOWN, YES, NO;
+        /** Compatibility has not been determined. */
+        UNKNOWN,
+        /** Audio is compatible with the live stream. */
+        YES,
+        /** Audio is not compatible with the live stream. */
+        NO;
     }
 }

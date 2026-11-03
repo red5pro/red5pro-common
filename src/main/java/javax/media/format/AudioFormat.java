@@ -51,8 +51,10 @@ public class AudioFormat extends Format {
      */
     double multiplier = -1f;
 
+    /** Length offset subtracted when computing the duration of a sample. */
     int margin = 0;
 
+    /** Whether the duration computation values have been initialized. */
     boolean init = false;
 
     /**

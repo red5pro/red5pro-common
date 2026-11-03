@@ -41,14 +41,33 @@ public class Restrictions {
         this.conditions = conditions;
     }
 
+    /**
+     * Indicates whether restrictions apply.
+     *
+     * @return true if restricted
+     */
     public boolean isRestricted() {
         return restricted;
     }
 
+    /**
+     * Returns the conditions associated with the restriction.
+     *
+     * @return array of condition strings
+     */
     public String[] getConditions() {
         return conditions;
     }
 
+    /**
+     * Creates a new Restrictions instance.
+     *
+     * @param restricted
+     *            true if restrictions apply
+     * @param conditions
+     *            conditions associated with the restriction
+     * @return new Restrictions
+     */
     public static Restrictions build(boolean restricted, String[] conditions) {
         return new Restrictions(restricted, conditions);
     }

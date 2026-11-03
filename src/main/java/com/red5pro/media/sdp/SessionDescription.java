@@ -28,10 +28,10 @@ public class SessionDescription {
 
     private final static String version = "v=0\n";
 
-    // media id constant for audio
+    /** Media id constant for audio */
     public final static String AUDIO = "audio";
 
-    // media id constant for video
+    /** Media id constant for video */
     public final static String VIDEO = "video";
 
     // generate an id for RTCMediaStream Id / msid/mslabel
@@ -78,15 +78,28 @@ public class SessionDescription {
     // Used for payload id generation (96 to 127)
     private int nextDynamicId = 96;
 
+    /** SRTP cryptography parameters parsed from the crypto attribute, if any */
     public CryptographyParam srtpInfo;
 
+    /**
+     * Creates a session description with an undefined user agent.
+     */
     public SessionDescription() {
     }
 
+    /**
+     * Creates a session description for the given user agent.
+     *
+     * @param userAgent
+     *            origin of the SDP
+     */
     public SessionDescription(SDPUserAgent userAgent) {
         this.userAgent = userAgent;
     }
 
+    /**
+     * Releases all fields held by this description, clearing tracks and metadata.
+     */
     public void free() {
         attributes = null;
         bandwidth = null;
@@ -106,6 +119,11 @@ public class SessionDescription {
         userAgent = null;
     }
 
+    /**
+     * Returns the next unused dynamic payload id, starting at 96.
+     *
+     * @return next dynamic payload id
+     */
     public int getDynamicPayloadId() {
         if (nextDynamicId == 128) {
             throw new Error("too many dynamic ID requested from the SDP session description object");
@@ -117,6 +135,8 @@ public class SessionDescription {
      * Adds an SDPTrack.
      *
      * @param track
+     *            track to add
+     * @return true if the track was added, false if it was already present
      */
     public boolean addTrack(SDPTrack track) {
         if (tracks == null) {
@@ -174,30 +194,69 @@ public class SessionDescription {
         return medias;
     }
 
+    /**
+     * Returns the origin (o=) field.
+     *
+     * @return origin field
+     */
     public OriginField getOrigin() {
         return origin;
     }
 
+    /**
+     * Sets the origin (o=) field.
+     *
+     * @param origin
+     *            origin field
+     */
     public void setOrigin(OriginField origin) {
         this.origin = origin;
     }
 
+    /**
+     * Returns the session name (s=) field.
+     *
+     * @return session field
+     */
     public SessionField getSession() {
         return session;
     }
 
+    /**
+     * Sets the session name (s=) field.
+     *
+     * @param session
+     *            session field
+     */
     public void setSession(SessionField session) {
         this.session = session;
     }
 
+    /**
+     * Returns the timing (t=) field.
+     *
+     * @return timing field
+     */
     public TimingField getTiming() {
         return timing;
     }
 
+    /**
+     * Sets the timing (t=) field.
+     *
+     * @param timing
+     *            timing field
+     */
     public void setTiming(TimingField timing) {
         this.timing = timing;
     }
 
+    /**
+     * Appends a session level attribute.
+     *
+     * @param attr
+     *            attribute to add
+     */
     public void addAttributeField(AttributeField attr) {
         if (attributes == null) {
             attributes = new AttributeField[1];
@@ -214,6 +273,7 @@ public class SessionDescription {
      * Lookup attribute by its key.
      *
      * @param key
+     *            attribute key to look up
      * @return attribute if found and null otherwise
      */
     public AttributeField getAttribute(AttributeKey key) {
@@ -230,6 +290,9 @@ public class SessionDescription {
     /**
      * Remove an attribute by its key. Be wary as this removes all attributes
      * matching the given key.
+     *
+     * @param key
+     *            key of the attributes to remove
      */
     public void remove(AttributeKey key) {
         if (attributes != null && attributes.length > 0) {
@@ -248,6 +311,9 @@ public class SessionDescription {
 
     /**
      * Remove an attribute.
+     *
+     * @param attr
+     *            attribute to remove
      */
     public void remove(AttributeField attr) {
         if (attributes != null && attributes.length > 0) {
@@ -264,18 +330,40 @@ public class SessionDescription {
         }
     }
 
+    /**
+     * Returns the session level attributes.
+     *
+     * @return attributes or null if none are set
+     */
     public AttributeField[] getAttributes() {
         return attributes;
     }
 
+    /**
+     * Replaces the session level attributes.
+     *
+     * @param attributes
+     *            attributes to set
+     */
     public void setAttributes(AttributeField[] attributes) {
         this.attributes = attributes;
     }
 
+    /**
+     * Returns the session level bandwidth (b=) field.
+     *
+     * @return bandwidth field or null if not set
+     */
     public BandwidthField getBandwidth() {
         return bandwidth;
     }
 
+    /**
+     * Sets the session level bandwidth (b=) field.
+     *
+     * @param bandwidth
+     *            bandwidth field
+     */
     public void setBandwidth(BandwidthField bandwidth) {
         this.bandwidth = bandwidth;
     }
@@ -284,6 +372,7 @@ public class SessionDescription {
      * Add a media field (description).
      *
      * @param mediaField
+     *            media description to add
      */
     @SuppressWarnings("incomplete-switch")
     public void addMediaDescription(MediaField mediaField) {
@@ -311,6 +400,7 @@ public class SessionDescription {
      * Remove a media field (description).
      *
      * @param mediaField
+     *            media description to remove
      */
     public void remove(MediaField mediaField) {
         if (mediaDescriptions != null) {
@@ -334,10 +424,21 @@ public class SessionDescription {
         }
     }
 
+    /**
+     * Returns all media descriptions.
+     *
+     * @return media descriptions or null if none are set
+     */
     public MediaField[] getMediaDescriptions() {
         return mediaDescriptions;
     }
 
+    /**
+     * Replaces all media descriptions.
+     *
+     * @param mediaDescriptions
+     *            media descriptions to set
+     */
     public void setMediaDescriptions(MediaField[] mediaDescriptions) {
         this.mediaDescriptions = mediaDescriptions;
     }
@@ -346,6 +447,7 @@ public class SessionDescription {
      * Set metadata and create attributes for each entry.
      *
      * @param metadata
+     *            stream metadata
      */
     public void setMetadata(Map<Object, Object> metadata) {
         this.metadata = metadata;
@@ -366,6 +468,11 @@ public class SessionDescription {
         return metadata;
     }
 
+    /**
+     * Indicates whether metadata has been set.
+     *
+     * @return true if metadata exists
+     */
     public boolean hasMetadata() {
         return metadata != null;
     }
@@ -445,102 +552,224 @@ public class SessionDescription {
         }
     }
 
+    /**
+     * Returns the SDP version line (v=0).
+     *
+     * @return version line
+     */
     public static String getVersion() {
         return version;
     }
 
+    /**
+     * Returns the media stream id used for msid/mslabel.
+     *
+     * @return media stream id
+     */
     public String getMsid() {
         return msid;
     }
 
+    /**
+     * Sets the media stream id used for msid/mslabel.
+     *
+     * @param msid
+     *            media stream id
+     */
     public void setMsid(String msid) {
         this.msid = msid;
     }
 
+    /**
+     * Returns the number of audio media descriptions.
+     *
+     * @return audio description count
+     */
     public int getAudio() {
         return audio;
     }
 
+    /**
+     * Increments the audio media description count.
+     */
     public void incrementAudio() {
         audio += 1;
     }
 
+    /**
+     * Decrements the audio media description count.
+     */
     public void decrementAudio() {
         audio -= 1;
     }
 
+    /**
+     * Indicates whether any audio media descriptions exist.
+     *
+     * @return true if audio is present
+     */
     public boolean hasAudio() {
         return audio > 0;
     }
 
+    /**
+     * Returns the number of video media descriptions.
+     *
+     * @return video description count
+     */
     public int getVideo() {
         return video;
     }
 
+    /**
+     * Increments the video media description count.
+     */
     public void incrementVideo() {
         video += 1;
     }
 
+    /**
+     * Decrements the video media description count.
+     */
     public void decrementVideo() {
         video -= 1;
     }
 
+    /**
+     * Indicates whether any video media descriptions exist.
+     *
+     * @return true if video is present
+     */
     public boolean hasVideo() {
         return video > 0;
     }
 
+    /**
+     * Indicates whether RTCP is multiplexed with RTP.
+     *
+     * @return true if rtcp-mux is used
+     */
     public boolean isRtcpMux() {
         return rtcpMux;
     }
 
+    /**
+     * Sets whether RTCP is multiplexed with RTP.
+     *
+     * @param rtcpMux
+     *            true to use rtcp-mux
+     */
     public void setRtcpMux(boolean rtcpMux) {
         this.rtcpMux = rtcpMux;
     }
 
+    /**
+     * Indicates whether media is bundled onto one transport.
+     *
+     * @return true if bundling is used
+     */
     public boolean isBundle() {
         return bundle;
     }
 
+    /**
+     * Sets whether media is bundled onto one transport.
+     *
+     * @param bundle
+     *            true to bundle
+     */
     public void setBundle(boolean bundle) {
         this.bundle = bundle;
     }
 
+    /**
+     * Indicates whether unified plan (rather than plan-b) is used.
+     *
+     * @return true if unified plan
+     */
     public boolean isUnified() {
         return unified;
     }
 
+    /**
+     * Sets whether unified plan (rather than plan-b) is used.
+     *
+     * @param unified
+     *            true for unified plan
+     */
     public void setUnified(boolean unified) {
         this.unified = unified;
     }
 
+    /**
+     * Sets the user agent that the SDP came from.
+     *
+     * @param userAgent
+     *            user agent
+     */
     public void setUA(SDPUserAgent userAgent) {
         this.userAgent = userAgent;
     }
 
+    /**
+     * Indicates whether the SDP came from an Android browser.
+     *
+     * @return true if the user agent matches
+     */
     public boolean isAndroid() {
         return userAgent == SDPUserAgent.android_chrome || userAgent == SDPUserAgent.android_firefox;
     }
 
+    /**
+     * Indicates whether the SDP came from Chrome (desktop or Android).
+     *
+     * @return true if the user agent matches
+     */
     public boolean isChrome() {
         return userAgent == SDPUserAgent.chrome || userAgent == SDPUserAgent.android_chrome;
     }
 
+    /**
+     * Indicates whether the SDP came from Firefox (desktop or Android).
+     *
+     * @return true if the user agent matches
+     */
     public boolean isFirefox() {
         return userAgent == SDPUserAgent.mozilla || userAgent == SDPUserAgent.firefox || userAgent == SDPUserAgent.android_firefox;
     }
 
+    /**
+     * Indicates whether the SDP came from Edge.
+     *
+     * @return true if the user agent matches
+     */
     public boolean isEdge() {
         return userAgent == SDPUserAgent.edge;
     }
 
+    /**
+     * Indicates whether the SDP came from Safari.
+     *
+     * @return true if the user agent matches
+     */
     public boolean isSafari() {
         return userAgent == SDPUserAgent.safari;
     }
 
+    /**
+     * Indicates whether the SDP came from OBS.
+     *
+     * @return true if the user agent matches
+     */
     public boolean isObs() {
         return userAgent == SDPUserAgent.obs;
     }
 
+    /**
+     * Indicates whether the SDP came from the Red5 Pro SDK.
+     *
+     * @return true if the user agent matches
+     */
     public boolean isRed5ProSDK() {
         return userAgent == SDPUserAgent.red5pro;
     }

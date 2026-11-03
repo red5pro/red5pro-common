@@ -14,21 +14,40 @@ import java.util.regex.Pattern;
  */
 public class SessionField {
 
+    /** Pattern matching a valid session name value. */
     public final static Pattern PATTERN = Pattern.compile("([\\w|\\d|\\s|-]+)");
 
     private String name = "-";
 
+    /**
+     * Creates a session field with the default name "-".
+     */
     public SessionField() {
     }
 
+    /**
+     * Creates a session field with the given name.
+     *
+     * @param name the session name
+     */
     public SessionField(String name) {
         this.name = name;
     }
 
+    /**
+     * Returns the session name.
+     *
+     * @return the session name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Sets the session name.
+     *
+     * @param name the session name
+     */
     public void setName(String name) {
         this.name = name;
     }

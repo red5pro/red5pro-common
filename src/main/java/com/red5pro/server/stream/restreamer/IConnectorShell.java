@@ -27,8 +27,16 @@ package com.red5pro.server.stream.restreamer;
 
 import org.red5.server.api.stream.IStreamCapableConnection;
 
+/**
+ * Connection shell used when connecting a restreamer to a remote server.
+ */
 public interface IConnectorShell extends IStreamCapableConnection {
 
+    /**
+     * Returns the parameters to send with the connect call.
+     *
+     * @return connect call parameters
+     */
     Object[] getConnectCallParams();
 
 }

@@ -40,6 +40,9 @@ public class ExampleProfileResolver implements ProfileLevelResolver {
 
     private String spliterator = "_";;
 
+    /**
+     * Creates the resolver and registers it with the shared level resolvers.
+     */
     public ExampleProfileResolver() {
         ProfileLevelResolver.levelResolvers.add(this);
     }

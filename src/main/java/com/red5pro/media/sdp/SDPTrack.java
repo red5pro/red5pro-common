@@ -40,6 +40,13 @@ public class SDPTrack {
     //
     private String interleavedVal;
 
+    /**
+     * Creates a track and adds it to the given session.
+     *
+     * @param session the owning session description
+     * @param mediaType the media type of the track
+     * @param payloadId the RTP payload type id
+     */
     public SDPTrack(SessionDescription session, SDPMediaType mediaType, int payloadId) {
         this.session = session;
         this.mediaType = mediaType;
@@ -60,7 +67,7 @@ public class SDPTrack {
     /**
      * Sets the payload id.
      *
-     * @param payloadId
+     * @param payloadId the RTP payload type id
      */
     public void setPayloadId(Integer payloadId) {
         this.payloadId = payloadId;
@@ -105,7 +112,7 @@ public class SDPTrack {
     /**
      * Sets the control uri (session level) or channel id (media level).
      *
-     * @param control
+     * @param control the control (track) URL or identifier
      */
     public void setControl(String control) {
         log.debug("setControl: {}", control);
@@ -171,7 +178,7 @@ public class SDPTrack {
     /**
      * Sets the media channel id.
      *
-     * @param mediaChannel
+     * @param mediaChannel the interleaved media channel id
      */
     public void setMediaChannelId(String mediaChannel) {
         log.debug("setMediaChannelId: {}", mediaChannel);
@@ -181,7 +188,7 @@ public class SDPTrack {
     /**
      * Sets the media channel id.
      *
-     * @param mediaChannel
+     * @param mediaChannel the interleaved media channel id
      */
     public void setMediaChannelId(int mediaChannel) {
         log.info("setMediaChannelId: {}", mediaChannel);
@@ -268,8 +275,8 @@ public class SDPTrack {
     /**
      * Sets the rtpmap attribute.
      *
-     * @param encoding
-     * @param clockRate
+     * @param encoding the codec encoding name
+     * @param clockRate the codec clock rate in Hz
      */
     public void setFormat(String encoding, int clockRate) {
         setFormat(encoding, clockRate, 0);
@@ -278,9 +285,9 @@ public class SDPTrack {
     /**
      * Sets the rtpmap attribute.
      *
-     * @param encoding
-     * @param clockRate
-     * @param channels
+     * @param encoding the codec encoding name
+     * @param clockRate the codec clock rate in Hz
+     * @param channels the number of audio channels
      */
     public void setFormat(String encoding, int clockRate, int channels) {
         MediaField mediaField = session.getMediaDescription(mediaType);
@@ -299,8 +306,8 @@ public class SDPTrack {
     /**
      * Adds a fmtp attribute.
      *
-     * @param key
-     * @param value
+     * @param key the attribute key
+     * @param value the attribute value
      */
     public void addParameter(String key, String value) {
         if (parameters == null) {
@@ -345,7 +352,7 @@ public class SDPTrack {
     /**
      * Set interleaved value.
      *
-     * @param interleavedVal
+     * @param interleavedVal the interleaved channel value, such as "0-1"
      */
     public void setInterleavedVal(String interleavedVal) {
         this.interleavedVal = interleavedVal;

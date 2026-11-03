@@ -61,6 +61,8 @@ public class LiveInterstitial extends InterstitialSession implements IStreamList
     private IInterstitialStream newStream;
 
     /**
+     * Creates a session which injects the new stream into the live stream.
+     *
      * @param liveStream
      *            the live stream whose contents will change
      * @param newStream

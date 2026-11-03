@@ -10,6 +10,10 @@ import org.red5.server.api.event.IEvent;
  */
 public class MediaTrackListener {
 
+    /** Creates a listener with default no-op behavior. */
+    public MediaTrackListener() {
+    }
+
     /**
      * Event has emitted from the given track.
      *

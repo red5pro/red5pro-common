@@ -25,12 +25,16 @@ public class Format implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 5612854984030969319L;
 
+    /** Value indicating a format attribute is not specified. */
     public static final int NOT_SPECIFIED = -1;
 
+    /** Value indicating a true format attribute. */
     public static final int TRUE = 1;
 
+    /** Value indicating a false format attribute. */
     public static final int FALSE = 0;
 
+    /** Encoding of this format. */
     protected String encoding;
 
     /**
@@ -54,11 +58,14 @@ public class Format implements Cloneable, Serializable {
      */
     public static final Class<?> formatArray = (new Format[0]).getClass();
 
+    /** Class of the data object required by this format. */
     protected Class<?> dataType = byteArray;
 
     // Cache the to optimize on equals, matches & intersect
+    /** Cached class of this instance. */
     protected Class<?> clz = getClass();
 
+    /** Cached numeric code of the encoding. */
     private long encodingCode = 0;
 
     /**

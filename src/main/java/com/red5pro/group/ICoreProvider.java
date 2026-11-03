@@ -18,8 +18,8 @@ public interface ICoreProvider {
     /**
      * Return the IGroupCore impl or null.
      *
-     * @param clazz
-     * @return
+     * @param clazz the class name identifying the requested core
+     * @return the matching core, or null if this provider does not handle it
      */
     IGroupCore resolve(String clazz);
 

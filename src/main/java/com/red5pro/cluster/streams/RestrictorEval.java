@@ -44,6 +44,8 @@ public interface RestrictorEval {
     static final CopyOnWriteArraySet<RestrictorEval> restrictions = new CopyOnWriteArraySet<RestrictorEval>();
 
     /**
+     * Determines whether the subscriber may play the provisioned stream, checking the
+     * provision's conditions against each registered restriction.
      *
      * @param provision
      *            stream provision

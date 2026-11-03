@@ -34,6 +34,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  *
  */
 public interface IConsumerStatistics {
+    /** Registered statistics listeners. */
     static final CopyOnWriteArraySet<IConsumerStatistics> listeners = new CopyOnWriteArraySet<>();
 
     /**

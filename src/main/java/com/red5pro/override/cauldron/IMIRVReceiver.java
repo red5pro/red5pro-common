@@ -38,9 +38,13 @@ import java.nio.ByteBuffer;
  */
 public interface IMIRVReceiver {
 
+    /**
+     * Error code passed to nativeError when the MIRV contract is broken or unfulfilled.
+     */
     public static final int MIRV_CONTRACT_BROKEN = 1;
 
     /**
+     * Receives an encoded video frame for one ABR level.
      *
      * @param index of ABR level.
      * @param timestamp milliseconds.
@@ -50,7 +54,7 @@ public interface IMIRVReceiver {
 
     /**
      * MIVR Contract broken or unfulfilled.
-     * @param code
+     * @param code error code, such as {@link #MIRV_CONTRACT_BROKEN}
      * @param message info or null.
      */
     void nativeError(int code, String message);

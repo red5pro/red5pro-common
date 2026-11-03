@@ -10,6 +10,12 @@ import javax.media.Buffer;
  */
 public class MediaSampleAdapter implements IMediaSample {
 
+    /**
+     * Creates a new adapter.
+     */
+    public MediaSampleAdapter() {
+    }
+
     @Override
     public boolean isComposite() {
         return false;

@@ -25,16 +25,32 @@
 //
 package com.red5pro.qos;
 
+/** IP type-of-service flag values. */
 public enum IPTOS {
 
-    IPTOS_LOWCOST(0x02), IPTOS_RELIABILITY(0x04), IPTOS_THROUGHPUT(0x08), IPTOS_LOWDELAY(0x10);
+    /** Minimize monetary cost. */
+    IPTOS_LOWCOST(0x02),
+    /** Maximize reliability. */
+    IPTOS_RELIABILITY(0x04),
+    /** Maximize throughput. */
+    IPTOS_THROUGHPUT(0x08),
+    /** Minimize delay. */
+    IPTOS_LOWDELAY(0x10);
 
     private final int id;
 
+    /**
+     * Creates a TOS constant.
+     * @param id the TOS bit value
+     */
     private IPTOS(int id) {
         this.id = id;
     }
 
+    /**
+     * Returns the IP type-of-service bit value.
+     * @return the TOS value
+     */
     public int getValue() {
         return id;
     }

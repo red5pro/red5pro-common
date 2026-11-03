@@ -44,7 +44,7 @@ public interface IRTCStream {
     /**
      * Sets remote candidates.
      *
-     * @param remoteCandidates
+     * @param remoteCandidates remote candidates
      */
     void setRemoteCandidates(List<String> remoteCandidates);
 
@@ -53,7 +53,7 @@ public interface IRTCStream {
      *
      * @param userAgent
      *            the user agent connected
-     * @throws Exception
+     * @throws Exception if initialization fails
      */
     void init(SDPUserAgent userAgent) throws Exception;
 
@@ -97,8 +97,18 @@ public interface IRTCStream {
      */
     boolean isIceController();
 
+    /**
+     * Sets whether the subscriber is in standby mode.
+     *
+     * @param state true to enable standby mode
+     */
     void setSubscriberModeStandby(boolean state);
 
+    /**
+     * Returns whether the subscriber is in standby mode.
+     *
+     * @return true if in standby mode
+     */
     boolean isSubscriberModeStandby();
 
     /**
@@ -118,7 +128,7 @@ public interface IRTCStream {
     /**
      * Returns the media id for at the given index in the local SDP.
      *
-     * @param index
+     * @param index index of the media in the local SDP
      * @return media id
      */
     String getMediaId(int index);
@@ -174,8 +184,8 @@ public interface IRTCStream {
     /**
      * Sets the stream connector for the stream with a given remote address.
      *
-     * @param streamConnector
-     * @param remoteAddress
+     * @param streamConnector the stream connector
+     * @param remoteAddress the remote transport address
      */
     void setStreamConnector(StreamConnector streamConnector, TransportAddress remoteAddress);
 
@@ -198,7 +208,7 @@ public interface IRTCStream {
     /**
      * Sets whether or not session level DTLS is enabled.
      *
-     * @param sessionLevelDTLS
+     * @param sessionLevelDTLS true to enable session level DTLS
      */
     void setSessionLevelDTLS(boolean sessionLevelDTLS);
 
@@ -212,14 +222,14 @@ public interface IRTCStream {
     /**
      * Sets whether or not session level ICE is enabled.
      *
-     * @param setSessionLevelICE
+     * @param setSessionLevelICE true to enable session level ICE
      */
     void setSessionLevelICE(boolean setSessionLevelICE);
 
     /**
-     * Returns whether or not end of candidates is enabled.
+     * Sets whether or not end of candidates is enabled.
      *
-     * @param setUseEndOfCandidates
+     * @param setUseEndOfCandidates true to enable end of candidates
      */
     void setUseEndOfCandidates(boolean setUseEndOfCandidates);
 
@@ -237,6 +247,12 @@ public interface IRTCStream {
      */
     IRTCStreamSession getSession();
 
+    /**
+     * Handles a request to change the audio and video mute states. The default does nothing.
+     *
+     * @param audioMuteStateReq requested audio mute state
+     * @param videoMuteStateReq requested video mute state
+     */
     default public void handleMuteStateEvent(MuteState audioMuteStateReq, MuteState videoMuteStateReq) {
         // default: no-op
     }

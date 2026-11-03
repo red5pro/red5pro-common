@@ -27,11 +27,18 @@ package com.red5pro.server.stream;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 
+/**
+ * Receives client reports for logging.
+ */
 public interface IClientReportReceiver {
 
+    /**
+     * Registered receivers.
+     */
     static final CopyOnWriteArraySet<IClientReportReceiver> receivers = new CopyOnWriteArraySet<>();
 
     /**
+     * Logs a client report.
      *
      * @param fourCC
      *            IoSessionAware foucCC

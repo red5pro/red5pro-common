@@ -12,17 +12,22 @@ import org.slf4j.LoggerFactory;
  * @author Nate Roe
  */
 public class DigestUtil {
+
+    /** Creates a new DigestUtil; all functionality is static. */
+    public DigestUtil() {
+    }
+
     private static final Logger log = LoggerFactory.getLogger(DigestUtil.class);
 
     /**
      * Create an SHA-256 signature hash from the given info. The input fields are concatenated to compute
      * the digest: action + content + timestamp + clusterPassword.
      *
-     * @param action
+     * @param action action name being signed
      * @param content often empty string ""
-     * @param timestamp
+     * @param timestamp request time in milliseconds
      * @param password cluster password
-     * @return
+     * @return upper-case hex SHA-256 digest, or null if SHA-256 is unavailable
      */
     public static String getSignature(String action, String content, long timestamp, String password) {
         try {

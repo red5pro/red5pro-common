@@ -57,6 +57,12 @@ import com.red5pro.cluster.streams.Restrictions;
  */
 public class ProvisionAdapter implements JsonSerializer<Provision>, JsonDeserializer<Provision> {
 
+    /**
+     * Creates a new adapter.
+     */
+    public ProvisionAdapter() {
+    }
+
     private static final Logger log = LoggerFactory.getLogger(ProvisionAdapter.class);
 
     @Override

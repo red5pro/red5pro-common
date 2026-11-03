@@ -28,6 +28,12 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class CorsFilter implements Filter {
 
+    /**
+     * Creates a filter; configuration is applied later through {@link #init(FilterConfig)}.
+     */
+    public CorsFilter() {
+    }
+
     private static Logger log = LoggerFactory.getLogger(CorsFilter.class);
 
     private static boolean isDebug = log.isDebugEnabled();
@@ -98,7 +104,11 @@ public class CorsFilter implements Filter {
         this.filterConfig = filterConfig;
     }
 
-    /** Initializes filter settings on the first request. */
+    /**
+     * Initializes filter settings on the first request.
+     *
+     * @throws ServletException if initialization fails
+     */
     public void doInit() throws ServletException {
         log.debug("Initializing");
         try {
@@ -282,8 +292,8 @@ public class CorsFilter implements Filter {
     /**
      * Debugging info for request/response.
      *
-     * @param request
-     * @param response
+     * @param request the request to dump
+     * @param response the response to dump
      */
     protected void debugDump(HttpServletRequest request, HttpServletResponse response) {
         if (isDebug) {

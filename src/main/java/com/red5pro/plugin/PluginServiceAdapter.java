@@ -40,7 +40,14 @@ import org.springframework.core.io.Resource;
  */
 public class PluginServiceAdapter implements IPluginService {
 
+    /** Identifier of the stream session this service is bound to. */
     protected String streamSessionId;
+
+    /**
+     * Creates an adapter with no stream session set.
+     */
+    public PluginServiceAdapter() {
+    }
 
     /** {@inheritDoc} */
     @Override

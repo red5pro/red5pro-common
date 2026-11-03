@@ -22,15 +22,34 @@ public class MultiSessionPod extends InterstitialSession {
 
     private InterstitialSession currentSession;
 
+    /**
+     * Creates an empty pod.
+     *
+     * @param isForwardAudio whether audio is forwarded
+     * @param isForwardVideo whether video is forwarded
+     */
     public MultiSessionPod(boolean isForwardAudio, boolean isForwardVideo) {
         super(isForwardAudio, isForwardVideo);
     }
 
+    /**
+     * Creates a pod pre-populated with sessions, processed in the given order.
+     *
+     * @param isForwardAudio whether audio is forwarded
+     * @param isForwardVideo whether video is forwarded
+     * @param sessions the sessions to queue
+     */
     public MultiSessionPod(boolean isForwardAudio, boolean isForwardVideo, InterstitialSession... sessions) {
         this(isForwardAudio, isForwardVideo);
         this.sessions.addAll(Arrays.asList(sessions));
     }
 
+    /**
+     * Appends a session to the end of the pod's queue.
+     *
+     * @param session the session to add
+     * @return true if the session was added
+     */
     public boolean addSession(InterstitialSession session) {
         return sessions.add(session);
     }

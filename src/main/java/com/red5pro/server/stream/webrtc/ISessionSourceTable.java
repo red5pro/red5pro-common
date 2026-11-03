@@ -36,7 +36,7 @@ public interface ISessionSourceTable extends Runnable {
     /**
      * Cancel the party.
      *
-     * @return
+     * @return true if cancelled
      */
     boolean cancel();
 
@@ -44,7 +44,7 @@ public interface ISessionSourceTable extends Runnable {
      * Tap ssrc control data received from the client. Tap only on receiving data from the remote client.
      * DataChannel has no SSRC, so the sctp port (default 5000) is used.
      *
-     * @param ssrc
+     * @param ssrc SSRC, or the sctp port for data channel traffic
      */
     void tapEntry(int ssrc);
 
@@ -69,6 +69,11 @@ public interface ISessionSourceTable extends Runnable {
      */
     boolean isCancelled();
 
+    /**
+     * Called when a BYE is received for the given SSRC.
+     *
+     * @param ssrc SSRC of the session that left
+     */
     void onBye(int ssrc);
 
 }

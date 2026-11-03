@@ -38,11 +38,19 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class Potion extends LinkedBlockingQueue<Ingredient> {
 
+    /**
+     * Serialization version identifier.
+     */
     private static final long serialVersionUID = -4967121322278479390L;
 
+    /**
+     * Globally unique id of the native module.
+     */
     private String guid;
 
     /**
+     * Creates a potion for the native module identified by the guid, for example:
+     *
      * <pre>
      * streamProcessorStart(IProStream stream) {
      * 	Potion p = new Potion("face");

@@ -7,6 +7,11 @@ package com.red5pro.interstitial.api;
  * @author Andy
  */
 public class InterstitialInsert {
+
+    /** Creates an empty interstitial insert request. */
+    public InterstitialInsert() {
+    }
+
     /**
      * User defined
      */

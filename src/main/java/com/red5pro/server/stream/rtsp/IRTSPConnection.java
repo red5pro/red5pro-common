@@ -37,6 +37,9 @@ import com.red5pro.server.stream.IoSessionAware;
  */
 public interface IRTSPConnection extends IoSessionAware {
 
+    /**
+     * FourCC type identifier for RTSP connections.
+     */
     public final static int fourCC = 'r' | ('t' << 8) | ('s' << 16) | ('p' << 24);
 
     /**
@@ -52,6 +55,11 @@ public interface IRTSPConnection extends IoSessionAware {
     @Deprecated
     IoSession getIOSession();
 
+    /**
+     * Returns the RTSP session id.
+     *
+     * @return session id
+     */
     String getSessionId();
 
     /**

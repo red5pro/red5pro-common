@@ -35,6 +35,7 @@ import org.apache.mina.core.session.IoSession;
  */
 public interface IoSessionAware {
 
+    /** FourCC identifier ('base') for this capability. */
     public final static int fourCC = 'b' | ('a' << 8) | ('s' << 16) | ('e' << 24);
 
     /**

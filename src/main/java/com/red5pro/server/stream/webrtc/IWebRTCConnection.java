@@ -35,6 +35,7 @@ import com.red5pro.server.stream.IoSessionAware;
  */
 public interface IWebRTCConnection extends IoSessionAware {
 
+    /** Four character code identifying a WebRTC connection ('rtc '). */
     public final static int fourCC = 'r' | ('t' << 8) | ('c' << 16) | (' ' << 24);
 
     /**

@@ -22,8 +22,10 @@ public interface StreamConnector {
      */
     public enum Protocol {
         // UDP protocol
+        /** UDP protocol. */
         UDP,
         // TCP protocol
+        /** TCP protocol. */
         TCP
     }
 
@@ -81,7 +83,7 @@ public interface StreamConnector {
     /**
      * Sets the output stream for the connector.
      *
-     * @param rtpConnectorOutputStream
+     * @param rtpConnectorOutputStream the output stream to use
      */
     public void setOutputStream(IRTPConnectorOutputStream rtpConnectorOutputStream);
 

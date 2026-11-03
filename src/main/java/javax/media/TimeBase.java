@@ -9,7 +9,17 @@ package javax.media;
  * @author Ken Larson
  */
 public interface TimeBase {
+    /**
+     * Returns the current time of this time base in nanoseconds.
+     *
+     * @return nanoseconds
+     */
     public long getNanoseconds();
 
+    /**
+     * Returns the current time of this time base.
+     *
+     * @return current time
+     */
     public Time getTime();
 }

@@ -8,6 +8,13 @@ import java.util.List;
  * @author Nate Roe
  */
 public class InterstitialRequest {
+
+    /**
+     * Creates an empty request.
+     */
+    public InterstitialRequest() {
+    }
+
     /**
      * Passed through to IInterstitialRequestHandler.
      */

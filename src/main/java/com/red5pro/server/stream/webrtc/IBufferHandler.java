@@ -25,6 +25,11 @@ public interface IBufferHandler {
      */
     void videoBufferReceived(Buffer outBuffer);
 
+    /**
+     * Sets the number of video buffers that are grouped together for output.
+     *
+     * @param size group size
+     */
     void setVideoGroupSize(int size);
 
 }

@@ -9,12 +9,17 @@ import org.red5.codec.VideoCodec;
 
 import com.red5pro.media.rtp.RTPCodecEnum;
 
+/**
+ * Default media sample implementation holding a buffer of audio, video or data along with timing and codec details.
+ */
 public class MediaSample implements IMediaSample {
 
     // type of media, audio, video etc
+    /** Type of media, such as audio or video. */
     protected MediaType type;
 
     // Critical codec information flag
+    /** Critical codec information flag. */
     protected boolean privateData;
 
     // Pro sequence number
@@ -47,6 +52,7 @@ public class MediaSample implements IMediaSample {
 
     private int trackNum;
 
+    /** Creates an empty sample for use by subclasses. */
     protected MediaSample() {
     }
 
@@ -134,6 +140,11 @@ public class MediaSample implements IMediaSample {
         this.decoded = decoded;
     }
 
+    /**
+     * Creates a sample from an existing buffer.
+     * @param buffer the buffer holding the sample data
+     * @param type the media type of the sample
+     */
     public MediaSample(Buffer buffer, MediaType type) {
         this.buffer = buffer;
         this.type = type;
@@ -199,6 +210,10 @@ public class MediaSample implements IMediaSample {
         return buffer != null && getBufferSize() > 0;
     }
 
+    /**
+     * Returns the media type.
+     * @return the media type
+     */
     public MediaType getType() {
         return type;
     }
@@ -207,18 +222,31 @@ public class MediaSample implements IMediaSample {
         return sourceName;
     }
 
+    /**
+     * Sets the name of the source that produced this sample.
+     * @param sourceName the source name
+     */
     public void setSourceName(String sourceName) {
         this.sourceName = sourceName;
     }
 
+    /**
+     * Indicates whether this sample is audio.
+     * @return true if the type is audio
+     */
     public boolean isAudio() {
         return type == MediaType.AUDIO;
     }
 
+    /**
+     * Indicates whether this sample is video.
+     * @return true if the type is video
+     */
     public boolean isVideo() {
         return type == MediaType.VIDEO;
     }
 
+    /** Marks this sample as a key frame. */
     public void setKey() {
         flags |= Buffer.FLAG_KEY_FRAME;
     }
@@ -263,26 +291,53 @@ public class MediaSample implements IMediaSample {
         return fourCC;
     }
 
+    /**
+     * Sets the fourCC code of the content.
+     * @param fourCC the fourCC as an integer
+     */
     public void setFourCC(int fourCC) {
         this.fourCC = fourCC;
     }
 
+    /**
+     * Sets the fourCC code of the content from its four characters.
+     * @param a first character
+     * @param b second character
+     * @param c third character
+     * @param d fourth character
+     */
     public void setFourCC(char a, char b, char c, char d) {
         this.fourCC = ((a << 24) | (b << 16) | (c << 8) | d);
     }
 
+    /**
+     * Returns the timebase of the sample.
+     * @return the timebase
+     */
     public long getTimebase() {
         return timebase;
     }
 
+    /**
+     * Sets the timebase of the sample.
+     * @param timebase the timebase
+     */
     public void setTimebase(long timebase) {
         this.timebase = timebase;
     }
 
+    /**
+     * Returns the stream creation time used when building a buffer from this sample.
+     * @return the epoch value
+     */
     public long getEpoc() {
         return epoc;
     }
 
+    /**
+     * Sets the stream creation time used when building a buffer from this sample.
+     * @param epoc the epoch value
+     */
     public void setEpoc(long epoc) {
         this.epoc = epoc;
     }
@@ -307,6 +362,10 @@ public class MediaSample implements IMediaSample {
         return container;
     }
 
+    /**
+     * Sets the container format of the content.
+     * @param container the container fourCC
+     */
     public void setContainer(FourCC container) {
         this.container = container;
     }
@@ -411,10 +470,11 @@ public class MediaSample implements IMediaSample {
     /**
      * Returns an FMJ/JMF Buffer based on this MediaSample.
      *
-     * @deprecated
-     * @param stripRtmp
+     * @deprecated retained for compatibility
+     * @param stripRtmp true to strip the RTMP header from the data
      * @return Buffer
      */
+    @Deprecated
     public Buffer toBuffer(boolean stripRtmp) {
         if (buffer instanceof Buffer) {
             return (Buffer) buffer;
@@ -502,22 +562,63 @@ public class MediaSample implements IMediaSample {
         return "MediaSample [type=" + (isAudio() ? "audio" : "video") + ", sourceName=" + sourceName + ", encoding=" + encoding + ", privateData=" + privateData + ", keyframe=" + isKeyframe() + ", startTime=" + timestamp + ",  sequenceNumber=" + sequenceNumber + ", decoded=" + decoded + ", buffer=" + buffer + "]";
     }
 
+    /**
+     * Builds a sample from an existing buffer.
+     * @param buffer the buffer holding the sample data
+     * @param type the media type
+     * @return the new sample
+     */
     public static MediaSample build(Buffer buffer, MediaType type) {
         return new MediaSample(buffer, type);
     }
 
+    /**
+     * Builds a sample from raw data.
+     * @param startTime the start time
+     * @param buf the sample data
+     * @param type the media type
+     * @return the new sample
+     */
     public static MediaSample build(long startTime, byte[] buf, MediaType type) {
         return new MediaSample(startTime, buf, type);
     }
 
+    /**
+     * Builds a sample from raw data.
+     * @param startTime the start time
+     * @param buf the sample data
+     * @param type the media type
+     * @param critical true if this carries critical codec information
+     * @return the new sample
+     */
     public static MediaSample build(long startTime, byte[] buf, MediaType type, boolean critical) {
         return new MediaSample(startTime, buf, type, critical);
     }
 
+    /**
+     * Builds a sample from raw data.
+     * @param startTime the start time
+     * @param buf the sample data
+     * @param type the media type
+     * @param critical true if this carries critical codec information
+     * @param sequenceNumber the sequence number
+     * @return the new sample
+     */
     public static MediaSample build(long startTime, byte[] buf, MediaType type, boolean critical, long sequenceNumber) {
         return new MediaSample(startTime, buf, type, critical, sequenceNumber);
     }
 
+    /**
+     * Builds a sample from raw data.
+     * @param startTime the start time
+     * @param buf the sample data
+     * @param type the media type
+     * @param sourceName the name of the source
+     * @param critical true if this carries critical codec information
+     * @param sequenceNumber the sequence number
+     * @param decoded true if the data is already decoded
+     * @return the new sample
+     */
     public static MediaSample build(long startTime, byte[] buf, MediaType type, String sourceName, boolean critical, long sequenceNumber, boolean decoded) {
         return new MediaSample(startTime, buf, type, sourceName, critical, sequenceNumber, decoded);
     }

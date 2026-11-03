@@ -38,6 +38,12 @@ public class VideoConstants {
     private static final Logger log = LoggerFactory.getLogger(VideoConstants.class);
 
     /**
+     * Creates a VideoConstants instance.
+     */
+    public VideoConstants() {
+    }
+
+    /**
      * The RTP and RTMP constants.
      */
     public static final String _RTP = "/rtp", _RTMP = "/rtmp";
@@ -103,8 +109,10 @@ public class VideoConstants {
      */
     public static final String H264_PACKETIZATION_MODE_FMTP = "packetization-mode";
 
+    /** The name of the format parameter which specifies the H.264 sprop parameter sets (SPS/PPS). */
     public static final String H264_SPROP_PARAMETER_SETS_FMTP = "sprop-parameter-sets";
 
+    /** The name of the format parameter which specifies the H.264 profile level id. */
     public static final String H264_PROFILE_LEVEL_ID_FMTP = "profile-level-id";
 
     /**

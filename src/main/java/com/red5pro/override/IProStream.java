@@ -54,17 +54,30 @@ public interface IProStream extends IClientBroadcastStream {
     @Override
     void close();
 
-    /** {@inheritDoc} */
+    /**
+     * Dispatches an event to this stream.
+     *
+     * @param event
+     *            event to dispatch
+     */
     void dispatchEvent(IEvent event);
 
     /** {@inheritDoc} */
     @Override
     Notify getMetaData();
 
-    /** {@inheritDoc} */
+    /**
+     * Returns the current state of the stream.
+     *
+     * @return stream state
+     */
     StreamState getState();
 
-    /** {@inheritDoc} */
+    /**
+     * Returns the number of bytes received by this stream.
+     *
+     * @return total bytes received
+     */
     long getBytesReceived();
 
     /** {@inheritDoc} */
@@ -83,6 +96,12 @@ public interface IProStream extends IClientBroadcastStream {
      */
     void stopRecording();
 
+    /**
+     * Adds an auxiliary audio output to the stream.
+     *
+     * @param audio
+     *            auxiliary output to add
+     */
     void addAuxOut(AuxOut audio);
 
     /**
@@ -144,6 +163,7 @@ public interface IProStream extends IClientBroadcastStream {
      * Sets end-user processor in packet flow chain. Allows end user to examine or alter packets prior to distribution.
      * This is downstream of ABR transcoder so each variant will require its own discrete processor.
      * @param specialContext
+     *            listener that receives packets before distribution
      */
     void setSpecialContext(IStreamListener specialContext);
 
@@ -177,7 +197,7 @@ public interface IProStream extends IClientBroadcastStream {
      *            processor parameters. Use null for default.
      * @deprecated
      */
-
+    @Deprecated
     default void usePreprocessor(String clazz, Map<String, Object> params) {
     };
 
@@ -194,12 +214,15 @@ public interface IProStream extends IClientBroadcastStream {
 
     /**
      * Flag indicates that "published" webhook call will be deferred (don't make this call as usual)
-     * @return
+     *
+     * @return true if the published webhook call is deferred
      */
     boolean isPublishedWebhookEnabled();
 
     /**
      * Return the total number of subscribers for the all sidestreams.
+     *
+     * @return total subscriber count across all sidestreams
      */
     int getAllSubscriberCount();
 }

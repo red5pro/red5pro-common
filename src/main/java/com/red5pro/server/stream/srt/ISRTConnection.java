@@ -35,6 +35,7 @@ import com.red5pro.server.stream.IoSessionAware;
  */
 public interface ISRTConnection extends IoSessionAware {
 
+    /** Four character code identifying SRT: "srt " */
     public final static int fourCC = 's' | ('r' << 8) | ('t' << 16) | (' ' << 24);
 
     /**

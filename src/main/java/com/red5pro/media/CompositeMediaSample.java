@@ -15,21 +15,33 @@ public class CompositeMediaSample extends MediaSampleAdapter {
     public CompositeMediaSample() {
     }
 
-    private IMediaSample[] samples;
+    private IMediaSample[] samples = new IMediaSample[0];
 
     private int trackNum;
 
-    /** Returns the contained samples. */
+    /**
+     * Returns the contained samples.
+     *
+     * @return array of samples, never null
+     */
     public IMediaSample[] getSamples() {
         return samples;
     }
 
-    /** Sets the contained samples. */
+    /**
+     * Sets the contained samples; null is treated as empty.
+     *
+     * @param samples samples to contain
+     */
     public void setSamples(IMediaSample[] samples) {
-        this.samples = samples;
+        this.samples = samples != null ? samples : new IMediaSample[0];
     }
 
-    /** Returns the number of contained samples. */
+    /**
+     * Returns the number of contained samples.
+     *
+     * @return sample count
+     */
     public int size() {
         return samples.length;
     }
@@ -70,12 +82,20 @@ public class CompositeMediaSample extends MediaSampleAdapter {
         trackNum = id;
     }
 
-    /** Returns the source participant. */
+    /**
+     * Returns the source participant.
+     *
+     * @return source participant
+     */
     public IParticipant getSource() {
         return source;
     }
 
-    /** Sets the source participant. */
+    /**
+     * Sets the source participant.
+     *
+     * @param source source participant
+     */
     public void setSource(IParticipant source) {
         this.source = source;
     }

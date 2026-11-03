@@ -58,7 +58,7 @@ public interface IProScopeHandler {
     /**
      * Sets the webhook endpoint for this scope.
      *
-     * @param webhookEndpoint
+     * @param webhookEndpoint the webhook endpoint
      */
     void setWebhookEndpoint(String webhookEndpoint);
 

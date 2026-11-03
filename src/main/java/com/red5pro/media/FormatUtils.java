@@ -15,21 +15,50 @@ import javax.media.format.VideoFormat;
  */
 public class FormatUtils {
 
+    /** Creates a new FormatUtils; all functionality is static. */
+    public FormatUtils() {
+    }
+
+    /**
+     * Class constant for byte arrays.
+     */
     public static final Class<?> byteArray = byte[].class;
 
+    /**
+     * Class constant for short arrays.
+     */
     public static final Class<?> shortArray = short[].class;
 
+    /**
+     * Class constant for int arrays.
+     */
     public static final Class<?> intArray = int[].class;
 
+    /**
+     * Class constant for Format arrays.
+     */
     public static final Class<?> formatArray = Format[].class;
 
     // here to avoid messing up the serialization signature in the format classes.
     // The Eclipse compiler
     // will insert anonymous fields for these:
+    /**
+     * Class constant for VideoFormat.
+     */
     public static final Class<?> videoFormatClass = VideoFormat.class;
 
+    /**
+     * Class constant for AudioFormat.
+     */
     public static final Class<?> audioFormatClass = AudioFormat.class;
 
+    /**
+     * Compares two byte arrays for content equality; two nulls are equal.
+     *
+     * @param ba1 first array, may be null
+     * @param ba2 second array, may be null
+     * @return true if both are null or have identical contents
+     */
     public static boolean byteArraysEqual(byte[] ba1, byte[] ba2) {
         if (ba1 == null && ba2 == null)
             return true;
@@ -62,12 +91,24 @@ public class FormatUtils {
         return -1;
     }
 
+    /**
+     * Copies a Dimension.
+     *
+     * @param d dimension to copy, may be null
+     * @return a new equal Dimension, or null if d is null
+     */
     public static Dimension clone(Dimension d) {
         if (d == null)
             return null;
         return new Dimension(d);
     }
 
+    /**
+     * Formats a frame rate with one decimal place and no rounding, matching JMF output.
+     *
+     * @param frameRate frame rate
+     * @return truncated frame rate as a string
+     */
     public static String frameRateToString(float frameRate) {
         // hack to get frame rates to print out same as JMF: 1 decimal place, but NO
         // rounding.
@@ -76,6 +117,13 @@ public class FormatUtils {
         return s;
     }
 
+    /**
+     * Tests whether either class is assignable from the other.
+     *
+     * @param a first class
+     * @param b second class
+     * @return true if the classes are the same or one is assignable from the other
+     */
     public static boolean isOneAssignableFromTheOther(Class<?> a, Class<?> b) {
         return a == b || b.isAssignableFrom(a) || a.isAssignableFrom(b);
     }
@@ -97,30 +145,65 @@ public class FormatUtils {
         return true;
     }
 
+    /**
+     * Matches two double values, treating Format.NOT_SPECIFIED as a wildcard.
+     *
+     * @param v1 first value
+     * @param v2 second value
+     * @return true if either is NOT_SPECIFIED or they are equal
+     */
     public static boolean matches(double v1, double v2) {
         if (v1 == Format.NOT_SPECIFIED || v2 == Format.NOT_SPECIFIED)
             return true;
         return v1 == v2;
     }
 
+    /**
+     * Matches two float values, treating Format.NOT_SPECIFIED as a wildcard.
+     *
+     * @param v1 first value
+     * @param v2 second value
+     * @return true if either is NOT_SPECIFIED or they are equal
+     */
     public static boolean matches(float v1, float v2) {
         if (v1 == Format.NOT_SPECIFIED || v2 == Format.NOT_SPECIFIED)
             return true;
         return v1 == v2;
     }
 
+    /**
+     * Matches two int values, treating Format.NOT_SPECIFIED as a wildcard.
+     *
+     * @param v1 first value
+     * @param v2 second value
+     * @return true if either is NOT_SPECIFIED or they are equal
+     */
     public static boolean matches(int v1, int v2) {
         if (v1 == Format.NOT_SPECIFIED || v2 == Format.NOT_SPECIFIED)
             return true;
         return v1 == v2;
     }
 
+    /**
+     * Matches two objects, treating null as a wildcard.
+     *
+     * @param o1 first object, may be null
+     * @param o2 second object, may be null
+     * @return true if either is null or they are equal
+     */
     public static boolean matches(Object o1, Object o2) {
         if (o1 == null || o2 == null)
             return true;
         return o1.equals(o2);
     }
 
+    /**
+     * Null-safe equals; two nulls are equal.
+     *
+     * @param o1 first object, may be null
+     * @param o2 second object, may be null
+     * @return true if both are null or they are equal
+     */
     public static boolean nullSafeEquals(Object o1, Object o2) {
         if (o1 == null && o2 == null)
             return true;
@@ -129,6 +212,13 @@ public class FormatUtils {
         return o1.equals(o2);
     }
 
+    /**
+     * Null-safe case-insensitive string comparison; two nulls are equal.
+     *
+     * @param o1 first string, may be null
+     * @param o2 second string, may be null
+     * @return true if both are null or equal ignoring case
+     */
     public static boolean nullSafeEqualsIgnoreCase(String o1, String o2) {
         if (o1 == null && o2 == null)
             return true;
@@ -137,22 +227,52 @@ public class FormatUtils {
         return o1.equalsIgnoreCase(o2);
     }
 
+    /**
+     * Tests whether a double value is set.
+     *
+     * @param v value to test
+     * @return true if the value is not Format.NOT_SPECIFIED
+     */
     public static boolean specified(double v) {
         return v != Format.NOT_SPECIFIED;
     }
 
+    /**
+     * Tests whether a float value is set.
+     *
+     * @param v value to test
+     * @return true if the value is not Format.NOT_SPECIFIED
+     */
     public static boolean specified(float v) {
         return v != Format.NOT_SPECIFIED;
     }
 
+    /**
+     * Tests whether a int value is set.
+     *
+     * @param v value to test
+     * @return true if the value is not Format.NOT_SPECIFIED
+     */
     public static boolean specified(int v) {
         return v != Format.NOT_SPECIFIED;
     }
 
+    /**
+     * Tests whether an object value is set.
+     *
+     * @param o value to test, may be null
+     * @return true if the object is not null
+     */
     public static boolean specified(Object o) {
         return o != null;
     }
 
+    /**
+     * Encodes a string as a base-64 positional number using JMF character codes.
+     *
+     * @param s string to encode
+     * @return encoded numeric value
+     */
     public static long stringEncodingCodeVal(String s) {
         long result = 0;
         for (int i = 0; i < s.length(); ++i) {

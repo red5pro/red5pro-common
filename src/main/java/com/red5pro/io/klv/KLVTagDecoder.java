@@ -14,10 +14,15 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class KLVTagDecoder {
 
+    /** Creates a decoder; for use by subclasses. */
+    public KLVTagDecoder() {
+    }
+
     private static Map<String, Class<? extends KLVTagDecoder>> libraries = new ConcurrentHashMap<>();
 
     private static Map<String, KLVTagDecoder> cache = new HashMap<>();
 
+    /** Logger shared by decoder implementations. */
     protected final static Logger logger = LoggerFactory.getLogger(KLVTagDecoder.class);
 
     /**
@@ -31,7 +36,12 @@ public abstract class KLVTagDecoder {
         libraries.put(universalLabel, decoder);
     }
 
-    /** Returns a cached decoder for the label, creating one when registered. */
+    /**
+     * Returns a cached decoder for the label, creating one when registered.
+     *
+     * @param label KLV universal label
+     * @return decoder instance, or null if none is registered or it cannot be instantiated
+     */
     public static KLVTagDecoder getDecoder(String label) {
         if (cache.containsKey(label)) {
             return cache.get(label);
@@ -49,7 +59,11 @@ public abstract class KLVTagDecoder {
         return null;
     }
 
-    /** Returns this decoder's universal label. */
+    /**
+     * Returns this decoder's universal label.
+     *
+     * @return universal label
+     */
     public abstract String getUniversalLabel();
 
     /**
