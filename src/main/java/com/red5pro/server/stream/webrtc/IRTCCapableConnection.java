@@ -149,6 +149,17 @@ public interface IRTCCapableConnection extends IConnection {
 
     void sendRemb(int ssrc, int bitrate);
 
+    /**
+     * Sends a receiver estimated maximum bitrate (REMB) message, with the SSRC given in its unsigned 32 bit range (0 to 4294967295). The
+     * int form carries the same 32 bits; this form keeps only the low 32 bits and delegates to it.
+     *
+     * @param ssrc the SSRC the estimate applies to, as an unsigned 32 bit value
+     * @param bitrate the estimated maximum bitrate
+     */
+    default void sendRemb(long ssrc, int bitrate) {
+        sendRemb((int) (ssrc & 0xFFFFFFFFL), bitrate);
+    }
+
     // TODO(paul) add this to the interface next release
     //boolean isLocalNetwork();
 
